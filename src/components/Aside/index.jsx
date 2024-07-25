@@ -27,12 +27,14 @@ const logo = () => {
                 height={40}
                 alt="Logo Itaberá SP"
             />
-            <Image 
-                src="/logo-texto.png"
-                width={100}
-                height={50}
-                alt="Prefeiura Municipal de Itaberá SP"
-            />
+            <div>
+                <p className="text-white text-[11px] font-impact">
+                    Prefeitura Municipal de
+                </p>
+                <p className="text-white text-[38px] leading-8 font-impact mt-0  ">
+                    ITABERÁ
+                </p>
+            </div>
        </div>
     )
 }
