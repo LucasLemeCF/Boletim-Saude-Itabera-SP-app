@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 export const Aside = () => {
     return (
-        <aside className="w-64 h-screen bg-[#337B5B] flex flex-col">
+        <aside className="w-64 h-screen fixed bg-[#337B5B] flex flex-col">
             {header()}
             {navigation()}
         </aside>

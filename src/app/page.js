@@ -1,6 +1,6 @@
-import { Tabela } from './Tabela/index';
+import Tabela from '../components/Tabela/index';
 
-export default function Home() {
+export default async function Home() {
   return (
     <main className="flex flex-col items-center justify-between bg-[#F8FAFC]">
       <div className="flex flex-col items-center justify-between">

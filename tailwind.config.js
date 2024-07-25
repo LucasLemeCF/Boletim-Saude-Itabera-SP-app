@@ -14,6 +14,9 @@ module.exports = {
       },
     },
     extend: {
+      fontFamily: {
+        'impact': ['IMPACT'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

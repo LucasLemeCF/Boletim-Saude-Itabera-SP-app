@@ -2,6 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: 'IMPACT';
+  src: url('../../public/fonts/Impact.ttf');
+}
+
 body {
   background-color: #F8FAFC;
   margin: 0;
