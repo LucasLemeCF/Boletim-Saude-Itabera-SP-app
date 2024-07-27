@@ -9,19 +9,26 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
+import { format } from "date-fns"
 
 export function DatePickerDemo({data, setData}) {
+
+  const handleDataChange = (novaData) => {
+    console.log('Nova data: ', format(novaData, "dd/MM/yyyy"))
+    setData(format(novaData, "dd/MM/yyyy"));
+  }
+
   return (
     <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
-            "w-full h-full border-0 justify-start text-left flex justify-center",
+            "w-full h-full border-0 text-left flex justify-center",
             !data && "text-muted-foreground"
           )}
         >
-          {data ? format(data, "PPP") : <span className="text-white text-center">{data}</span>}
+          <span className="text-white text-center">{format(data, "dd/MM/yyyy")}</span>
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0 border-[#337B5B]">

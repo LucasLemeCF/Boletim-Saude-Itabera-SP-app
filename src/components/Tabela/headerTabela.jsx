@@ -1,14 +1,13 @@
 "use client"
 
 import Image from 'next/image';
-import { useState } from 'react';
 import { DatePickerDemo } from "./calendario";
 
-export default function HeaderTabela() {
+export default function HeaderTabela({data, setData}) {
     return (
       <div>
         {Titulo()}
-        {HeaderData()}
+        {HeaderData({data, setData})}
       </div>
     )
   }
@@ -54,8 +53,7 @@ export default function HeaderTabela() {
     ) 
   }
   
-  function HeaderData() {
-    let [data, setData] = useState(new Date())
+  function HeaderData({data, setData}) {
 
     return (
       <div className="flex items-center justify-between divide-x divide-y border-black bg-[#337B5B] mt-0">

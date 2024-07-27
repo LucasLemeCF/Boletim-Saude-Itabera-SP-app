@@ -1,27 +1,49 @@
+"use client"
+
+import { useEffect, useState } from 'react';
+import ConverterData from './converterData';
 import HeaderTabela from './headerTabela';
 
-async function getDadosTabela() {
-  const response = await fetch('http://localhost:8080/api/tabela/03-06-2024')
+export default function Tabela() {
+  let [data, setData] = useState(new Date(), "dd/MM/yyyy");
+  const [dadosTabela, setDadosTabela] = useState(null)
+  const [isLoading, setLoading] = useState(true);
 
-  if (!response.ok) {
-    console.log('Erro ao buscar os dados da tabela');
-  }
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:8080/api/tabela/' + ConverterData(data));   
+        const dataResponse = await response.json();
+        setDadosTabela(dataResponse);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  return response.json()
-}
+    fetchData();
+  }, [data]);
 
-export default async function Tabela() {
-  const dadosTabela = await getDadosTabela();
+  console.log('Data: ', data)
+  console.log('Resultado: ', dadosTabela)
+
+  if (isLoading) return <p>Loading...</p>
+  if (!data) return <p>No profile data</p>
 
   return (
     <div className="flex flex-col items-center justify-between  border border-black mt-[50px]">
-      <HeaderTabela data={dadosTabela.data}/>
-      {corpo(dadosTabela)}
+      <HeaderTabela  
+        data={data}
+        setData={setData}
+      /> 
+      {dadosTabela != null ? corpo({ dadosTabela }) : <p>Não foi possível encontrar dados para a data</p>}
     </div>
   )
 }
 
-const corpo = (dadosTabela) => {
+const corpo = ({ dadosTabela }) => {
   return (
     <div className='mt-0'>
       {dadosTabela.especialidadesCabecalhos.map((cabecalho, index) => 
