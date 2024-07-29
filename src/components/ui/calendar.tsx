@@ -6,6 +6,7 @@ import { DayPicker } from "react-day-picker"
 
 import { buttonVariants } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
+import { ptBR } from "date-fns/locale"
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
@@ -15,26 +16,27 @@ function Calendar({
   showOutsideDays = true,
   ...props
 }: CalendarProps) {
+
   return (
     <DayPicker
+      locale={ptBR}
       showOutsideDays={showOutsideDays}
-      className={cn("p-3 bg-[#337B5B] border-2 border-black", className)}
+      className={cn("p-3 bg-[#337B5B] border border-black", className)}
       classNames={{
         months: "flex flex-col bg-[#E2EFDB] sm:flex-row sm:space-x-4 sm:space-y-0",
         month: "",
         caption: "flex justify-center pb-4 pt-1 relative items-center bg-[#337B5B]",
-        caption_label: "text-sm font-medium text-white",
+        caption_label: "text-sm font-medium text-white capitalize",
         nav: "space-x-1 flex items-center bg-[#337B5B]",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
-          "h-7 w-7 bg-transparent p-0 opacity-75 hover:opacity-100 hover:text-white"
+          "h-7 w-7 bg-transparent p-0 hover:text-white"
         ),
-        nav_button_previous: "absolute left-1 border-2 border-white text-white",
-        nav_button_next: "absolute right-1 border-2 border-white text-white mt-0",
-        table: "w-full border-collapse border-2 border-black",
+        nav_button_previous: "absolute left-0 text-red border-black hover:bg-[#255941] hover:border-[#255941]",
+        nav_button_next: "absolute right-0 border-black hover:bg-[#255941] hover:border-[#255941]",
+        table: "w-full border-collapse border border-black",
         head_row: "flex",
-        head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem]",
+        head_cell: "rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full mt-2",
         cell: "h-9 w-9 text-center text-sm p-0 relative hover:border-black hover:border [&:has([aria-selected].day-range-end)]:rounded-r-md [&:has([aria-selected].day-outside)]:bg-accent/50 [&:has([aria-selected])]:bg-accent first:[&:has([aria-selected])]:rounded-l-md last:[&:has([aria-selected])]:rounded-r-md focus-within:relative focus-within:z-20",
         day: cn(
@@ -42,14 +44,11 @@ function Calendar({
           "h-9 w-9 p-0 font-normal aria-selected:opacity-100"
         ),
         day_range_end: "day-range-end",
-        day_selected:
-          "bg-[#337B5B] text-primary-foreground hover:bg-primary hover:text-primary-foreground focus:bg-primary focus:text-primary-foreground",
-        day_today: "bg-accent text-accent-foreground",
-        day_outside:
-          "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
-        day_disabled: "text-muted-foreground opacity-50",
-        day_range_middle:
-          "aria-selected:bg-accent aria-selected:text-accent-foreground",
+        day_selected:"bg-[#337B5B] text-white",
+        day_today: "bg-accent text-black",
+        day_outside: "day-outside opacity-50 aria-selected:bg-accent/50 aria-selected:opacity-30",
+        day_disabled: "opacity-50",
+        day_range_middle: "aria-selected:bg-accent",
         day_hidden: "invisible",
         ...classNames,
       }}
