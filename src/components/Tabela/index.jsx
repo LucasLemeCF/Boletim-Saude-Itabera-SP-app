@@ -1,11 +1,26 @@
 "use client"
 
 import { useEffect, useState } from 'react';
+import Cirurgioes from './cirurgioes';
 import ConverterData from './converterData';
+import Especialidades from './especialidades';
 import HeaderTabela from './headerTabela';
 
 export default function Tabela() {
   let [data, setData] = useState(new Date(), "dd/MM/yyyy");
+
+  return (
+    <div className="flex flex-col items-center justify-between  border border-black mt-[50px] bg-[#E2EFDB]">
+      <HeaderTabela  
+        data={data}
+        setData={setData}
+      /> 
+      <Linhas data={data}/>
+    </div>
+  )
+}
+
+function Linhas({data}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [isLoading, setLoading] = useState(true);
 
@@ -26,110 +41,53 @@ export default function Tabela() {
     fetchData();
   }, [data]);
 
-  console.log('Data: ', data)
   console.log('Resultado: ', dadosTabela)
 
-  if (isLoading) return <p>Loading...</p>
-  if (!data) return <p>No profile data</p>
+  if (isLoading) return Carregando()
 
-  return (
-    <div className="flex flex-col items-center justify-between  border border-black mt-[50px]">
-      <HeaderTabela  
-        data={data}
-        setData={setData}
-      /> 
-      {dadosTabela != null ? corpo({ dadosTabela }) : <p>Não foi possível encontrar dados para a data</p>}
-    </div>
-  )
-}
-
-const corpo = ({ dadosTabela }) => {
-  return (
-    <div className='mt-0'>
-      {dadosTabela.especialidadesCabecalhos.map((cabecalho, index) => 
-        <div key={index}>
-          {cabecalhoEspecialidade(cabecalho)}
-        </div>
-      )}
-    </div>
-  )
-}
-
-const cabecalhoEspecialidade = (cabecalho) => {
   return (
     <div>
-      <div className="flex items-center justify-between divide-x divide-y border-black bg-[#337B5B]">
-        <div className="flex items-center justify-between border-black border-t w-[300px] h-[50px] px-1">
-          <p className='w-full font-semibold text-center text-white'>{cabecalho.textos[0].texto}</p>
-        </div>
+      {TemDadadosEspecialidades({dadosTabela}) ? 
+        <Especialidades dadosTabela={dadosTabela}/>
+      : null}
 
-        <div className="flex items-center justify-center border-black font-semibold text-center text-white w-[100px] h-[50px]">
-          <p>Pacientes Atendidos</p>
-        </div>
-        <div className="flex items-center justify-center border-black font-semibold text-center text-white w-[100px] h-[50px]">
-          <p>Meta de Atend.</p>
-        </div>
-        <div className="flex items-center justify-center border-black text-center text-white w-[100px] h-[50px]">
-          <p>%</p>
-        </div>
+      {TemDadadosCirurgioes({dadosTabela}) ? 
+        <Cirurgioes dadosTabela={dadosTabela}/>
+      : null}
 
-        <div className="flex items-center justify-center border-black font-semibold text-center text-white w-[100px] h-[50px]">
-          <p>Pacientes Atendidos</p>
-        </div>
-        <div className="flex items-center justify-center border-black font-semibold text-center text-white w-[100px] h-[50px]">
-          <p>Meta de Atend.</p>
-        </div>
-        <div className="flex items-center justify-center border-black text-center text-white w-[100px] h-[50px]">
-          <p>%</p>
-        </div>
-      </div>
-
-      {cabecalho.especialidades.map((especialidade, index) => 
-        <div key={index}>
-          {linhaEspecialidade(especialidade)}
-        </div>
-      )}
+      {!TemDadadosEspecialidades({dadosTabela}) && !TemDadadosCirurgioes({dadosTabela}) ?
+        <p>Não foi possível encontrar dados para a data</p>
+      : null}
     </div>
   )
 }
 
-const linhaEspecialidade = (data) => {
-  return (
-    <div className="flex items-center justify-between divide-x divide-y border-black bg-[#E2EFDB]">
-      <div className="flex items-center justify-between border-black border-t w-[300px] h-[25px] px-1">
-        <p>{data.especialidade}</p>
-      </div>
+function TemDadadosEspecialidades({dadosTabela}) {
+  let temDados = false;
 
-      <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">
-        <p>{data.pacientesAtendidosDia}</p>
-      </div>
-      <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">
-        <p>{data.metaDiaria}</p>
-      </div>
-      <div className="flex items-center justify-center border-black w-[100px] h-[25px]">
-        <p>{calcularPorcentagem(data.pacientesAtendidosDia, data.metaDiaria)}%</p>
-      </div>
+  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+    if (cabecalho.especialidades.length > 0) {
+      temDados = true;
+    }
+  });
 
-      <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">
-        <p>{data.pacientesAtendidosMes}</p>
-      </div>
-      <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">
-        <p>{data.metaMensal}</p>
-      </div>
-      <div className="flex items-center justify-center border-black w-[100px] h-[25px]">
-        <p>{calcularPorcentagem(data.pacientesAtendidosMes, data.metaMensal)}%</p>
-      </div>
-    </div>
-  )
+  return temDados;
 }
 
-const calcularPorcentagem = (atendidos, meta) => {
-  return (atendidos / meta * 100).toFixed(1)
+function TemDadadosCirurgioes({dadosTabela}) {
+  let temDados = false;
+
+  dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
+    if (cabecalho.cirurgioes.length > 0) {
+      temDados = true;
+    }
+  });
+
+  return temDados;
 }
 
-const botoes = () => {
+function Carregando() {
   return (
-    <div className="flex items-center justify-between">
-    </div>
+    <p>Carregando...</p>
   )
 }
