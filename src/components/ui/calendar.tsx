@@ -32,9 +32,9 @@ function Calendar({
           buttonVariants({ variant: "outline" }),
           "h-7 w-7 bg-transparent p-0 hover:text-white"
         ),
-        nav_button_previous: "absolute left-0 text-red border-black hover:bg-[#255941] hover:border-[#255941]",
-        nav_button_next: "absolute right-0 border-black hover:bg-[#255941] hover:border-[#255941]",
-        table: "w-full border-collapse border border-black",
+        nav_button_previous: "absolute left-0 text-white border-black hover:bg-[#255941] hover:border-[#255941]",
+        nav_button_next: "absolute right-0 text-white border-black hover:bg-[#255941] hover:border-[#255941]",
+        table: "w-full border-collapse border border-black capitalize",
         head_row: "flex",
         head_cell: "rounded-md w-9 font-normal text-[0.8rem]",
         row: "flex w-full mt-2",
