@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/popover"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
+import React from "react"
 
 export function DatePickerDemo({data, setData}) {
 
@@ -36,7 +37,7 @@ export function DatePickerDemo({data, setData}) {
           mode="single"
           selected={data}
           onSelect={setData}
-          initialFocusedDate={data}
+          initialFocus
         />
       </PopoverContent>
     </Popover>

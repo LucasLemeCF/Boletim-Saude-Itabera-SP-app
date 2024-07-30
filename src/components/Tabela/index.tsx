@@ -1,14 +1,14 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cirurgioes from './cirurgioes';
 import ConverterData from './converterData';
 import Especialidades from './especialidades';
 import HeaderTabela from './headerTabela';
 
 export default function Tabela() {
-  let [data, setData] = useState(new Date(), "dd/MM/yyyy");
-
+  let [data, setData] = useState(new Date());
+  
   return (
     <div className="flex flex-col items-center justify-between  border border-black mt-[50px] bg-[#E2EFDB]">
       <HeaderTabela  

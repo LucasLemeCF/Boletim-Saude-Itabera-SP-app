@@ -1,12 +1,28 @@
+import React from 'react';
+
 export default function Especialidades({ dadosTabela }) {
+  // const createMessage = async (formData: FormData) => {
+  //   'use server';
+    
+  //   await new Promise((resolve) => setTimeout(resolve, 250));
+  
+  //   const text = formData.get('text') as string;
+  
+  //   messages.push({
+  //     id: crypto.randomUUID(),
+  //     text,
+  //   });
+  // };
+
   return (
-    <div className='mt-0'>
+    <form>
+      {/* <input type="text" name="text" /> */}
       {dadosTabela.especialidadesCabecalhos.map((cabecalho, index) => 
         <div key={index}>
           {cabecalhoEspecialidade(cabecalho)}
         </div>
       )}
-    </div>
+    </form>
   )
 }
   
@@ -55,9 +71,10 @@ const linhaEspecialidade = (data) => {
         <p>{data.especialidade}</p>
       </div>
 
-      <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">
-        <p>{data.pacientesAtendidosDia}</p>
-      </div>
+      <input  className="flex items-center justify-center border-black font-semibold text-center w-[100px] h-[25px] bg-[#E2EFDB]" 
+        type="text" name={data.especialidade} value={data.pacientesAtendidosDia}
+      />
+     
       <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">
         <p>{data.metaDiaria}</p>
       </div>
