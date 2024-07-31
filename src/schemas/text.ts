@@ -1,9 +1,9 @@
 import * as z from "zod";
 
 const linhas = z.object({
-    // tipo: z.string(),
-    // componenteId: z.number(),
-    // posicao: z.number(),
+    tipo: z.string(),
+    componenteId: z.number(),
+    posicao: z.number(),
     pacientesAtendidos: z.number(),
 })
 

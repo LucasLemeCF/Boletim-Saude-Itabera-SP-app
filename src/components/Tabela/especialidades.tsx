@@ -41,36 +41,54 @@ export default function Especialidades({ dadosTabela }: { dadosTabela: Tabela })
     name: "especialidadesCabecalhos",
   });
 
+  console.log(dadosTabela);
+
   const form = useForm<TabelaFormData>({
     resolver: zodResolver(dadosTabelaSchema),
     defaultValues: {
       data: "",
-      linhas: dadosTabela.especialidadesCabecalhos.flatMap((cabecalho) => cabecalho.especialidades.map((especialidade) => ({
-        pacientesAtendidos: especialidade.pacientesAtendidosDia,
-      })))
+      linhas: montarValoresLinhas()
     }
   })
+
+  function montarValoresLinhas() {
+    let linhas = [] as any;
+
+    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+      cabecalho.especialidades.map((especialidade) => {
+        linhas.push({
+          tipo: "ESPECIALIDADE_LINHA",
+          componenteId: especialidade.especialidadeId,
+          posicao: especialidade.posicao,
+          pacientesAtendidos: especialidade.pacientesAtendidosDia
+        });
+      });
+    });
   
+    console.log(linhas);
+
+    return linhas;
+  }
+
   async function onSubmit(dados: TabelaFormData) {
     const tabela = {
-      data: dados.data,
+      data: dadosTabela.data,
       linhas: dadosTabela.especialidadesCabecalhos.map((cabecalho, indexCabecalho) => 
         cabecalho.especialidades.map((especialidade, index) => ({
           tipo: "ESPECIALIDADE_LINHA",
           componenteId: especialidade.especialidadeId,
-          posicao: indexCabecalho * (cabecalho.especialidades.length + 1) + index,
+          posicao: ((indexCabecalho * (cabecalho.especialidades.length + 1)) + (indexCabecalho + 1)  + (index + 1)),
           pacientesAtendidos: especialidade.pacientesAtendidosDia
         }))
-      )} as TabelaFormData;
+    )} as TabelaFormData;
 
-      console.log(tabela);
+    console.log(tabela);
 
     await testaFormulario(tabela);
   }
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)}>
-      <input type="text" {...form.register("data")} />
       {fields.map((field, index) => {
         return (
           <div key={field.id}>
@@ -114,7 +132,7 @@ const cabecalhoEspecialidade = (cabecalho: CabecalhoTabela, indexCabecalho, form
 
       {cabecalho.especialidades.map((especialidade, index) => 
         <div key={index}>
-          {linhaEspecialidade(especialidade, (indexCabecalho * (cabecalho.especialidades.length + 1) + index), form)}
+          {linhaEspecialidade(especialidade, ((indexCabecalho * (cabecalho.especialidades.length + 1)) + (indexCabecalho + 1)  + (index + 1)), form)}
         </div>
       )}
     </div>
@@ -124,10 +142,6 @@ const cabecalhoEspecialidade = (cabecalho: CabecalhoTabela, indexCabecalho, form
 const linhaEspecialidade = (data, posicaoLinha, form) => {
   return (
     <div className="flex items-center justify-between divide-x divide-y border-black bg-[#E2EFDB]">
-      {/* <div>
-        {posicaoLinha}
-      </div> */}
-
       <div className="flex items-center justify-between border-black border-t w-[300px] h-[25px] px-1">
         <p>{data.especialidade}</p>
       </div>
