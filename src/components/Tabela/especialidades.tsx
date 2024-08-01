@@ -132,7 +132,7 @@ const cabecalhoEspecialidade = (cabecalho: CabecalhoTabela, indexCabecalho, form
 
       {cabecalho.especialidades.map((especialidade, index) => 
         <div key={index}>
-          {linhaEspecialidade(especialidade, ((indexCabecalho * (cabecalho.especialidades.length + 1)) + (indexCabecalho + 1)  + (index + 1)), form)}
+          {linhaEspecialidade(especialidade, ((indexCabecalho * (cabecalho.especialidades.length + 1)) + index), form)}
         </div>
       )}
     </div>
