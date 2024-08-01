@@ -15,7 +15,6 @@ import React from "react"
 export function DatePickerDemo({data, setData}) {
 
   const handleDataChange = (novaData) => {
-    console.log('Nova data: ', format(novaData, "dd/MM/yyyy"))
     setData(format(novaData, "dd/MM/yyyy"));
   }
 

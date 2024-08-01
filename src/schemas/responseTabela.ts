@@ -10,7 +10,7 @@ const cabecalhos =  z.object({
     textos: z.array(texto),
 })
 
-const linhas = z.object({
+export const linhasEspecialidades = z.object({
     tipo: z.string(),
     componenteId: z.number(),
     posicao: z.number(),
@@ -18,8 +18,7 @@ const linhas = z.object({
 })
 
 export const dadosTabelaSchema = z.object({
-    data: z.string(),
-    linhas: z.array(linhas)
+    linhas: z.array(linhasEspecialidades)
 })
 
 export type TabelaFormData = z.infer<typeof dadosTabelaSchema>;

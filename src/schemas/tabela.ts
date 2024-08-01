@@ -1,7 +1,7 @@
 export interface Tabela {
     data: string;
     especialidadesCabecalhos: CabecalhoTabela[];
-  }
+}
   
 export interface CabecalhoTabela {
     posicao: number;
