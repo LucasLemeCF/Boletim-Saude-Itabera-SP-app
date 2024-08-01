@@ -41,7 +41,7 @@ function Linhas({data}) {
     fetchData();
   }, [data]);
 
-  console.log('Resultado: ', dadosTabela)
+  // console.log('Resultado: ', dadosTabela)
 
   if (isLoading) return Carregando()
 

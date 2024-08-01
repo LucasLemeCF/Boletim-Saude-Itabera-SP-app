@@ -1,35 +1,9 @@
 import { testaFormulario } from '@/actions/text';
-import { TabelaFormData, dadosTabelaSchema } from '@/schemas/text';
+import { TabelaFormData, dadosTabelaSchema } from '@/schemas/responseTabela';
+import { CabecalhoTabela, Tabela } from '@/schemas/tabela';
+import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-
-import { zodResolver } from '@hookform/resolvers/zod';
-
-export interface Tabela {
-  data: string;
-  especialidadesCabecalhos: CabecalhoTabela[];
-}
-
-export interface CabecalhoTabela {
-  posicao: number;
-  textos: TextosCabalho[];
-  especialidades: EspecialidadesTabela[];
-}
-
-export interface TextosCabalho {
-  id: number;
-  texto: string;
-}
-
-export interface EspecialidadesTabela {
-  posicao: number;
-  especialidadeId: number;
-  especialidade: string;
-  pacientesAtendidosDia: number;
-  metaDiaria: number;
-  pacientesAtendidosMes: number;
-  metaMensal: number;
-}
 
 export default function Especialidades({ dadosTabela }: { dadosTabela: Tabela }) {
   const { control, register } = useForm<Tabela>({
@@ -41,46 +15,20 @@ export default function Especialidades({ dadosTabela }: { dadosTabela: Tabela })
     name: "especialidadesCabecalhos",
   });
 
-  console.log(dadosTabela);
-
   const form = useForm<TabelaFormData>({
     resolver: zodResolver(dadosTabelaSchema),
     defaultValues: {
       data: "",
-      linhas: montarValoresLinhas()
+      linhas: montarValoresLinhas(dadosTabela)
     }
   })
 
-  function montarValoresLinhas() {
-    let linhas = [] as any;
-
-    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-      cabecalho.especialidades.map((especialidade) => {
-        linhas.push({
-          tipo: "ESPECIALIDADE_LINHA",
-          componenteId: especialidade.especialidadeId,
-          posicao: especialidade.posicao,
-          pacientesAtendidos: especialidade.pacientesAtendidosDia
-        });
-      });
-    });
-  
-    console.log(linhas);
-
-    return linhas;
-  }
-
-  async function onSubmit(dados: TabelaFormData) {
+  async function onSubmit(dadosNovos: TabelaFormData) {
     const tabela = {
       data: dadosTabela.data,
-      linhas: dadosTabela.especialidadesCabecalhos.map((cabecalho, indexCabecalho) => 
-        cabecalho.especialidades.map((especialidade, index) => ({
-          tipo: "ESPECIALIDADE_LINHA",
-          componenteId: especialidade.especialidadeId,
-          posicao: ((indexCabecalho * (cabecalho.especialidades.length + 1)) + (indexCabecalho + 1)  + (index + 1)),
-          pacientesAtendidos: especialidade.pacientesAtendidosDia
-        }))
-    )} as TabelaFormData;
+      linhas: montarTabelaFormData(dadosTabela, dadosNovos),
+      cabecalhos: montarCabecalhos(dadosTabela)
+    } as TabelaFormData;
 
     console.log(tabela);
 
@@ -99,6 +47,67 @@ export default function Especialidades({ dadosTabela }: { dadosTabela: Tabela })
       <button type="submit">Submit</button>
     </form>
   )
+}
+
+function montarValoresLinhas(dadosTabela: Tabela) {
+  const linhas = [] as any;
+
+  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+    cabecalho.especialidades.map((especialidade) => {
+      linhas.push({
+        tipo: "ESPECIALIDADE_LINHA",
+        componenteId: especialidade.especialidadeId,
+        posicao: especialidade.posicao,
+        pacientesAtendidos: especialidade.pacientesAtendidosDia
+      });
+    });
+  });
+
+  return linhas;
+}
+
+function montarTabelaFormData(dadosTabela: Tabela, dadosNovos: TabelaFormData) {
+  const resultado = [] as any;
+  const linhas = montarValoresLinhas(dadosTabela);
+
+  for (let i = 0; i < linhas.length; i++) {
+    resultado.push({
+      tipo: "ESPECIALIDADE_LINHA",
+      componenteId: linhas[i].componenteId,
+      posicao: linhas[i].posicao,
+      pacientesAtendidos: dadosNovos.linhas[i].pacientesAtendidos
+    });
+  }
+
+  return resultado;
+}
+
+function montarCabecalhos(dadosTabela: Tabela) {
+  const resultado = [] as any;
+
+  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+    resultado.push({
+      posicao: cabecalho.posicao,
+      tipo: "ESPECIALIDADE_CABECALHO",
+      textos: converteTextos(cabecalho.textos)
+    });
+  });
+
+  return resultado;
+}
+
+function converteTextos(textos: any) {
+  const resultado = [] as any;
+
+  textos.map((textoAntigo) => {
+    resultado.push({
+      texto: textoAntigo
+    });
+  });
+
+  // console.log(resultado);
+
+  return resultado;
 }
   
 const cabecalhoEspecialidade = (cabecalho: CabecalhoTabela, indexCabecalho, form) => {
