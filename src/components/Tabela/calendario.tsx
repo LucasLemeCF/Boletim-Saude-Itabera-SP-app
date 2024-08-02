@@ -13,11 +13,6 @@ import { format } from "date-fns"
 import React from "react"
 
 export function DatePickerDemo({data, setData}) {
-
-  const handleDataChange = (novaData) => {
-    setData(format(novaData, "dd/MM/yyyy"));
-  }
-
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -37,6 +32,7 @@ export function DatePickerDemo({data, setData}) {
           selected={data}
           onSelect={setData}
           initialFocus
+          defaultMonth={data}
         />
       </PopoverContent>
     </Popover>
