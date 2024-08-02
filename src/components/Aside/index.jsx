@@ -56,6 +56,7 @@ const navigation = () => {
     return (
         <div className="flex flex-col items-start self-stretch gap-6 mt-10 px-2">
             {botao('Boletim Médico', '/api/tabela', true)}
+            {botao('Relatórios', '/api/relatorio', false)}
             {botao('Editar Boletim', '/api/ordem-tabela', false)}
             {botao('Especialidades', '/api/especialidade', false)}
             {botao('Cirurgiões', '/api/cirurgiao', false)}

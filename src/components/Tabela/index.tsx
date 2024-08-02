@@ -73,12 +73,6 @@ function Linhas({dataCalendario, BaixarTabela}) {
     fetchData();
   }, [dataCalendario, setValue]);
 
-  // useEffect(mostraValor, [data, fields]);
-
-  // function mostraValor() {
-  //   // console.log(fields);
-  // }
-
   if (isLoading) return Carregando()
 
   async function onSubmit(dadosNovos: TabelaFormData) {
@@ -86,17 +80,18 @@ function Linhas({dataCalendario, BaixarTabela}) {
 
     const resultado = {
       data: ConverterData(dataCalendario),
-      linhas: fields
+      linhas: dadosNovos.linhas,
+      cabecalhos: MontarCabecalhos(dadosTabela)
     }
 
-    // const requestOptions = {
-    //   method: 'POST',
-    //   headers: { 'Content-Type': 'application/json' },
-    //   body: JSON.stringify(resultado)
-    // };
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(resultado)
+    };
 
-    // fetch('http://localhost:8080/api/tabela', requestOptions)
-    //   .then(response => response.json())
+    fetch('http://localhost:8080/api/tabela', requestOptions)
+      .then(response => response)
 
     console.log(JSON.stringify(resultado));
   }
@@ -215,4 +210,22 @@ function montarValoresLinhas(dadosTabela: Tabela) {
   }
 
   return linhas;
+}
+
+function MontarCabecalhos(dadosTabela: Tabela) {
+  const cabecalhos: any[] = [];
+
+  for (let i = 0; i < dadosTabela.especialidadesCabecalhos.length; i++) {
+    cabecalhos.push({
+      posicao: dadosTabela.especialidadesCabecalhos[i].posicao,
+      tipo: "ESPECIALIDADE_CABECALHO",
+      textos: [
+        {
+          texto: dadosTabela.especialidadesCabecalhos[i].textos[0].texto
+        }
+      ]
+    });
+  }
+
+  return cabecalhos;
 }
