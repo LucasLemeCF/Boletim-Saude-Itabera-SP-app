@@ -16,7 +16,7 @@ export default function HeaderTabela({data, setData}) {
   function Titulo() {
     return (
       <div className="flex items-center justify-between divide-x border-t border-x border-black bg-[#337B5B]">
-        <div className="flex items-centerflex items-center justify-center border-b-0 border-black w-[300px] h-[75px] h-[75px] px-2 gap-4">
+        <div className="flex items-centerflex items-center justify-start border-b-0 border-black w-[300px] h-[75px] h-[75px] px-2 gap-4">
           <Image 
             src="/logo.png"
             width={60}

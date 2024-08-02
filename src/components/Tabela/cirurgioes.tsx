@@ -2,7 +2,7 @@ import React from "react"
 
 export default function Especialidade({ dadosTabela }) {
   return (
-    <div className='mt-0 border border-t-0 border-black'>
+    <div className='mt-0 border-t-0 border border-black'>
       {dadosTabela.cirurgioesCabecalhos.map((cabecalho, index) => 
         <div key={index}>
           {cabecalhoCirurgioes(cabecalho)}
@@ -14,13 +14,13 @@ export default function Especialidade({ dadosTabela }) {
   
 const cabecalhoCirurgioes = (cabecalho) => {
   return (
-    <div>
-      <div className="flex items-center justify-between divide-x divide-y border-black bg-[#337B5B]">
-        <div className="flex items-center justify-between border-black border-t w-[300px] h-[50px] px-1">
+    <>
+      <div className="flex items-center justify-between divide-x border-black bg-[#337B5B]">
+        <div className="flex items-center justify-between border-black w-[300px] h-[50px] px-1">
           <p className='w-full font-semibold text-center text-white'>{cabecalho.textos[0].texto}</p>
         </div>
 
-        <div className="flex items-center justify-between border-black border-t w-[300px] h-[50px] px-1">
+        <div className="flex items-center justify-between border-black w-[300px] h-[50px] px-1">
           <p className='w-full font-semibold text-center text-white'>{cabecalho.textos[1].texto}</p>
         </div>
 
@@ -40,7 +40,7 @@ const cabecalhoCirurgioes = (cabecalho) => {
           {linhaCirurgiao(cirurgiao)}
         </div>
       )}
-    </div>
+    </>
   )
 }
   
