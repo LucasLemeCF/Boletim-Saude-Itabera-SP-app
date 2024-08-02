@@ -44,9 +44,9 @@ export default function HeaderTabela({data, setData}) {
             SECRETARIA MUNICIPAL DE SAÚDE
           </p>
           <Image 
-            src="/logo-saude.png"
-            width={65}
-            height={65}
+            src="/logoSaude.png"
+            width={60}
+            height={60}
             alt="Logo da secretaria de saúde"
           />
         </div>

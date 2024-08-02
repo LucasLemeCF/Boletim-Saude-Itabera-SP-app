@@ -3,7 +3,8 @@
 import { dadosTabelaSchema, TabelaFormData } from '@/schemas/responseTabela';
 import { Tabela } from '@/schemas/tabela';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useEffect, useState } from 'react';
+import { toPng } from 'html-to-image';
+import React, { useEffect, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import Cirurgioes from './cirurgioes';
 import ConverterData from './converterData';
@@ -12,19 +13,33 @@ import HeaderTabela from './headerTabela';
 
 export default function Tabela() {
   let [data, setData] = useState(new Date());
+  const imgRef = useRef(null);
+
+  function BaixarTabela() {
+    toPng(imgRef.current, { cacheBust: false })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "Boletim Saúde - " + ConverterData(data);
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   
   return (
-    <div className="flex flex-col items-center justify-between mt-[50px] mb-[25px] border-collapse">
+    <div className="flex flex-col items-center justify-between mt-[50px] mb-[25px] border-collapse" ref={imgRef}>
       <HeaderTabela  
         data={data}
         setData={setData}
       /> 
-      <Linhas data={data}/>
+      <Linhas data={data} BaixarTabela={BaixarTabela}/>
     </div>
   )
 }
 
-function Linhas({data}) {
+function Linhas({data, BaixarTabela}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [isLoading, setLoading] = useState(true);
   
@@ -71,25 +86,26 @@ function Linhas({data}) {
   }
 
   return (
-    <form className="w-full">
-      {TemDadadosEspecialidades({dadosTabela}) ? 
-        <Especialidades dadosTabela={dadosTabela} replace={replace} register={register}/>
-      : null}
+    <>
+      <form className="w-full">
+        {TemDadadosEspecialidades({dadosTabela}) ? 
+          <Especialidades dadosTabela={dadosTabela} replace={replace} register={register}/>
+        : null}
 
-      {TemDadadosCirurgioes({dadosTabela}) ? 
-        <Cirurgioes dadosTabela={dadosTabela}/>
-      : null}
+        {TemDadadosCirurgioes({dadosTabela}) ? 
+          <Cirurgioes dadosTabela={dadosTabela}/>
+        : null}
 
-      {!TemDadadosEspecialidades({dadosTabela}) && !TemDadadosCirurgioes({dadosTabela}) ?
-        <p>Não foi possível encontrar dados para a data</p>
-      : null}
-
+        {!TemDadadosEspecialidades({dadosTabela}) && !TemDadadosCirurgioes({dadosTabela}) ?
+          <p>Não foi possível encontrar dados para a data</p>
+        : null}
+      </form>
       <div className="flex items-center justify-between w-full mt-8">
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela}/>
         <Button texto={"Gerar Gráfico"} color={"bg-red-700"} onClick={GerarGrafico}/>
         <Button texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)}/>
       </div>
-    </form>
+    </>
   )
 }
 
@@ -103,10 +119,6 @@ function Button({ texto, color, onClick }: ButtomProps) {
   return (
     <button className={`w-[150px] h-[50px] rounded-[5px] text-white ${color}`} type="button" onClick={onClick}>{texto}</button>
   )
-}
-
-function BaixarTabela() {
-  console.log("Baixar Tabela");
 }
 
 function GerarGrafico() {

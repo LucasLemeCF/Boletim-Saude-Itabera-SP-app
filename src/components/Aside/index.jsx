@@ -13,7 +13,7 @@ const header = () => {
     return (
         <div className="flex flex-row justify-center items-center self-stretch mt-5">
            {logo()}
-           {seta()}
+           {/* {seta()} */}
         </div>
     )
 }
@@ -23,8 +23,8 @@ const logo = () => {
        <div className="flex items-center gap-6 self-stretch w-48">
             <Image 
                 src="/logo.png"
-                width={40}
-                height={40}
+                width={50}
+                height={50}
                 alt="Logo Itaberá SP"
             />
             <div>
@@ -65,7 +65,7 @@ const navigation = () => {
 
 const botao = (texto, link, active) => {
     return (
-        <div className={`flex items-center self-stretch rounded-[6px] py-2 px-3 ${active ? 'bg-teal-50' : ''}`}>
+        <div className={`flex items-center self-stretch rounded-[6px] py-2 px-3 hover:cursor-pointer ${active ? 'bg-teal-50' : 'hover:bg-teal-50/25'}`}>
             <a href={link} className={`text-lg ${active ? 'text-green-900' : 'text-white'}`}>
                 {texto}
             </a>
