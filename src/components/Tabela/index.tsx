@@ -14,7 +14,7 @@ export default function Tabela() {
   let [data, setData] = useState(new Date());
   
   return (
-    <div className="flex flex-col items-center justify-between  border border-black mt-[50px] bg-[#E2EFDB]">
+    <div className="flex flex-col items-center justify-between mt-[50px] mb-[25px] border-collapse">
       <HeaderTabela  
         data={data}
         setData={setData}
@@ -71,7 +71,7 @@ function Linhas({data}) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form className="w-full">
       {TemDadadosEspecialidades({dadosTabela}) ? 
         <Especialidades dadosTabela={dadosTabela} replace={replace} register={register}/>
       : null}
@@ -83,9 +83,34 @@ function Linhas({data}) {
       {!TemDadadosEspecialidades({dadosTabela}) && !TemDadadosCirurgioes({dadosTabela}) ?
         <p>Não foi possível encontrar dados para a data</p>
       : null}
-      <button type="submit">Submit</button>
+
+      <div className="flex items-center justify-between w-full mt-8">
+        <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela}/>
+        <Button texto={"Gerar Gráfico"} color={"bg-red-700"} onClick={GerarGrafico}/>
+        <Button texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)}/>
+      </div>
     </form>
   )
+}
+
+interface ButtomProps {
+  texto: string;
+  color: string;
+  onClick?: () => void;
+}
+
+function Button({ texto, color, onClick }: ButtomProps) {
+  return (
+    <button className={`w-[150px] h-[50px] rounded-[5px] text-white ${color}`} type="button" onClick={onClick}>{texto}</button>
+  )
+}
+
+function BaixarTabela() {
+  console.log("Baixar Tabela");
+}
+
+function GerarGrafico() {
+  console.log("Gerar Gráfico");
 }
 
 function TemDadadosEspecialidades({dadosTabela}) {
@@ -150,6 +175,6 @@ function montarValoresLinhas(dadosTabela: Tabela) {
       });
     });
   }
-  
+
   return linhas;
 }

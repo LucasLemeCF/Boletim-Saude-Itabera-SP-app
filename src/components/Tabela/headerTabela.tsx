@@ -1,11 +1,12 @@
 "use client"
 
 import Image from 'next/image';
+import React from 'react';
 import { DatePickerDemo } from "./calendario";
 
 export default function HeaderTabela({data, setData}) {
     return (
-      <div>
+      <div className='bg-[#E2EFDB]'>
         {Titulo()}
         {HeaderData({data, setData})}
       </div>
@@ -14,8 +15,8 @@ export default function HeaderTabela({data, setData}) {
   
   function Titulo() {
     return (
-      <div className="flex items-center justify-between divide-x divide-y border-black bg-[#337B5B]">
-        <div className="flex items-center border-black w-[300px] h-[75px] px-2 gap-4">
+      <div className="flex items-center justify-between divide-x border-t border-x border-black bg-[#337B5B]">
+        <div className="flex items-centerflex items-center justify-center border-b-0 border-black w-[300px] h-[75px] h-[75px] px-2 gap-4">
           <Image 
             src="/logo.png"
             width={60}
@@ -32,7 +33,7 @@ export default function HeaderTabela({data, setData}) {
           </div>
         </div>
   
-        <div className="flex items-center justify-center border-black w-[300px] h-[75px] ">
+        <div className="flex items-center justify-center border-black w-[300px] h-[75px]">
           <p className="text-white text-2xl font-impact">
             BOLETIM MÉDICO DIÁRIO
           </p>
@@ -56,19 +57,19 @@ export default function HeaderTabela({data, setData}) {
   function HeaderData({data, setData}) {
 
     return (
-      <div className="flex items-center justify-between divide-x divide-y border-black bg-[#337B5B] mt-0">
-        <div className="flex items-center justify-center border-black border-t w-[300px] h-[25px]">
+      <div className="flex items-center justify-between divide-x border-t border-x border-black bg-[#337B5B] mt-0">
+        <div className="flex items-center justify-center border-black border-collapse w-[300px] h-[25px]">
           <p className="text-center text-white text-base font-bold leading-6">Data</p>
         </div>
   
-        <div className="flex items-center justify-center border-black w-[300px] h-[25px] ">
+        <div className="flex items-center justify-center border-black border-collapse w-[300px] h-[25px] ">
             <DatePickerDemo
               data={data}
               setData={setData}
             />
         </div>
   
-        <div className="flex items-center justify-center border-black w-[300px] h-[25px] px-2 gap-4">  
+        <div className="flex items-center justify-center border-black border-collapse w-[300px] h-[25px] px-2 gap-4">  
           <p className="text-center text-white text-base font-bold leading-6">
             Resultado Mensal
           </p>  

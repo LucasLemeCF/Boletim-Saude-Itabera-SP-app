@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Especialidades({ dadosTabela, replace, register }: { dadosTabela: Tabela, replace: (data:any)=>void,  register: (data:any)=>void }) {
   return (
-    <div>
+    <div className="border border-y-0 border-black bg-[#E2EFDB]">
       {dadosTabela.especialidadesCabecalhos.map((field, index) => {
         return (
           <div key={index}>

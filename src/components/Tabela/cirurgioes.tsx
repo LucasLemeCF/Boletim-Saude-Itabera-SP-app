@@ -2,7 +2,7 @@ import React from "react"
 
 export default function Especialidade({ dadosTabela }) {
   return (
-    <div className='mt-0'>
+    <div className='mt-0 border border-t-0 border-black'>
       {dadosTabela.cirurgioesCabecalhos.map((cabecalho, index) => 
         <div key={index}>
           {cabecalhoCirurgioes(cabecalho)}
