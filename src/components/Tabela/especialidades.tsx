@@ -85,11 +85,16 @@ const linhaEspecialidade = (especialidade, posicaoLinha, register) => {
   )
 }
   
-const calcularPorcentagem = (atendidos, meta) => {
+export const calcularPorcentagem = (atendidos, meta) => {
   if (meta === 0) {
       return 100;
   } else {
-      const porcentagem = (atendidos / meta * 100);
-      return porcentagem % 1 === 0 ? porcentagem.toFixed(0) : porcentagem.toFixed(1);
+    const porcentagem = Number((atendidos / meta * 100).toFixed(1));
+
+    if (porcentagem % 1 == 0) {
+      return porcentagem.toFixed(0);
+    } else {
+      return porcentagem.toFixed(1);
+    }
   }
 }
