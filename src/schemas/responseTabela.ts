@@ -18,6 +18,7 @@ export const linhasEspecialidades = z.object({
 })
 
 export const dadosTabelaSchema = z.object({
+    data: z.string(),
     linhas: z.array(linhasEspecialidades)
 })
 

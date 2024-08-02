@@ -1,7 +1,7 @@
 import { Tabela } from '@/schemas/tabela';
 import React from 'react';
 
-export default function Especialidades({ dadosTabela, replace, register }: { dadosTabela: Tabela, replace: (data:any)=>void,  register: (data:any)=>void }) {
+export default function Especialidades({ dadosTabela, register }: { dadosTabela: Tabela,  register: (data:any)=>void }) {
   return (
     <div className="border border-t-0 border-black bg-[#E2EFDB]">
       {dadosTabela.especialidadesCabecalhos.map((field, index) => {

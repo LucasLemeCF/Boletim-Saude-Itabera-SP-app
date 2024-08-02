@@ -6,13 +6,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { toPng } from 'html-to-image';
 import React, { useEffect, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { BiSave } from "react-icons/bi";
+import { MdOutlineFileDownload } from "react-icons/md";
 import Cirurgioes from './cirurgioes';
 import ConverterData from './converterData';
 import Especialidades from './especialidades';
 import HeaderTabela from './headerTabela';
 
 export default function Tabela() {
-  let [data, setData] = useState(new Date());
+  const [data, setData] = useState(new Date());
   const imgRef = useRef(null);
 
   function BaixarTabela() {
@@ -30,31 +32,34 @@ export default function Tabela() {
   
   return (
     <div className="flex flex-col items-center justify-between mt-[50px] mb-[25px] border-collapse" ref={imgRef}>
-      <HeaderTabela  
-        data={data}
-        setData={setData}
-      /> 
-      <Linhas data={data} BaixarTabela={BaixarTabela}/>
+      <HeaderTabela data={data} setData={setData}/> 
+      <Linhas dataCalendario={data} BaixarTabela={BaixarTabela}/>
     </div>
   )
 }
 
-function Linhas({data, BaixarTabela}) {
+function Linhas({dataCalendario, BaixarTabela}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [isLoading, setLoading] = useState(true);
   
   const { control, register, handleSubmit, setValue } = useForm<TabelaFormData>({
     resolver: zodResolver(dadosTabelaSchema),
     defaultValues: {  
+      data: ConverterData(dataCalendario),
       linhas: montarValoresLinhas(dadosTabela)
     }
+  });
+
+  const { fields, replace } = useFieldArray({
+    control: control,
+    name: "linhas"
   });
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/tabela/' + ConverterData(data));   
+        const response = await fetch('http://localhost:8080/api/tabela/' + ConverterData(dataCalendario));   
         const dataResponse = await response.json();
         setDadosTabela(dataResponse);
         setValue("linhas", montarValoresLinhas(dataResponse))
@@ -66,30 +71,41 @@ function Linhas({data, BaixarTabela}) {
     };
 
     fetchData();
-  }, [data, setValue]);
+  }, [dataCalendario, setValue]);
 
-  const { fields, replace } = useFieldArray({
-    control: control,
-    name: "linhas"
-  });
+  // useEffect(mostraValor, [data, fields]);
 
-  useEffect(mostraValor, [fields]);
-
-  function mostraValor() {
-    console.log(fields);
-  }
+  // function mostraValor() {
+  //   // console.log(fields);
+  // }
 
   if (isLoading) return Carregando()
 
   async function onSubmit(dadosNovos: TabelaFormData) {
     replace(montarTabelaFormData(dadosTabela, dadosNovos));
+
+    const resultado = {
+      data: ConverterData(dataCalendario),
+      linhas: fields
+    }
+
+    // const requestOptions = {
+    //   method: 'POST',
+    //   headers: { 'Content-Type': 'application/json' },
+    //   body: JSON.stringify(resultado)
+    // };
+
+    // fetch('http://localhost:8080/api/tabela', requestOptions)
+    //   .then(response => response.json())
+
+    console.log(JSON.stringify(resultado));
   }
 
   return (
     <>
       <form className="w-full">
         {TemDadadosEspecialidades({dadosTabela}) ? 
-          <Especialidades dadosTabela={dadosTabela} replace={replace} register={register}/>
+          <Especialidades dadosTabela={dadosTabela} register={register}/>
         : null}
 
         {TemDadadosCirurgioes({dadosTabela}) ? 
@@ -100,9 +116,8 @@ function Linhas({data, BaixarTabela}) {
           <p>Não foi possível encontrar dados para a data</p>
         : null}
       </form>
-      <div className="flex items-center justify-between w-full mt-8">
+      <div className="flex items-center justify-end gap-8 w-full mt-8">
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela}/>
-        <Button texto={"Gerar Gráfico"} color={"bg-red-700"} onClick={GerarGrafico}/>
         <Button texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)}/>
       </div>
     </>
@@ -117,12 +132,23 @@ interface ButtomProps {
 
 function Button({ texto, color, onClick }: ButtomProps) {
   return (
-    <button className={`w-[150px] h-[50px] rounded-[5px] text-white ${color}`} type="button" onClick={onClick}>{texto}</button>
+    <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start ${color}`} type="button" onClick={onClick}>
+      {IconeBotao(texto)}
+      <div className="ml-4">{texto}</div>
+    </button>
   )
 }
 
-function GerarGrafico() {
-  console.log("Gerar Gráfico");
+const IconeBotao = (texto: String) => {
+  if (texto === "Baixar") {
+    return <MdOutlineFileDownload className="w-6 h-6 ml-4"/>
+  } else if (texto === "Salvar") {
+    return <BiSave className="w-6 h-6 ml-4"/>
+  } else {
+    return <div className="ml-4"></div>
+  }
+
+
 }
 
 function TemDadadosEspecialidades({dadosTabela}) {
