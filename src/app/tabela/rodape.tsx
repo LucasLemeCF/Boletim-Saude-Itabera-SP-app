@@ -53,9 +53,6 @@ function somarAtendimentosDia(dadosTabela) {
   
 function somarMetaDia(dadosTabela) {
     let totalMetaDia = 0;
-
-    console.log("Teste: ");
-    console.log(JSON.stringify(dadosTabela));
     
     dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
         cabecalho.especialidades.map((especialidade) => {

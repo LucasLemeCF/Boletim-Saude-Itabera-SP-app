@@ -1,11 +1,5 @@
-import Tabela from '../components/Tabela/index';
+import { redirect } from 'next/navigation';
 
 export default async function Home() {
-  return (
-    <main className="flex flex-col items-center justify-between bg-[#F8FAFC] overscroll-none">
-      <div className="flex flex-col items-center justify-between">
-        <Tabela/>
-      </div>
-    </main>
-  );
+  redirect('/tabela');
 }

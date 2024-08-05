@@ -1,12 +1,12 @@
 "use client"
 
-import { dadosTabelaSchema, TabelaFormData } from '@/schemas/responseTabela';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toPng } from 'html-to-image';
-import React, { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { BiSave } from "react-icons/bi";
 import { MdOutlineFileDownload } from "react-icons/md";
+import { dadosTabelaSchema, TabelaFormData } from '../../schemas/responseTabela';
 import Cirurgioes from './cirurgioes';
 import ConverterData from './converterData';
 import Especialidades from './especialidades';
@@ -32,10 +32,14 @@ export default function Tabela() {
   }
   
   return (
-    <div className="flex flex-col items-center justify-between mt-[50px] mb-[25px] border-collapse" ref={imgRef}>
-      <HeaderTabela data={data} setData={setData}/> 
-      <Linhas dataCalendario={data} BaixarTabela={BaixarTabela}/>
-    </div>
+    <main className="flex flex-col items-center justify-between bg-[#F8FAFC] overscroll-none">
+      <div className="flex flex-col items-center justify-between">
+        <div className="flex flex-col items-center justify-between mt-[50px] mb-[25px] border-collapse" ref={imgRef}>
+          <HeaderTabela data={data} setData={setData}/> 
+          <Linhas dataCalendario={data} BaixarTabela={BaixarTabela}/>
+        </div>
+      </div>
+    </main>
   )
 }
 

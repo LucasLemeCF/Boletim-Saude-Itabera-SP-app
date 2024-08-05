@@ -1,10 +1,10 @@
-import Image from 'next/image'
+import { Navigation } from './navigation';
 
 export const Aside = () => {
     return (
         <aside className="w-64 h-screen fixed bg-[#337B5B] flex flex-col">
             {header()}
-            {navigation()}
+            {<Navigation/>}
         </aside>
     )
 }
@@ -21,10 +21,10 @@ const header = () => {
 const logo = () => {
     return (
        <div className="flex items-center gap-6 self-stretch w-48">
-            <Image 
+            <img 
                 src="/logo.png"
-                width={50}
-                height={50}
+                width="50px"
+                height="50px"
                 alt="Logo Itaberá SP"
             />
             <div>
@@ -39,38 +39,16 @@ const logo = () => {
     )
 }
 
-const seta = () => {
-    return (
-        <div className="flex justify-end items-center gap-10">
-            <Image 
-                src="/seta.png"
-                width={6}
-                height={10}
-                alt="Seta para esquerda"
-            />
-        </div>
-    )
-}
+// const seta = () => {
+//     return (
+//         <div className="flex justify-end items-center gap-10">
+//             <Image 
+//                 src="/seta.png"
+//                 width={6}
+//                 height={10}
+//                 alt="Seta para esquerda"
+//             />
+//         </div>
+//     )
+// }
 
-const navigation = () => {
-    return (
-        <div className="flex flex-col items-start self-stretch gap-6 mt-10 px-2">
-            {botao('Boletim Médico', '/api/tabela', true)}
-            {botao('Relatórios', '/api/relatorio', false)}
-            {botao('Editar Boletim', '/api/ordem-tabela', false)}
-            {botao('Especialidades', '/api/especialidade', false)}
-            {botao('Cirurgiões', '/api/cirurgiao', false)}
-        </div>
-    )
-}
-
-const botao = (texto, link, active) => {
-    return (
-        <div className={`flex items-center self-stretch rounded-[6px] py-2 px-3 hover:cursor-pointer ${active ? 'bg-teal-50' : 'hover:bg-teal-50/25'}`}>
-            <a href={link} className={`text-lg ${active ? 'text-green-900' : 'text-white'}`}>
-                {texto}
-            </a>
-        </div>
-        
-    )
-}
