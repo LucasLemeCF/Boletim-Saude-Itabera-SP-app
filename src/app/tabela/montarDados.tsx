@@ -1,5 +1,5 @@
-import { TabelaFormData } from "@/schemas/responseTabela";
-import { Tabela } from "@/schemas/tabela";
+import { TabelaFormData } from "../../schemas/responseTabela";
+import { Tabela } from "../../schemas/tabela";
 
 export function montarTabelaFormData(dadosTabela: Tabela, dadosNovos: TabelaFormData) {
     const resultado = [] as any;

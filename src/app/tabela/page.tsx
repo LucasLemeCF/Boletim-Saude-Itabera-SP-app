@@ -47,7 +47,7 @@ function Linhas({dataCalendario, BaixarTabela}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [isLoading, setLoading] = useState(true);
   
-  const { control, register, handleSubmit, setValue } = useForm<TabelaFormData>({
+  const { control, watch, register, handleSubmit, setValue } = useForm<TabelaFormData>({
     resolver: zodResolver(dadosTabelaSchema),
     defaultValues: {  
       data: ConverterData(dataCalendario),
@@ -99,11 +99,17 @@ function Linhas({dataCalendario, BaixarTabela}) {
       .then(response => response)
   }
 
+  const watchLinha = watch("linhas");
+
+  function handleChange() {
+    // console.log(watchLinha);
+  }
+
   return (
     <>
-      <form className="w-full">
+      <form className="w-full" onChange={handleChange}>
         {TemDadadosEspecialidades({dadosTabela}) ? 
-          <Especialidades dadosTabela={dadosTabela} register={register}/>
+          <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
         : null}
 
         {TemDadadosCirurgioes({dadosTabela}) ? 
@@ -115,7 +121,7 @@ function Linhas({dataCalendario, BaixarTabela}) {
         : null}
       </form>
 
-      <Rodape dadosTabela={dadosTabela}/>
+      <Rodape dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
       
       <div className="flex items-center justify-end gap-8 w-full mt-8">
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela}/>
@@ -148,8 +154,6 @@ const IconeBotao = (texto: String) => {
   } else {
     return <div className="ml-4"></div>
   }
-
-
 }
 
 function TemDadadosEspecialidades({dadosTabela}) {

@@ -1,14 +1,13 @@
-import React from "react";
 import { calcularPorcentagem } from "./especialidades";
 
-export function Rodape({dadosTabela}) {
-    const totalDia = somarAtendimentosDia(dadosTabela);
+export function Rodape({dadosTabela, linhasTabela}) {
+    let totalDia = somarAtendimentosDia(linhasTabela);
     const totalMetaDia = somarMetaDia(dadosTabela);
-    const totalAtingidoDia = calcularPorcentagem(totalDia, totalMetaDia);
+    let totalAtingidoDia = calcularPorcentagem(totalDia, totalMetaDia);
 
-    const totalMes = somarAtendimentosMes(dadosTabela);
+    let totalMes = somarAtendimentosMes(dadosTabela);
     const totalMetaMes = somarMetaMes(dadosTabela);
-    const totalAtingidoMes = calcularPorcentagem(totalMes, totalMetaMes);
+    let totalAtingidoMes = calcularPorcentagem(totalMes, totalMetaMes);
 
     return (
       <div className="flex border border-t-0 divide-x border-black bg-[#337B5B] w-full">
@@ -39,13 +38,15 @@ export function Rodape({dadosTabela}) {
     )
 }
 
-function somarAtendimentosDia(dadosTabela) {
+function somarAtendimentosDia(linhasTabela) {
   let totalDia = 0;
 
-  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-    cabecalho.especialidades.map((especialidade) => {
-      totalDia += especialidade.pacientesAtendidosDia;
-    });
+  linhasTabela.map((linha) => {
+    if (Number.isNaN(linha.pacientesAtendidos)) {
+      totalDia += 0;
+    } else {
+      totalDia += linha.pacientesAtendidos;
+    }
   });
 
   return totalDia;
@@ -56,7 +57,7 @@ function somarMetaDia(dadosTabela) {
     
     dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
         cabecalho.especialidades.map((especialidade) => {
-            totalMetaDia += especialidade.metaDiaria;
+          totalMetaDia += especialidade.metaDiaria;
         });
     });
     
