@@ -5,7 +5,7 @@ export function Rodape({dadosTabela, linhasTabela}) {
     const totalMetaDia = somarMetaDia(dadosTabela);
     let totalAtingidoDia = calcularPorcentagem(totalDia, totalMetaDia);
 
-    let totalMes = somarAtendimentosMes(dadosTabela);
+    let totalMes = somarAtendimentosMes(dadosTabela) + totalDia;
     const totalMetaMes = somarMetaMes(dadosTabela);
     let totalAtingidoMes = calcularPorcentagem(totalMes, totalMetaMes);
 
@@ -69,7 +69,7 @@ function somarAtendimentosMes(dadosTabela) {
 
     dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
         cabecalho.especialidades.map((especialidade) => {
-            totalMes += especialidade.pacientesAtendidosMes;
+          totalMes += especialidade.pacientesAtendidosMes;
         });
     });
 
