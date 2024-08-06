@@ -128,7 +128,7 @@ interface ButtomProps {
   onClick?: () => void;
 }
 
-function Button({ texto, color, onClick }: ButtomProps) {
+export function Button({ texto, color, onClick }: ButtomProps) {
   return (
     <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start ${color}`} type="button" onClick={onClick}>
       {IconeBotao(texto)}
