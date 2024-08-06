@@ -1,13 +1,13 @@
-import { calcularPorcentagem } from "./especialidades";
 
 export function Rodape({dadosTabela, linhasTabela}) {
+  console.log(dadosTabela);
     let totalDia = somarAtendimentosDia(linhasTabela);
     const totalMetaDia = somarMetaDia(dadosTabela);
-    let totalAtingidoDia = calcularPorcentagem(totalDia, totalMetaDia);
+    let totalAtingidoDia = calculaPorcentagemDia(dadosTabela);
 
     let totalMes = somarAtendimentosMes(dadosTabela) + totalDia;
     const totalMetaMes = somarMetaMes(dadosTabela);
-    let totalAtingidoMes = calcularPorcentagem(totalMes, totalMetaMes);
+    let totalAtingidoMes = calcularPorcentagemMes(dadosTabela);
 
     return (
       <div className="flex border border-t-0 divide-x border-black bg-[#337B5B] w-full">
@@ -81,9 +81,41 @@ function somarMetaMes(dadosTabela) {
 
     dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
         cabecalho.especialidades.map((especialidade) => {
-            totalMetaMes += especialidade.metaMensal;
+          totalMetaMes += especialidade.metaMensal;
         });
     });
 
     return totalMetaMes;
 }
+
+function calculaPorcentagemDia(dadosTabela) {
+    let totalPorcentagemDia = 0;
+    let qtdEspecialidades = 0;
+
+    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+        cabecalho.especialidades.map((especialidade) => {
+          if (especialidade.metaDiaria > 0) {
+            totalPorcentagemDia += Number(especialidade.pacientesAtendidos / Number(especialidade.metaDiaria));
+            qtdEspecialidades++;
+          }
+        });
+    });
+
+    return ((totalPorcentagemDia/qtdEspecialidades) * 100).toFixed(2);
+}
+
+function calcularPorcentagemMes(dadosTabela) {
+    let totalPorcentagemMes = 0;
+    let qtdEspecialidades = 0;
+
+    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+        cabecalho.especialidades.map((especialidade) => {
+          if (especialidade.metaMensal > 0) {
+            totalPorcentagemMes += Number(especialidade.pacientesAtendidosMes / Number(especialidade.metaMensal));
+            qtdEspecialidades++;
+          }
+        });
+    });
+
+    return ((totalPorcentagemMes/qtdEspecialidades) * 100).toFixed(2);
+} 
