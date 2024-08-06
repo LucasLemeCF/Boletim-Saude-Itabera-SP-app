@@ -1,32 +1,9 @@
 "use client"
 
-import html2canvas from 'html2canvas';
-import jsPDF from 'jspdf';
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../tabela/page";
-
-const downloadPDF = ({pdfRef}) => {
-  const input = pdfRef.current;
-  html2canvas(input)
-    .then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
-      const imgWidth = 210;
-      const pageHeight = 297;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
-      const doc = new jsPDF('p', 'mm', 'a4', true);
-      let position = 0;
-      doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-      while (heightLeft > 0) {
-        position = heightLeft - imgHeight;
-        doc.addPage();
-        doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-      doc.save('Relatório.pdf');
-    });
-}
+import { Pagina } from "./corpo";
+import { downloadPDF } from "./pdf";
 
 export default function Relatorio() {
   return (
@@ -37,26 +14,46 @@ export default function Relatorio() {
 }
 
 function Paginas() {
+  const [dadosEspecialidades, setDadosEspecialidades] = useState(null)
+  const [isLoading, setLoading] = useState(true);
   const pdfRef = useRef(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:8080/api/especialidade');   
+        const dataResponse = await response.json();
+        setDadosEspecialidades(dataResponse);
+        console.log(dataResponse.get(0).especialidade);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (isLoading) return Carregando()
 
   return (
     <>
       <div className="mt-2">
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={() => {downloadPDF({pdfRef})}}/>
       </div>
-      <div ref={pdfRef} className="flex flex-col items-center justify-between mt-[50px] mb-[25px] w-[840px]"> 
-        <Pagina cor={"bg-blue-800"}/>
-        <Pagina cor={"bg-green-800"}/>
-        <Pagina cor={"bg-red-800"}/>
+      <div ref={pdfRef} className="flex flex-col items-center justify-between mt-[50px] mb-[25px] w-[891px]"> 
+        {dadosEspecialidades.map((especialidade, index) => (
+          <Pagina key={index} especialidade={especialidade}/>
+        ))}
       </div>
     </>
   );
 }
 
-function Pagina({cor}) {
+function Carregando() {
   return (
-    <div className={`flex flex-col items-center justify-between border border-4 border-red-800 w-[840px] h-[1188px] ${cor}`}> 
-       
-    </div>
-  );
+    <p>Carregando...</p>
+  )
 }
