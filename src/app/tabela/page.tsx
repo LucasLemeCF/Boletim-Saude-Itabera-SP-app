@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toPng } from 'html-to-image';
 import { useEffect, useRef, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { BiSave } from "react-icons/bi";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { dadosTabelaSchema, TabelaFormData } from '../../schemas/responseTabela';
@@ -11,7 +11,7 @@ import Cirurgioes from './cirurgioes';
 import ConverterData from './converterData';
 import Especialidades from './especialidades';
 import HeaderTabela from './headerTabela';
-import { MontarCabecalhos, montarTabelaFormData, montarValoresLinhas } from './montarDados';
+import { MontarCabecalhos, montarValoresLinhas } from './montarDados';
 import { Rodape } from './rodape';
 
 export default function Tabela() {
@@ -27,7 +27,7 @@ export default function Tabela() {
         link.click();
       })
       .catch((err) => {
-        console.log(err);
+        console.log("Erro: " + err);
       });
   }
   
@@ -47,17 +47,12 @@ function Linhas({dataCalendario, BaixarTabela}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [isLoading, setLoading] = useState(true);
   
-  const { control, watch, register, handleSubmit, setValue } = useForm<TabelaFormData>({
+  const { watch, register, handleSubmit, setValue, getValues } = useForm<TabelaFormData>({
     resolver: zodResolver(dadosTabelaSchema),
     defaultValues: {  
       data: ConverterData(dataCalendario),
       linhas: montarValoresLinhas(dadosTabela)
     }
-  });
-
-  const { fields, replace } = useFieldArray({
-    control: control,
-    name: "linhas"
   });
 
   useEffect(() => {
@@ -76,13 +71,11 @@ function Linhas({dataCalendario, BaixarTabela}) {
     };
 
     fetchData();
-  }, [dataCalendario, setValue]);
+  }, [dataCalendario, getValues, setValue]);
 
   if (isLoading) return Carregando()
 
   async function onSubmit(dadosNovos: TabelaFormData) {
-    replace(montarTabelaFormData(dadosTabela, dadosNovos));
-
     const resultado = {
       data: ConverterData(dataCalendario),
       linhas: dadosNovos.linhas,
@@ -97,17 +90,15 @@ function Linhas({dataCalendario, BaixarTabela}) {
 
     fetch('http://localhost:8080/api/tabela', requestOptions)
       .then(response => response)
+
+    console.log("Tabela salva com sucesso!");
   }
 
   const watchLinha = watch("linhas");
 
-  function handleChange() {
-    // console.log(watchLinha);
-  }
-
   return (
     <>
-      <form className="w-full" onChange={handleChange}>
+      <form className="w-full">
         {TemDadadosEspecialidades({dadosTabela}) ? 
           <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
         : null}

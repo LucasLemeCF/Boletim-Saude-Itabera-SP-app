@@ -14,7 +14,10 @@ export const linhasEspecialidades = z.object({
     tipo: z.string(),
     componenteId: z.number(),
     posicao: z.number(),
-    pacientesAtendidos: z.number(),
+    pacientesAtendidos: z.number({
+        required_error: "pacientesAtendidos is required",
+        invalid_type_error: "pacientesAtendidos must be a number",
+    }),
 })
 
 export const dadosTabelaSchema = z.object({

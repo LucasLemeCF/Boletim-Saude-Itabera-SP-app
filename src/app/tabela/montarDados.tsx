@@ -18,17 +18,17 @@ export function montarTabelaFormData(dadosTabela: Tabela, dadosNovos: TabelaForm
     return resultado;
 }
   
-export  function montarValoresLinhas(dadosTabela: Tabela) {
+export function montarValoresLinhas(dadosTabela: Tabela) {
     const linhas = [] as any;
 
     if (dadosTabela !== null) {
         dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
         cabecalho.especialidades.map((especialidade) => {
             linhas.push({
-            tipo: "ESPECIALIDADE_LINHA",
-            componenteId: especialidade.especialidadeId,
-            posicao: especialidade.posicao,
-            pacientesAtendidos: especialidade.pacientesAtendidosDia
+                tipo: "ESPECIALIDADE_LINHA",
+                componenteId: especialidade.especialidadeId,
+                posicao: especialidade.posicao,
+                pacientesAtendidos: especialidade.pacientesAtendidosDia
             });
         });
         });

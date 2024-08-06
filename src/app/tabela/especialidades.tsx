@@ -20,9 +20,14 @@ export default function Especialidades({ dadosTabela, register, watchLinha }: Es
   return (
     <div className="border border-t-0 border-black bg-[#E2EFDB]">
       {dadosTabela.especialidadesCabecalhos.map((field, index) => {
+        let tamanhoCabecalhoAnterior = Number(dadosTabela.especialidadesCabecalhos[index - 1]?.especialidades.length);
+        if (Number.isNaN(tamanhoCabecalhoAnterior)) {
+          tamanhoCabecalhoAnterior = 0;
+        }
+
         return (
           <div key={index}>
-            <CabecalhoEspecialidade cabecalho={field} indexCabecalho={index} register={register} watchLinha={watchLinha}/>
+            <CabecalhoEspecialidade cabecalho={field} tamanhoCabecalhoAnterior={tamanhoCabecalhoAnterior} indexCabecalho={index} register={register} watchLinha={watchLinha}/>
           </div>
         );
       })}
@@ -32,6 +37,7 @@ export default function Especialidades({ dadosTabela, register, watchLinha }: Es
 
 interface CabecalhoEspecialidadesProps {
   cabecalho: CabecalhoTabela;
+  tamanhoCabecalhoAnterior: Number;
   indexCabecalho: Number;
   register: UseFormRegister<{
     data?: string;
@@ -45,7 +51,7 @@ interface CabecalhoEspecialidadesProps {
   watchLinha?: any;
 }
 
-function CabecalhoEspecialidade({ cabecalho, indexCabecalho, register, watchLinha}: CabecalhoEspecialidadesProps) {
+function CabecalhoEspecialidade({ cabecalho, tamanhoCabecalhoAnterior, indexCabecalho, register, watchLinha}: CabecalhoEspecialidadesProps) {
   return (
     <div>
       <div className="flex items-center justify-between divide-x divide-y border-black bg-[#337B5B]">
@@ -74,14 +80,23 @@ function CabecalhoEspecialidade({ cabecalho, indexCabecalho, register, watchLinh
         </div>
       </div>
 
-      {cabecalho.especialidades.map((especialidade, index) => 
-        <div key={index}>
-          <LinhaEspecialidade especialidade={especialidade} posicaoLinha={(Number(indexCabecalho) * (cabecalho.especialidades.length + 1)) + index} register={register} watchLinha={watchLinha}/>
-        </div>
+      {cabecalho.especialidades.map((especialidade, index) => {
+        const novoIndexCabecalho = Number(indexCabecalho);
+        const tamanhoCabecalho = Number(tamanhoCabecalhoAnterior);
+        const novoIndex = index;
+
+        const posicaoLinha = (novoIndexCabecalho * tamanhoCabecalho + novoIndex);
+
+        return (
+          <div key={index}>
+            <LinhaEspecialidade especialidade={especialidade} posicaoLinha={posicaoLinha} register={register} watchLinha={watchLinha}/>
+          </div>
+        )}
       )}
     </div>
   )
 }
+
 
 interface LinhaEspecialidadeProps {
   especialidade: EspecialidadesTabela;
@@ -109,7 +124,7 @@ function LinhaEspecialidade({especialidade, posicaoLinha, register, watchLinha}:
 
       <input  className="flex items-center justify-center border-black font-semibold text-center w-[100px] h-[25px] bg-[#E2EFDB]" 
         type="number"
-        name={`linhas.${posicaoLinha}.pacientesAtendidos`} {...register(`linhas.${Number(posicaoLinha)}.pacientesAtendidos`, { valueAsNumber: true })}
+        name={`linhas.${posicaoLinha}.pacientesAtendidos`} {...register(`linhas.${Number(posicaoLinha)}.pacientesAtendidos`, { valueAsNumber: true, required: "Digite os numeros restantes" })}
       />
      
       <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">
