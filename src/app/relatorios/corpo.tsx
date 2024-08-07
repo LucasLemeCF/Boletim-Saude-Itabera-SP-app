@@ -18,21 +18,31 @@ export function Pagina({especialidade}) {
 
 const titulo = (especialidade) => {
     return (
-        <div className="text-center font-bold">
-            {especialidade.especialidade}
-        </div>
+      <div className="text-center font-bold">
+          {especialidade.especialidade}
+      </div>
     )
 }
 
 const descricao = (dadosMes) => {
     return (
         <>
-            <div>
-                <p><span className="font-bold">Total: </span>{dadosMes.atendimentos} pacientes atendidos.</p>
-                <p><span className="font-bold">Meta Mensal: </span>{dadosMes.metaMensal} pacientes.</p>
-                <p><span className="font-bold">Índice de Atendimento: </span>
-                    {calcularPorcentagem(dadosMes.atendimentos, dadosMes.metaMensal)}%
-                </p>
+            <div className="flex justify-between">
+                <div>
+                    <p><span className="font-bold">Total: </span>{dadosMes.atendimentos} pacientes atendidos.</p>
+                    <p><span className="font-bold">Meta Mensal: </span>{dadosMes.metaMensal} pacientes.</p>
+                    <p><span className="font-bold">Índice de Atendimento: </span>
+                        {calcularPorcentagem(dadosMes.atendimentos, dadosMes.metaMensal)}%
+                    </p>
+                </div>
+                <div className="flex flex-row h-[60px] mr-4">
+                    <img 
+                        src="/logo.png"
+                        width="60px"
+                        height="60px"
+                        alt="Logo Itaberá SP"
+                    />
+                </div>
             </div>
             <div className="mt-4">
                 <p>A especialidade {dadosMes.especialidade} atendeu {calcularPorcentagem(dadosMes.atendimentos, dadosMes.metaMensal)}% da meta mensal, com {calcularResultado(dadosMes)}

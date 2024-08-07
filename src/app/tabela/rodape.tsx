@@ -1,6 +1,5 @@
 
 export function Rodape({dadosTabela, linhasTabela}) {
-  console.log(dadosTabela);
     let totalDia = somarAtendimentosDia(linhasTabela);
     const totalMetaDia = somarMetaDia(dadosTabela);
     let totalAtingidoDia = calculaPorcentagemDia(dadosTabela);

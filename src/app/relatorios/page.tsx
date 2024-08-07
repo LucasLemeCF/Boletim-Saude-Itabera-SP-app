@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import generatePDF, { Options, usePDF } from "react-to-pdf";
 import { Button } from "../tabela/page";
+import { Capa } from "./capa";
 import { Pagina } from "./corpo";
 
 export default function Relatorio() {
@@ -54,6 +55,7 @@ function Paginas() {
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={() => downloadPdf()}/>
       </div>
       <div ref={targetRef} className="flex flex-col items-center justify-between mt-[50px] mb-[25px] w-[891px]"> 
+        <Capa especialidade={dadosEspecialidades} mes={mesRelatorio} ano={anoRelatorio}/>
         {dadosEspecialidades.map((especialidade, index) => (
           <Pagina key={index} especialidade={especialidade}/>
         ))}
