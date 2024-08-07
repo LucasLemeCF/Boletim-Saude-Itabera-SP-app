@@ -5,14 +5,14 @@ export const downloadPDF = ({pdfRef}) => {
     const input = pdfRef.current;
     html2canvas(input)
       .then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/jpg');
         const imgWidth = 297;
         const pageHeight = 210;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
         let heightLeft = imgHeight;
         const doc = new jsPDF('l', 'mm', 'a4', true);
         let position = 0;
-        doc.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        doc.addImage(imgData, 'JPG', 0, 0, imgWidth, imgHeight);
         heightLeft -= pageHeight;
         while (heightLeft > 0) {
           position = heightLeft - imgHeight;

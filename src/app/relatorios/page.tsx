@@ -25,7 +25,6 @@ function Paginas() {
         const response = await fetch('http://localhost:8080/api/especialidade');   
         const dataResponse = await response.json();
         setDadosEspecialidades(dataResponse);
-        console.log(dataResponse.get(0).especialidade);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
