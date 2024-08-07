@@ -8,7 +8,7 @@ export function Pagina({especialidade}) {
     const dadosMes = especialidade.resultadosMensais[0];
 
     return (
-      <div className={`flex flex-col justify-items-start border border-2 border-black w-[891px] h-[630px] p-8`}> 
+      <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[630px] p-8`}> 
         {titulo(especialidade)}
         {descricao(dadosMes)}
         <LineChart dadosMes={dadosMes} especialidade={especialidade.especialidade}/>
@@ -55,21 +55,6 @@ const calcularPorcentagem = (atendidos, meta) => {
       }
     }
 }
-
-// function separarDadosMes(especialidade, mesAtual, anoAtual) {
-//     let dadosMes = [];
-  
-//     especialidade.resultadosMensais.map(mes => {
-//       if (mes.mes === mesAtual && mes.ano === anoAtual) {
-//         if (mes.metaMensal === 0) {
-//            console.log(`A especialidade ${especialidade.especialidade} não possui meta mensal.`);
-//         }
-//         dadosMes = mes;
-//       }
-//     });
-  
-//     return dadosMes;
-// }
 
 function calcularResultado(dadosMes) {
     const resultado = dadosMes.atendimentos - dadosMes.metaMensal;
