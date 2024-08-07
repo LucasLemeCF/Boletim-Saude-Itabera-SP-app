@@ -18,11 +18,14 @@ function Paginas() {
   const [isLoading, setLoading] = useState(true);
   const pdfRef = useRef(null);
 
+  const mesRelatorio = "06";
+  const anoRelatorio = "2024"
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/especialidade');   
+        const response = await fetch('http://localhost:8080/api/especialidade/' + mesRelatorio + '-' + anoRelatorio);   
         const dataResponse = await response.json();
         setDadosEspecialidades(dataResponse);
       } catch (error) {
@@ -43,9 +46,10 @@ function Paginas() {
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={() => {downloadPDF({pdfRef})}}/>
       </div>
       <div ref={pdfRef} className="flex flex-col items-center justify-between mt-[50px] mb-[25px] w-[891px]"> 
-        {dadosEspecialidades.map((especialidade, index) => (
+        {/* {dadosEspecialidades.map((especialidade, index) => (
           <Pagina key={index} especialidade={especialidade}/>
-        ))}
+        ))} */}
+         <Pagina especialidade={dadosEspecialidades[0]}/>
       </div>
     </>
   );

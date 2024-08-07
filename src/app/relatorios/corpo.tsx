@@ -5,7 +5,7 @@ import LineChart from "../../components/Charts/LineChart";
 Chart.register(CategoryScale);
 
 export function Pagina({especialidade}) {  
-    const dadosMes = separarDadosMes(especialidade, 6, 2024);
+    const dadosMes = especialidade.resultadosMensais[0];
 
     return (
       <div className={`flex flex-col justify-items-start border border-2 border-black w-[891px] h-[630px] p-8`}> 
@@ -56,17 +56,20 @@ const calcularPorcentagem = (atendidos, meta) => {
     }
 }
 
-function separarDadosMes(especialidade, mesAtual, anoAtual) {
-    let dadosMes = [];
+// function separarDadosMes(especialidade, mesAtual, anoAtual) {
+//     let dadosMes = [];
   
-    especialidade.resultadosMensais.map(mes => {
-      if (mes.mes === mesAtual && mes.ano === anoAtual) {
-        dadosMes = mes;
-      }
-    });
+//     especialidade.resultadosMensais.map(mes => {
+//       if (mes.mes === mesAtual && mes.ano === anoAtual) {
+//         if (mes.metaMensal === 0) {
+//            console.log(`A especialidade ${especialidade.especialidade} não possui meta mensal.`);
+//         }
+//         dadosMes = mes;
+//       }
+//     });
   
-    return dadosMes;
-}
+//     return dadosMes;
+// }
 
 function calcularResultado(dadosMes) {
     const resultado = dadosMes.atendimentos - dadosMes.metaMensal;
