@@ -1,20 +1,25 @@
 import { useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-function BarChart({ dadosMes }) {
+function BarChartCapa({ especialiade }) {
   const [chartData] = useState({
     type: 'bar',
-    datasets: [{
-      data: montarData(dadosMes),
-      backgroundColor: '#337B5B',
-    }],
-    labels: montarLabels(dadosMes),
+    labels: montarLabels(especialiade),
+    datasets: [
+      {
+        label: "Total",
+        data: montarData(especialiade),
+        borderColor: '#337B5B',
+        backgroundColor: '#337B5B',
+      }
+    ]
   });
 
   return (
-    <div className="chart-container flex justify-center h-full mt-4">
+    <div className="chart-container mt-4 px-8">
       <Bar
-        // height="250px"
+        height='50vh'
+        width='80vw'
         type='bar'
         data={chartData}
         plugins={[topNumber]}
@@ -23,6 +28,14 @@ function BarChart({ dadosMes }) {
           plugins: {
             legend: {
               display: false
+            },
+            title: {
+              display: true,
+              text: 'Total de atendimentos',
+              font: {
+                size: 16,
+                weight: 'bold'
+              }
             }
           },
           scales: {
@@ -32,7 +45,7 @@ function BarChart({ dadosMes }) {
               ticks: {
                 padding: 10,
                 font: {
-                  size: 12
+                  size: 9
                 }
               },
             },
@@ -40,7 +53,7 @@ function BarChart({ dadosMes }) {
               ticks: {
                 padding: 10,
                 callback: function (value) {
-                  return value + '%';
+                  return value;
                 },
               }
             }
@@ -61,36 +74,36 @@ const topNumber = {
       ctx.font = '12px Arial';
       ctx.fillStyle = 'black';
       ctx.textAlign = 'center';
-      ctx.fillText(data.datasets[0].data[index] + "%", datapoint.x + 25, datapoint.y + 5);
+      ctx.fillText(data.datasets[0].data[index], datapoint.x + 25, datapoint.y + 5);
 
     });
   }
 }
 
-function montarLabels(dadosMes) {
+function montarLabels(especialidades) {
   let labels = [];
 
-  dadosMes.map(especialidade => {
+  especialidades.map(especialidade => {
     labels.push(especialidade.especialidade);
   });
 
   return labels;
 }
 
-function montarData(dadosMes) {
+function montarData(especialidades) {
   let resultado = [];
   
-  dadosMes.map(especialidade => {
+  especialidades.map(especialidade => {
     let soma = 0;
 
     especialidade.resultadosMensais[0].resultadosDiarios.map(resultadosDiario => {
-      soma += resultadosDiario.atendimentos / especialidade.resultadosMensais[0].metaMensal;
+      soma += resultadosDiario.atendimentos;
     });
 
-    resultado.push((soma * 100).toFixed(2));
+    resultado.push(soma);
   });
 
   return resultado;
 }
 
-export default BarChart;
+export default BarChartCapa;

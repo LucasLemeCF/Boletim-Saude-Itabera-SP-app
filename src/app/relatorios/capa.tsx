@@ -1,17 +1,17 @@
 
-import BarChart from "../../components/Charts/BarChart";
-import LineChartCapa from "../../components/Charts/LineChartCapa";
+import Image from "next/image";
+import LineChartCapa from "../../components/Charts/BarChartCapa";
+import BarChartPorcentagem from "../../components/Charts/BarChartPorcentagem";
 
-export function Capa({especialidade, mes, ano}) {  
+export function Capa({especialidades, mes, ano}) {  
     const mesString = numeroParaMes(mes);
-
-    console.log(especialidade);
 
     return (
       <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[1260px] py-8`}> 
         {titulo(mesString, ano)}
-        <BarChart dadosMes={especialidade}/>
-        <LineChartCapa especialiade={especialidade}/>
+        <LineChartCapa especialiade={especialidades}/>
+        {descricao(especialidades)}
+        <BarChartPorcentagem dadosMes={especialidades}/>
       </div>
     );
 }
@@ -21,13 +21,21 @@ const titulo = (mes, ano) => {
         <div className="flex justify-between h-[60px] px-8">
             <div className="w-[60px]"></div>
             <div className="text-center font-bold text-xl ml-4">Relatório de Atendimentos de {mes} de {ano}</div>
-            <img 
+            <Image 
                 src="/logo.png"
-                width="60px"
-                height="60px"
+                width={60}
+                height={60}
                 alt="Logo Itaberá SP"
                 className="mr-4"
             />
+        </div>
+    )
+}
+
+const descricao = (especialidades) => {
+    return (
+        <div className="flex flex-col justify-between h-[30px] mt-4 px-8">
+            <div className="text-center font-bold text-base">No total foram atendidos {somarAtendimentos(especialidades)} pacientes.</div>
         </div>
     )
 }
@@ -39,4 +47,16 @@ function numeroParaMes(numero: string): string {
     ];
     const index = parseInt(numero, 10) - 1;
     return meses[index] || "Mês inválido";
+}
+
+function somarAtendimentos(especialidades) {
+    let soma = 0;
+    
+    especialidades.map(especialidade => {
+      especialidade.resultadosMensais[0].resultadosDiarios.map(resultadosDiario => {
+        soma += resultadosDiario.atendimentos;
+      });
+    });
+  
+    return soma;
 }

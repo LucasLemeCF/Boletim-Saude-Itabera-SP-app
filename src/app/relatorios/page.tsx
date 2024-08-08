@@ -21,7 +21,7 @@ function Paginas() {
   const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
   const pdfRef = useRef(null);
 
-  const mesRelatorio = "06";
+  const mesRelatorio = "07";
   const anoRelatorio = "2024"
 
   useEffect(() => {
@@ -55,9 +55,11 @@ function Paginas() {
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={() => downloadPdf()}/>
       </div>
       <div ref={targetRef} className="flex flex-col items-center justify-between mt-[50px] mb-[25px] w-[891px]"> 
-        <Capa especialidade={dadosEspecialidades} mes={mesRelatorio} ano={anoRelatorio}/>
+        <Capa especialidades={dadosEspecialidades} mes={mesRelatorio} ano={anoRelatorio}/>
         {dadosEspecialidades.map((especialidade, index) => (
-          <Pagina key={index} especialidade={especialidade}/>
+          (especialidade.resultadosMensais[0].metaMensal > 0) ?
+          <Pagina key={index} especialidade={especialidade}/> :
+          null
         ))}
       </div>
     </>
