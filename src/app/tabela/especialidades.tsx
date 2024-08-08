@@ -135,13 +135,13 @@ function LinhaEspecialidade({especialidade, posicaoLinha, register, watchLinha}:
       </div>
 
       <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">
-        <p>{(especialidade.pacientesAtendidosMes + pacientesAtendidos)}</p>
+        <p>{(especialidade.pacientesAtendidosMes - especialidade.pacientesAtendidosDia + pacientesAtendidos)}</p>
       </div>
       <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">
         <p>{especialidade.metaMensal}</p>
       </div>
       <div className="flex items-center justify-center border-black w-[100px] h-[25px]">
-        <p>{calcularPorcentagem((especialidade.pacientesAtendidosMes + pacientesAtendidos), especialidade.metaMensal)}%</p>
+        <p>{calcularPorcentagem((especialidade.pacientesAtendidosMes - especialidade.pacientesAtendidosDia + pacientesAtendidos), especialidade.metaMensal)}%</p>
       </div>
     </div>
   )

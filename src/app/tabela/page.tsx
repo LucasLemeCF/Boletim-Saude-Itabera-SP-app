@@ -26,9 +26,6 @@ export default function Tabela() {
         link.href = dataUrl;
         link.click();
       })
-      .catch((err) => {
-        console.log("Erro: " + err);
-      });
   }
   
   return (
