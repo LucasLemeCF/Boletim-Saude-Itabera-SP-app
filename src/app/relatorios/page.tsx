@@ -2,6 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import generatePDF, { Options, usePDF } from "react-to-pdf";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
 import { Button } from "../tabela/page";
 import { Capa } from "./capa";
 import { Pagina } from "./corpo";
@@ -21,7 +28,7 @@ function Paginas() {
   const { toPDF, targetRef } = usePDF({filename: 'page.pdf'});
   const pdfRef = useRef(null);
 
-  const mesRelatorio = "07";
+  const mesRelatorio = "06";
   const anoRelatorio = "2024"
 
   useEffect(() => {
@@ -51,8 +58,21 @@ function Paginas() {
 
   return (
     <>
-      <div className="mt-2">
+      <div className="flex justify-between w-[891px] mt-2">
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={() => downloadPdf()}/>
+        <div className="w-32">
+          <Select>
+            <SelectTrigger id="framework">
+              <SelectValue placeholder="Select" />
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="next">Next.js</SelectItem>
+              <SelectItem value="sveltekit">SvelteKit</SelectItem>
+              <SelectItem value="astro">Astro</SelectItem>
+              <SelectItem value="nuxt">Nuxt.js</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       <div ref={targetRef} className="flex flex-col items-center justify-between mt-[50px] mb-[25px] w-[891px]"> 
         <Capa especialidades={dadosEspecialidades} mes={mesRelatorio} ano={anoRelatorio}/>

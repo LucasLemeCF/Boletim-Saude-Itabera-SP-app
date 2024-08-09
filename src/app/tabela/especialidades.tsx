@@ -6,15 +6,14 @@ interface EspecialidadesProps {
   register: UseFormRegister<{
     data?: string;
     linhas?: {
-        tipo?: string;
-        componenteId?: number;
-        posicao?: number;
-        pacientesAtendidos?: number;
+      tipo?: string;
+      componenteId?: number;
+      posicao?: number;
+      pacientesAtendidos?: number;
     }[];
   }>;
   watchLinha?: any;
 }
-
 
 export default function Especialidades({ dadosTabela, register, watchLinha }: EspecialidadesProps) {
   return (
@@ -42,10 +41,10 @@ interface CabecalhoEspecialidadesProps {
   register: UseFormRegister<{
     data?: string;
     linhas?: {
-        tipo?: string;
-        componenteId?: number;
-        posicao?: number;
-        pacientesAtendidos?: number;
+      tipo?: string;
+      componenteId?: number;
+      posicao?: number;
+      pacientesAtendidos?: number;
     }[];
   }>;
   watchLinha?: any;

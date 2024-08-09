@@ -23,14 +23,27 @@ export function montarValoresLinhas(dadosTabela: Tabela) {
 
     if (dadosTabela !== null) {
         dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-        cabecalho.especialidades.map((especialidade) => {
-            linhas.push({
-                tipo: "ESPECIALIDADE_LINHA",
-                componenteId: especialidade.especialidadeId,
-                posicao: especialidade.posicao,
-                pacientesAtendidos: especialidade.pacientesAtendidosDia
+            cabecalho.especialidades.map((especialidade) => {
+                linhas.push({
+                    tipo: "ESPECIALIDADE_LINHA",
+                    componenteId: especialidade.especialidadeId,
+                    posicao: especialidade.posicao,
+                    pacientesAtendidos: especialidade.pacientesAtendidosDia
+                });
             });
         });
+    }
+
+    if (dadosTabela !== null) {
+        dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
+            cabecalho.cirurgioes.map((cirurgiao) => {
+                linhas.push({
+                    tipo: "CIRURGIAO_LINHA",
+                    componenteId: cirurgiao.procedimentoId,
+                    posicao: cirurgiao.posicao,
+                    pacientesAtendidos: cirurgiao.pacientesAtendidosDia
+                });
+            });
         });
     }
 

@@ -1,6 +1,7 @@
 export interface Tabela {
     data: string;
     especialidadesCabecalhos: CabecalhoTabela[];
+    cirurgioesCabecalhos: CabecalhoTabelaCirurgioes[];
 }
   
 export interface CabecalhoTabela {
@@ -22,4 +23,20 @@ export interface EspecialidadesTabela {
     metaDiaria: number;
     pacientesAtendidosMes: number;
     metaMensal: number;
+}
+
+export interface CabecalhoTabelaCirurgioes {
+    posicao: number;
+    textos: TextosCabalho[];
+    cirurgioes: CirurgioesTabela[];
+}
+
+export interface CirurgioesTabela {
+    posicao: number;
+    procedimentoId: number;
+    cirurgiao: string;
+    procedimento: string;
+    pacientesAtendidosDia: string;
+    pacientesAtendidosMes: string;
+    pacientesAtendidosAno: string;
 }

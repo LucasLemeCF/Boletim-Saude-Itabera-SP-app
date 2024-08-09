@@ -100,16 +100,16 @@ function Linhas({dataCalendario, BaixarTabela}) {
           <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
         : null}
 
+        <Rodape dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+
         {TemDadadosCirurgioes({dadosTabela}) ? 
-          <Cirurgioes dadosTabela={dadosTabela}/>
+          <Cirurgioes dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
         : null}
 
         {!TemDadadosEspecialidades({dadosTabela}) && !TemDadadosCirurgioes({dadosTabela}) ?
           <p>Não foi possível encontrar dados para a data</p>
         : null}
       </form>
-
-      <Rodape dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
       
       <div className="flex items-center justify-end gap-8 w-full mt-8">
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela}/>
