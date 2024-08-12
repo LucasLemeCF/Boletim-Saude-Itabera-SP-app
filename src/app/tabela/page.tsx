@@ -112,8 +112,8 @@ function Linhas({dataCalendario, BaixarTabela}) {
       </form>
       
       <div className="flex items-center justify-end gap-8 w-full mt-8">
-        <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela}/>
-        <Button texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)}/>
+        <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela} type={"button"}/>
+        <Button texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"}/>
       </div>
     </>
   )
@@ -123,11 +123,12 @@ interface ButtomProps {
   texto: string;
   color: string;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
 }
 
-export function Button({ texto, color, onClick }: ButtomProps) {
+export function Button({ texto, color, onClick, type}: ButtomProps) {
   return (
-    <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start ${color}`} type="button" onClick={onClick}>
+    <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start ${color}`} type={type} onClick={onClick}>
       {IconeBotao(texto)}
       <div className="ml-4">{texto}</div>
     </button>
@@ -140,7 +141,7 @@ const IconeBotao = (texto: String) => {
   } else if (texto === "Salvar") {
     return <BiSave className="w-6 h-6 ml-4"/>
   } else {
-    return <div className="ml-4"></div>
+    return <div></div>
   }
 }
 

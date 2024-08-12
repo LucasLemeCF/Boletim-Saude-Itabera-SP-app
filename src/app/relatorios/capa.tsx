@@ -7,7 +7,7 @@ export function Capa({especialidades, mes, ano}) {
     const mesString = numeroParaMes(mes);
 
     return (
-      <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[1260px] py-8`}> 
+      <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[1260px] pt-4 pb-8`}> 
         {titulo(mesString, ano)}
         <LineChartCapa especialiade={especialidades}/>
         {descricao(especialidades)}
