@@ -4,7 +4,7 @@ import LineChart from "../../components/Charts/LineChart";
 
 Chart.register(CategoryScale);
 
-export function Pagina({especialidade}) {  
+export function CorpoEspecialidade({especialidade}) {  
     const dadosMes = especialidade.resultadosMensais[0];
 
     return (

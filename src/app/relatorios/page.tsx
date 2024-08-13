@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
 import generatePDF, { Options, usePDF } from "react-to-pdf";
-import {
-  Form
-} from "../../components/ui/form";
+import { Form } from "../../components/ui/form";
 import { RelatorioFormData } from '../../schemas/relatorio';
 import { Button } from "../tabela/page";
-import { Capa } from "./capa";
-import { Pagina } from "./corpo";
+import { CapaCirurgiao } from "./capaCirurgiao";
+import { CapaEspecialidade } from "./capaEspecialidade";
+import { CorpoEspecialidade } from "./corpoEspecialidade";
 import { SelectMonth, SelectTipoRelatorio, SelectYear } from "./select";
 
 export default function Relatorio() {
@@ -21,14 +20,15 @@ export default function Relatorio() {
 }
 
 function Paginas() {
-  const [dadosEspecialidades, setDadosEspecialidades] = useState(null)
+  const [dadosRelatorio, setDadosRelatorio] = useState(null)
+  const [tipoRelatorio, setTipoRelatorio] = useState("especialidade");
   const [mesRelatorio, setMesRelatorio] = useState(buscaMesAtual());
-  const [anoRelatorio, setAnoRelatorio] = useState("2024");
+  const [anoRelatorio, setAnoRelatorio] = useState((new Date().getFullYear()).toString());
   const [isLoading, setLoading] = useState(true);
 
   const { targetRef } = usePDF({filename: 'page.pdf'});
   
-  const { control, handleSubmit, register } = useForm<RelatorioFormData>({
+  const { control, handleSubmit } = useForm<RelatorioFormData>({
   });
 
   const form = useForm<RelatorioFormData>({})
@@ -37,9 +37,11 @@ function Paginas() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/especialidade/' + mesRelatorio + '-' + anoRelatorio);   
+        const response = await fetch('http://localhost:8080/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio);   
+        console.log('http://localhost:8080/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio);
         const dataResponse = await response.json();
-        setDadosEspecialidades(dataResponse);
+        setDadosRelatorio(dataResponse);
+        console.log(dataResponse);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -48,7 +50,7 @@ function Paginas() {
     };
 
     fetchData();
-  }, [anoRelatorio, mesRelatorio]);
+  }, [anoRelatorio, mesRelatorio, tipoRelatorio]);
 
   if (isLoading) return Carregando()
 
@@ -59,7 +61,22 @@ function Paginas() {
   const downloadPdf = () => generatePDF(targetRef, options);
 
   async function onSubmit(dadosNovos: RelatorioFormData) {
-    console.log("Tipo: " + dadosNovos.tipo + " Data: " + dadosNovos.mes + "-" + dadosNovos.ano);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await fetch('http://localhost:8080/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano);   
+        console.log('http://localhost:8080/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano);
+        const dataResponse = await response.json();
+        setDadosRelatorio(dataResponse);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+    setTipoRelatorio(dadosNovos.tipo);
     setMesRelatorio(dadosNovos.mes);
     setAnoRelatorio(dadosNovos.ano);
   }
@@ -74,15 +91,15 @@ function Paginas() {
         <Button texto={"Gerar Relatório"} color={"bg-[#337B5B]"} onClick={handleSubmit(onSubmit)} type={"button"}/>
       </form>
       {
-        TemDadados(dadosEspecialidades) ? 
+        TemDadados(dadosRelatorio) ? 
         <div ref={targetRef} className="flex flex-col items-center justify-between mt-[50px] mb-[25px] w-[891px]"> 
-          <Capa especialidades={dadosEspecialidades} mes={mesRelatorio} ano={anoRelatorio}/>
-          {dadosEspecialidades.map((especialidade, index) => (
-            (especialidade.resultadosMensais[0].metaMensal > 0) ?
-            <Pagina key={index} especialidade={especialidade}/> :
-            null
-          ))}
-        </div> 
+          {tipoRelatorio == "especialidade" ?
+            <RelatorioEspecialidade dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
+            :
+            <RelatorioCirurgiao dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
+          }
+         
+        </div>
         :
         <div className="text-white rounded-[5px] mt-20 p-4 bg-[#337B5B]">
           <p>Não foi possível encontrar dados para a data selecionada</p> 
@@ -112,4 +129,32 @@ const buscaMesAtual = () => {
   const data = new Date();
   const mes = data.getMonth() + 1;
   return mes < 10 ? "0" + mes : mes.toString();
+}
+
+function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelatorio}) {
+  console.log(dadosRelatorio);
+  return (
+    <>
+      <CapaEspecialidade especialidades={dadosRelatorio} mes={mesRelatorio} ano={anoRelatorio}/>
+      {dadosRelatorio.map((especialidade, index) => (
+        (especialidade.resultadosMensais[0].metaMensal > 0) ?
+        <CorpoEspecialidade key={index} especialidade={especialidade}/> :
+        null
+      ))}
+    </>
+  )
+}
+
+function RelatorioCirurgiao({dadosRelatorio, mesRelatorio, anoRelatorio}) {
+  console.log(dadosRelatorio);
+  return (
+    <>
+      <CapaCirurgiao cirurgioes={dadosRelatorio} mes={mesRelatorio} ano={anoRelatorio}/>
+      {/* {dadosRelatorio.map((especialidade, index) => (
+        (especialidade.resultadosMensais[0].metaMensal > 0) ?
+        <CorpoEspecialidade key={index} especialidade={especialidade}/> :
+        null
+      ))} */}
+    </>
+  )
 }

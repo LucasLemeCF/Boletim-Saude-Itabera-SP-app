@@ -1,17 +1,17 @@
 
 import Image from "next/image";
-import LineChartCapa from "../../components/Charts/BarChartCapa";
-import BarChartPorcentagem from "../../components/Charts/BarChartPorcentagem";
 
-export function Capa({especialidades, mes, ano}) {  
+export function CapaCirurgiao({cirurgioes, mes, ano}) {  
     const mesString = numeroParaMes(mes);
+
+    console.log(cirurgioes);
 
     return (
       <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[1260px] pt-4 pb-8`}> 
         {titulo(mesString, ano)}
-        <LineChartCapa especialiade={especialidades}/>
-        {descricao(especialidades)}
-        <BarChartPorcentagem dadosMes={especialidades}/>
+        {/* <LineChartCapa especialiade={especialidades}/> */}
+        {/* {descricao(especialidades)} */}
+        {/* <BarChartPorcentagem dadosMes={especialidades}/> */}
       </div>
     );
 }
@@ -20,7 +20,7 @@ const titulo = (mes, ano) => {
     return (
         <div className="flex justify-between h-[60px] px-8">
             <div className="w-[60px]"></div>
-            <div className="text-center font-bold text-xl ml-4">Relatório de Atendimentos de {mes} de {ano}</div>
+            <div className="text-center font-bold text-xl ml-4">Relatório de Cirurgias de {mes} de {ano}</div>
             <Image 
                 src="/logo.png"
                 width={60}

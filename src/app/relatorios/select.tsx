@@ -19,7 +19,7 @@ interface SelectProps {
 export function SelectTipoRelatorio({control}) {
     return (
         <FormField
-          defaultValue={"especialidades"}
+          defaultValue={"especialidade"}
           control={control}
           name="tipo"
           render={({ field }) => (
@@ -29,8 +29,8 @@ export function SelectTipoRelatorio({control}) {
                 <SelectValue placeholder="Tipo"/>
                 </SelectTrigger>
                 <SelectContent position="popper">
-                    <SelectItem value="especialidades">Especialidades</SelectItem>
-                    <SelectItem value="cirurgioes">Cirurgiões</SelectItem>
+                    <SelectItem value="especialidade">Especialidades</SelectItem>
+                    <SelectItem value="cirurgiao">Cirurgiões</SelectItem>
                 </SelectContent>
               </Select>
             </FormItem>
