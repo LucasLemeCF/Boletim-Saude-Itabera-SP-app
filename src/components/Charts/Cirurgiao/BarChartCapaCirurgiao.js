@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-function BarChartCapa({ especialiade }) {
+function BarChartCapaCirurgiao({ cirurgioes }) {
   const [chartData] = useState({
     type: 'bar',
-    labels: montarLabels(especialiade),
+    labels: montarLabels(cirurgioes),
     datasets: [
       {
         label: "Total",
-        data: montarData(especialiade),
+        data: montarData(cirurgioes),
         borderColor: '#337B5B',
         backgroundColor: '#337B5B',
       }
@@ -31,7 +31,7 @@ function BarChartCapa({ especialiade }) {
             },
             title: {
               display: true,
-              text: 'Total de atendimentos',
+              text: 'Total de cirurgias',
               font: {
                 size: 16,
                 weight: 'bold'
@@ -80,30 +80,34 @@ const topNumber = {
   }
 }
 
-function montarLabels(especialidades) {
+function montarLabels(cirurgioes) {
   let labels = [];
 
-  especialidades.map(especialidade => {
-    labels.push(especialidade.especialidade);
+  cirurgioes.map(cirurgiao => {
+    cirurgiao.procedimentos.map(procedimento => {
+      labels.push(procedimento.nome);
+    });
   });
 
   return labels;
 }
 
-function montarData(especialidades) {
+function montarData(cirurgioes) {
   let resultado = [];
+
+  cirurgioes.map(cirurgiao => {
+    cirurgiao.procedimentos.map(procedimento => {
+      let soma = 0;
   
-  especialidades.map(especialidade => {
-    let soma = 0;
-
-    especialidade.resultadosMensais[0].resultadosDiarios.map(resultadosDiario => {
-      soma += resultadosDiario.atendimentos;
+      procedimento.resultadosMensais[0].resultadosDiarios.map(resultadosDiario => {
+        soma += resultadosDiario.atendimentos;
+      });
+  
+      resultado.push(soma);
     });
-
-    resultado.push(soma);
   });
 
   return resultado;
 }
 
-export default BarChartCapa;
+export default BarChartCapaCirurgiao;

@@ -8,6 +8,7 @@ import { RelatorioFormData } from '../../schemas/relatorio';
 import { Button } from "../tabela/page";
 import { CapaCirurgiao } from "./capaCirurgiao";
 import { CapaEspecialidade } from "./capaEspecialidade";
+import { CorpoCirurgiao } from "./corpoCirurgiao";
 import { CorpoEspecialidade } from "./corpoEspecialidade";
 import { SelectMonth, SelectTipoRelatorio, SelectYear } from "./select";
 
@@ -37,11 +38,9 @@ function Paginas() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio);   
-        console.log('http://localhost:8080/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio);
+        const response = await fetch('http://localhost:8080/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio);
         const dataResponse = await response.json();
         setDadosRelatorio(dataResponse);
-        console.log(dataResponse);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -54,8 +53,20 @@ function Paginas() {
 
   if (isLoading) return Carregando()
 
+  const montarNomeDoArquivo = () => {
+    let resultato = "";
+
+    if (tipoRelatorio == "especialidade") {
+      resultato = "Relatório Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf";
+    } else if (tipoRelatorio == "cirurgiao") {
+      resultato = "Relatório de Cirurgias - " + mesRelatorio + "-" + anoRelatorio + ".pdf";
+    }
+    
+    return resultato;
+  }
+
   const options: Options = {
-    filename: "Relatório Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf",
+    filename: montarNomeDoArquivo(),
   };
 
   const downloadPdf = () => generatePDF(targetRef, options);
@@ -65,7 +76,6 @@ function Paginas() {
       setLoading(true);
       try {
         const response = await fetch('http://localhost:8080/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano);   
-        console.log('http://localhost:8080/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano);
         const dataResponse = await response.json();
         setDadosRelatorio(dataResponse);
       } catch (error) {
@@ -96,9 +106,8 @@ function Paginas() {
           {tipoRelatorio == "especialidade" ?
             <RelatorioEspecialidade dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
             :
-            <RelatorioCirurgiao dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
+            <RelatorioCirurgiao cirurgioes={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
           }
-         
         </div>
         :
         <div className="text-white rounded-[5px] mt-20 p-4 bg-[#337B5B]">
@@ -132,7 +141,6 @@ const buscaMesAtual = () => {
 }
 
 function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelatorio}) {
-  console.log(dadosRelatorio);
   return (
     <>
       <CapaEspecialidade especialidades={dadosRelatorio} mes={mesRelatorio} ano={anoRelatorio}/>
@@ -145,16 +153,15 @@ function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelatorio}) {
   )
 }
 
-function RelatorioCirurgiao({dadosRelatorio, mesRelatorio, anoRelatorio}) {
-  console.log(dadosRelatorio);
+function RelatorioCirurgiao({cirurgioes, mesRelatorio, anoRelatorio}) {
   return (
     <>
-      <CapaCirurgiao cirurgioes={dadosRelatorio} mes={mesRelatorio} ano={anoRelatorio}/>
-      {/* {dadosRelatorio.map((especialidade, index) => (
-        (especialidade.resultadosMensais[0].metaMensal > 0) ?
-        <CorpoEspecialidade key={index} especialidade={especialidade}/> :
-        null
-      ))} */}
+      <CapaCirurgiao cirurgioes={cirurgioes} mes={mesRelatorio} ano={anoRelatorio}/>
+      {cirurgioes.map((cirurgiao, index) => (
+        cirurgiao.procedimentos.map(procedimento => (
+          <CorpoCirurgiao key={index} cirurgiao={cirurgiao} procedimento={procedimento}/> 
+        ))
+      ))}
     </>
   )
 }

@@ -5,7 +5,7 @@ export const Header = () => {
         <header className="flex w-full h-[75px] py-4 px-8 justify-center items-center gap-4 bg-[#337B5B]">
             <div className="flex w-full justify-end items-center gap-3">
                 <p className="text-white">
-                    Nome do Usuário
+                    Administrador
                 </p>
                 <Image
                     src="/user.png"

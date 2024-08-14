@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Line } from "react-chartjs-2";
 
-function LineChart({ dadosMes, especialidade }) {
+function LineChartCirurgiao({ dadosMes }) {
+
   const [chartData] = useState({
     type: 'line',
     labels: montarLabels(dadosMes),
 
     datasets: [
       {
-        label: especialidade.especialidade,
         data: montarData(dadosMes),
         borderColor: '#337B5B',
         backgroundColor: '#337B5B',
@@ -34,9 +34,6 @@ function LineChart({ dadosMes, especialidade }) {
             y: {
               ticks: {
                 padding: 10,
-                callback: function (value) {
-                  return value + '%';
-                },
               }
             },
             x: {
@@ -55,7 +52,7 @@ function montarLabels(dadosMes) {
   let labels = [];
 
   dadosMes.resultadosDiarios.map(resultadosDiario => {
-    let dia = resultadosDiario.dia;
+    let dia = resultadosDiario.data;
     (dia < 10) ? dia = "0" + dia : dia;
 
     let mes = dadosMes.mes;
@@ -73,12 +70,11 @@ function montarData(dadosMes) {
   let soma = 0;
 
   dadosMes.resultadosDiarios.map(resultadosDiario => {
-    soma += resultadosDiario.atendimentos / dadosMes.metaMensal;
-    const somaFormat = (soma * 100).toFixed(2);
-    data.push(somaFormat);
+    soma += resultadosDiario.atendimentos;
+    data.push(soma);
   });
 
   return data;
 }
 
-export default LineChart;
+export default LineChartCirurgiao;

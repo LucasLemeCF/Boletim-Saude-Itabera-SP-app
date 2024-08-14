@@ -1,6 +1,6 @@
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-import LineChart from "../../components/Charts/LineChart";
+import LineChartEspecialidade from "../../components/Charts/Especialidade/LineChartEspecialidade";
 
 Chart.register(CategoryScale);
 
@@ -11,7 +11,7 @@ export function CorpoEspecialidade({especialidade}) {
       <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[630px] p-8`}> 
         {titulo(especialidade)}
         {descricao(dadosMes)}
-        <LineChart dadosMes={dadosMes} especialidade={especialidade.especialidade}/>
+        <LineChartEspecialidade dadosMes={dadosMes}/>
       </div>
     );
 }
@@ -32,7 +32,7 @@ const descricao = (dadosMes) => {
                     <p><span className="font-bold">Total: </span>{dadosMes.atendimentos} pacientes atendidos.</p>
                     <p><span className="font-bold">Meta Mensal: </span>{dadosMes.metaMensal} pacientes.</p>
                     <p><span className="font-bold">Índice de Atendimento: </span>
-                        {calcularPorcentagem(dadosMes.atendimentos, dadosMes.metaMensal)}%
+                      {calcularPorcentagem(dadosMes.atendimentos, dadosMes.metaMensal)}%
                     </p>
                 </div>
                 <div className="flex flex-row h-[60px] mr-4">
