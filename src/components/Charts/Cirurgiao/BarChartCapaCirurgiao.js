@@ -85,7 +85,7 @@ function montarLabels(cirurgioes) {
 
   cirurgioes.map(cirurgiao => {
     cirurgiao.procedimentos.map(procedimento => {
-      labels.push(procedimento.nome);
+      labels.push(procedimento.nome + ' - ' + cirurgiao.nome);
     });
   });
 
