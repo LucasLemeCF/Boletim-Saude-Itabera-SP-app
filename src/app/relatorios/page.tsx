@@ -6,10 +6,8 @@ import generatePDF, { Options, usePDF } from "react-to-pdf";
 import { Form } from "../../components/ui/form";
 import { RelatorioFormData } from '../../schemas/relatorio';
 import { Button } from "../tabela/page";
-import { CapaCirurgiao } from "./capaCirurgiao";
-import { CapaEspecialidade } from "./capaEspecialidade";
-import { CorpoCirurgiao } from "./corpoCirurgiao";
-import { CorpoEspecialidade } from "./corpoEspecialidade";
+import { RelatorioCirurgiao } from "./cirurgiao/relatorioCirurgiao";
+import { RelatorioEspecialidade } from './especialidade/relatorioEspecialidade';
 import { SelectMonth, SelectTipoRelatorio, SelectYear } from "./select";
 
 export default function Relatorio() {
@@ -28,9 +26,7 @@ function Paginas() {
   const [isLoading, setLoading] = useState(true);
 
   const { targetRef } = usePDF({filename: 'page.pdf'});
-  
-  const { control, handleSubmit } = useForm<RelatorioFormData>({
-  });
+  const { control, handleSubmit } = useForm<RelatorioFormData>({});
 
   const form = useForm<RelatorioFormData>({})
 
@@ -93,20 +89,21 @@ function Paginas() {
 
   return (
     <Form {...form}>
-      <form className="flex justify-between w-[891px] mt-8">
-        <Button texto={"Baixar"} color={"bg-blue-800"} onClick={() => downloadPdf()} type={"button"}/>
+      <form className="flex justify-between w-[891px] mt-8 p-8 rounded-[5px] bg-[#337B5B]">
         <SelectTipoRelatorio control={control}/>
         <SelectMonth control={control}/>
         <SelectYear control={control}/>
-        <Button texto={"Gerar Relatório"} color={"bg-[#337B5B]"} onClick={handleSubmit(onSubmit)} type={"button"}/>
+        <Button texto={"Gerar Gráfico"} color={"bg-blue-800 border border-black"} onClick={handleSubmit(onSubmit)} type={"button"}/>
       </form>
       {
         TemDadados(dadosRelatorio) ? 
-        <div ref={targetRef} className="flex flex-col items-center justify-between mt-[50px] mb-[25px] w-[891px]"> 
+        <div ref={targetRef} className="flex flex-col items-center justify-between my-8 w-[891px]"> 
           {tipoRelatorio == "especialidade" ?
             <RelatorioEspecialidade dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
-            :
+            : tipoRelatorio == "cirurgiao" ?
             <RelatorioCirurgiao cirurgioes={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
+            : 
+            <p>Tipo de relatório não encontrado</p>
           }
         </div>
         :
@@ -138,30 +135,4 @@ const buscaMesAtual = () => {
   const data = new Date();
   const mes = data.getMonth() + 1;
   return mes < 10 ? "0" + mes : mes.toString();
-}
-
-function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelatorio}) {
-  return (
-    <>
-      <CapaEspecialidade especialidades={dadosRelatorio} mes={mesRelatorio} ano={anoRelatorio}/>
-      {dadosRelatorio.map((especialidade, index) => (
-        (especialidade.resultadosMensais[0].metaMensal > 0) ?
-        <CorpoEspecialidade key={index} especialidade={especialidade}/> :
-        null
-      ))}
-    </>
-  )
-}
-
-function RelatorioCirurgiao({cirurgioes, mesRelatorio, anoRelatorio}) {
-  return (
-    <>
-      <CapaCirurgiao cirurgioes={cirurgioes} mes={mesRelatorio} ano={anoRelatorio}/>
-      {cirurgioes.map((cirurgiao, index) => (
-        cirurgiao.procedimentos.map(procedimento => (
-          <CorpoCirurgiao key={index} cirurgiao={cirurgiao} procedimento={procedimento}/> 
-        ))
-      ))}
-    </>
-  )
 }

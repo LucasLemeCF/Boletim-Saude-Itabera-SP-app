@@ -124,14 +124,24 @@ interface ButtomProps {
   color: string;
   onClick?: () => void;
   type?: "button" | "submit" | "reset";
+  comBotao?: boolean;
 }
 
-export function Button({ texto, color, onClick, type}: ButtomProps) {
+export function Button({ texto, color, onClick, type, comBotao = true}: ButtomProps) {
   return (
-    <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start ${color}`} type={type} onClick={onClick}>
-      {IconeBotao(texto)}
-      <div className="ml-4">{texto}</div>
-    </button>
+    <>
+      {
+        comBotao ?
+        <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start ${color}`} type={type} onClick={onClick}>
+          {IconeBotao(texto)}
+          <div className="ml-4">{texto}</div>
+        </button>
+        :
+        <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-center ${color}`} type={type} onClick={onClick}>
+          <div className="ml-4">{texto}</div>
+        </button>
+      }
+    </>
   )
 }
 

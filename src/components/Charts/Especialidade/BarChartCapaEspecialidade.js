@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-function BarChartCapaEspecialidade({ especialiade }) {
+function BarChartCapaEspecialidade({ especialiade, chartRef }) {
   const [chartData] = useState({
     type: 'bar',
     labels: montarLabels(especialiade),
@@ -18,6 +18,7 @@ function BarChartCapaEspecialidade({ especialiade }) {
   return (
     <div className="chart-container mt-4 px-8">
       <Bar
+        ref={el => chartRef.current[0] = el}
         height='50vh'
         width='80vw'
         type='bar'
@@ -43,15 +44,18 @@ function BarChartCapaEspecialidade({ especialiade }) {
               beginAtZero: true,
               grace: 1,
               ticks: {
-                padding: 10,
+                padding: 0,
                 font: {
-                  size: 9
+                  size: 12
                 }
               },
             },
             x: {
               ticks: {
-                padding: 10,
+                padding: 0,
+                font: {
+                  size: 12
+                },
                 callback: function (value) {
                   return value;
                 },

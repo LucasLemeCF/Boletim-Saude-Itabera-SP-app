@@ -1,6 +1,6 @@
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
-import LineChartCirurgiao from "../../components/Charts/Cirurgiao/LineChartCirurgiao";
+import LineChartCirurgiao from "../../../components/Charts/Cirurgiao/LineChartCirurgiao";
 
 Chart.register(CategoryScale);
 

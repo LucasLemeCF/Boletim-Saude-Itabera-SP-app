@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-function BarChartPorcentagem({ dadosMes }) {
+function BarChartPorcentagem({ dadosMes, chartRef }) {
   const [chartData] = useState({
     type: 'bar',
     datasets: [{
@@ -14,6 +14,7 @@ function BarChartPorcentagem({ dadosMes }) {
   return (
     <div className="chart-container flex justify-center mt-4 px-8">
       <Bar
+        ref={el => chartRef.current[1] = el}
         height='50vh'
         width='80vw'
         type='bar'
@@ -41,13 +42,16 @@ function BarChartPorcentagem({ dadosMes }) {
               ticks: {
                 padding: 0,
                 font: {
-                  size: 10
+                  size: 12
                 }
               },
             },
             x: {
               ticks: {
-                padding: 10,
+                padding: 0,
+                font: {
+                  size: 12
+                },
                 callback: function (value) {
                   return value + '%';
                 },

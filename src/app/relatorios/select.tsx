@@ -1,11 +1,11 @@
 import { UseFormRegister } from 'react-hook-form';
 import { FormField, FormItem } from '../../components/ui/form';
 import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "../../components/ui/select";
 
 interface SelectProps {
@@ -17,26 +17,26 @@ interface SelectProps {
   }
 
 export function SelectTipoRelatorio({control}) {
-    return (
-        <FormField
-          defaultValue={"especialidade"}
-          control={control}
-          name="tipo"
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <SelectTrigger id="framework">
-                <SelectValue placeholder="Tipo"/>
-                </SelectTrigger>
-                <SelectContent position="popper">
-                    <SelectItem value="especialidade">Especialidades</SelectItem>
-                    <SelectItem value="cirurgiao">Cirurgiões</SelectItem>
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-    )
+  return (
+    <FormField
+      defaultValue={"especialidade"}
+      control={control}
+      name="tipo"
+      render={({ field }) => (
+        <FormItem>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <SelectTrigger id="framework">
+            <SelectValue placeholder="Tipo"/>
+            </SelectTrigger>
+            <SelectContent position="popper">
+              <SelectItem value="especialidade">Especialidades</SelectItem>
+              <SelectItem value="cirurgiao">Cirurgiões</SelectItem>
+            </SelectContent>
+          </Select>
+        </FormItem>
+      )}
+    />
+  )
 }
 
 export function SelectMonth({control}) {

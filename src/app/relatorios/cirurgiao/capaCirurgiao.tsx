@@ -1,8 +1,8 @@
 
 import Image from "next/image";
-import BarChartCapaCirurgiao from "../../components/Charts/Cirurgiao/BarChartCapaCirurgiao";
-import TotalMesesCirurgiao from "../../components/Charts/Cirurgiao/TotalMesesCirurgiao";
-import { numeroParaMes } from "../../utils/meses";
+import BarChartCapaCirurgiao from "../../../components/Charts/Cirurgiao/BarChartCapaCirurgiao";
+import TotalMesesCirurgiao from "../../../components/Charts/Cirurgiao/TotalMesesCirurgiao";
+import { numeroParaMes } from "../../../utils/meses";
 
 export function CapaCirurgiao({cirurgioes, mes, ano}) {  
     return (

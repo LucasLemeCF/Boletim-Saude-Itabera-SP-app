@@ -1,18 +1,18 @@
+/* eslint-disable jsx-a11y/alt-text */
+import Image from 'next/image';
+import BarChartCapaEspecialidade from "../../../components/Charts/Especialidade/BarChartCapaEspecialidade";
+import BarChartPorcentagem from "../../../components/Charts/Especialidade/BarChartPorcentagem";
 
-import Image from "next/image";
-import BarChartCapaEspecialidade from "../../components/Charts/Especialidade/BarChartCapaEspecialidade";
-import BarChartPorcentagem from "../../components/Charts/Especialidade/BarChartPorcentagem";
-
-export function CapaEspecialidade({especialidades, mes, ano}) {  
-    const mesString = numeroParaMes(mes);
-
+export function CapaEspecialidade({especialidades, mes, ano, chartRef}) {  
     return (
-      <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[1260px] pt-4 pb-8`}> 
-        {titulo(mesString, ano)}
-        <BarChartCapaEspecialidade especialiade={especialidades}/>
-        {descricao(especialidades)}
-        <BarChartPorcentagem dadosMes={especialidades}/>
-      </div>
+        <>
+            <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[1260px] pt-4 pb-8`}>
+                {titulo(mes, ano)} 
+                <BarChartCapaEspecialidade especialiade={especialidades} chartRef={chartRef}/>
+                {descricao(especialidades)}
+                <BarChartPorcentagem dadosMes={especialidades} chartRef={chartRef}/>
+            </div>
+        </>
     );
 }
 
@@ -38,15 +38,6 @@ const descricao = (especialidades) => {
             <div className="text-center font-bold text-base">No total foram atendidos {somarAtendimentos(especialidades)} pacientes.</div>
         </div>
     )
-}
-
-function numeroParaMes(numero: string): string {
-    const meses = [
-        "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
-        "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
-    ];
-    const index = parseInt(numero, 10) - 1;
-    return meses[index] || "Mês inválido";
 }
 
 function somarAtendimentos(especialidades) {
