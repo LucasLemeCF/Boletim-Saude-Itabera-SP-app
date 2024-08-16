@@ -38,19 +38,21 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
             <div className="w-[150px]"></div>
             <div className="flex items-center space-x-2 w-[150px] h-[50px] rounded-[5px] flex items-center justify-center">
                 <Switch onClick={() => gerarPdfReader()}/>
-                <Label>Modo de PDF</Label>
+                <Label>Modo PDF</Label>
             </div>
-            <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start bg-blue-800`} type={"button"}>
+            <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start bg-[#337B5B]`} type={"button"}>
                 <MdOutlineFileDownload className="w-6 h-6 ml-4"/>
                 <div className={"ml-4"}>
-                    <PDFDownloadLink document={<PdfEspecialidade mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>} fileName="MyFile.pdf">Baixar</PDFDownloadLink>
+                    <PDFDownloadLink document={<PdfEspecialidade especialidades={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>} fileName={"Boletim Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"}>
+                        Baixar
+                    </PDFDownloadLink>
                 </div>
             </button>
         </div>
        
         <div className={`flex flex-col justify-items-start w-[891px] h-[1260px] mt-8 px-0 ` + (openPdf ? "" : "hidden")}>
             <PDFViewer  style={{height: "100%"}}>
-               <PdfEspecialidade mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>
+               <PdfEspecialidade especialidades={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>
             </PDFViewer>
         </div>
         
@@ -66,9 +68,9 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
     )
 }
 
-export const PdfEspecialidade = ({ mesRelatorio, anoRelatorio, base64Image, mesString, dadosRelatorio }) => (
+export const PdfEspecialidade = ({ especialidades, mesRelatorio, anoRelatorio, base64Image, mesString, dadosRelatorio }) => (
     <Document title={"Boletim Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"} >
         <PdfCapaEspecialidade img={base64Image} mes={mesString} ano={anoRelatorio} especialidades={dadosRelatorio}/>
-        <PdfCorpoEspecialidade img={base64Image}/>
+        <PdfCorpoEspecialidade especialidades={especialidades} img={base64Image}/>
     </Document>
 )

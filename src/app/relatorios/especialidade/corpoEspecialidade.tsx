@@ -17,11 +17,11 @@ export function CorpoEspecialidade({especialidade, chartRef, base64Image}) {
 }
 
 const titulo = (especialidade) => {
-    return (
-      <div className="text-center font-bold">
-          {especialidade.especialidade}
-      </div>
-    )
+  return (
+    <div className="text-center font-bold">
+      {especialidade.especialidade}
+    </div>
+  )
 }
 
 const descricao = (dadosMes) => {
