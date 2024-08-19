@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Line } from "react-chartjs-2";
 
-function LineChartEspecialidade({ dadosMes }) {
+function LineChartEspecialidade({ dadosMes, chartRef, index }) {
   const [chartData] = useState({
     type: 'line',
     labels: montarLabels(dadosMes),
@@ -18,6 +18,7 @@ function LineChartEspecialidade({ dadosMes }) {
   return (
     <div className="chart-container mt-4">
       <Line
+        ref={el => chartRef.current[index-1] = el}
         data={chartData}
         options={{
           responsive: true,

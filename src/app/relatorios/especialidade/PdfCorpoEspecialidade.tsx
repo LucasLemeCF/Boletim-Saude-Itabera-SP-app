@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
-import { Font, Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
+import { Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 
-export function PdfCorpoEspecialidade({ especialidades, img }) {
+export const PdfCorpoEspecialidade = ({ especialidades, img }) => {
   const especialidadesComMeta = [];
 
   especialidades.map(especialidade => {
@@ -19,51 +19,107 @@ export function PdfCorpoEspecialidade({ especialidades, img }) {
   return (
     <>
       {especialidadesPagina.map((especialidades, index) => (
-        <Pagina key={index} especialidadesPagina={especialidades} img={img}/>
+        <Pagina key={index} especialidadesPagina={especialidades} img={img} indexEspecialidade={index}/>
       ))}
     </>
   )
 }
 
-function Pagina({especialidadesPagina, img}) {
+const Pagina = ({especialidadesPagina, img, indexEspecialidade}) => {
   return (
     <Page size="A4" style={styles.page}>
-      {especialidadesPagina.map(especialidade => (
-        <Especialidade especialidade={especialidade} img={img}/>
+      {especialidadesPagina.map((especialidade, index) => (
+        <Especialidade especialidade={especialidade} img={img} indexEspecialidade={indexEspecialidade} index={index}/>
       ))}
     </Page>
   )
 }
 
-function Especialidade({especialidade, img}) {
+const Especialidade = ({especialidade, img, indexEspecialidade, index}) => {
+  const dadosMes = especialidade.resultadosMensais[0];
+
+  let testIndex = 0;
+
+  if ((indexEspecialidade * 2 + index + 2) > 22) {
+    testIndex = 2;
+  } else {
+    testIndex = Number(indexEspecialidade) * 2 + index + 2;
+  }
+
   return (
-    <View style={styles.section}>
-      <View style={{ display: "flex",  flexDirection: "row", justifyContent: "space-between", height: "40px" }}>
-        <View style={{ width: "50px"}}></View>
-        <Text style={{ fontFamily: 'Open Sans', fontSize: 14, fontWeight: 700}}>
-          {especialidade.especialidade}
-        </Text>
-        <Image
-          source={"/logo.png"}
-          style={{height: "40px", width: "40px", marginRight: "10px"}}
-        />
-      </View>
+    <View style={[styles.containerPagina]}>
+      <Titulo especialidade={especialidade.especialidade}/>
+      {descricao(dadosMes)}
       <Image
-        source={img}
-        style={{ height: "322", width: "552", marginTop: "16px" }}
+        source={img[testIndex]}
+        style={{ height: "322", width: "552", padding: "16px" }}
       />
     </View> 
   )
 }
 
-const titulo = (especialidade) => {
+const Titulo = (especialidade) => {
   return (
-    <div className="text-center font-bold">
-       <Text style={{ fontFamily: 'Open Sans', fontSize: 14, fontWeight: 700}}>
-          {especialidade.especialidade}
-        </Text>
-    </div>
+    <Text style={styles.titulo}>
+      {especialidade.especialidade}
+    </Text>
   )
+}
+
+const descricao = (dadosMes) => {
+  return (
+    <View>
+      <View style={{display: "flex",  flexDirection: "row", justifyContent: "space-between"}}>
+        <View style={styles.descricao}>
+          <View style={styles.componenteDescricao}>
+            <Text style={styles.textDescriptionBold}>Total: </Text>
+            <Text style={styles.textDescription}>{dadosMes.atendimentos} pacientes atendidos.</Text>
+          </View>
+          <View style={styles.componenteDescricao}>
+            <Text style={styles.textDescriptionBold}>Meta Mensal: </Text>
+            <Text style={styles.textDescription}>{dadosMes.metaMensal} pacientes.</Text>
+          </View>
+          <View style={styles.componenteDescricao}>
+            <Text style={styles.textDescriptionBold}>Índice de Atendimento: </Text>
+            <Text style={styles.textDescription}>{calcularPorcentagem(dadosMes.atendimentos, dadosMes.metaMensal)}%</Text>
+          </View>
+        </View>
+          <Image
+            source={"/logo.png"}
+            style={{height: "40px", width: "40px", marginRight: "10px", marginTop: "8px"}}
+          />
+      </View>
+      <View style={[styles.componenteDescricao, {marginTop: "8px"}]}>
+        <Text style={styles.textDescription}>A especialidade {dadosMes.especialidade} atendeu {calcularPorcentagem(dadosMes.atendimentos, dadosMes.metaMensal)}% da meta mensal, com {calcularResultado(dadosMes)}</Text>
+      </View>
+    </View>
+  )
+}
+
+const calcularPorcentagem = (atendidos, meta) => {
+  if (meta === 0) {
+    return 100;
+  } else {
+    const porcentagem = (atendidos / meta * 100);
+
+    if (Number.isInteger(porcentagem)) {
+      return porcentagem.toFixed(0).replace(".", ",");
+    } else {
+      return porcentagem.toFixed(2).replace(".", ",");
+    }
+  }
+}
+
+function calcularResultado(dadosMes) {
+  const resultado = dadosMes.atendimentos - dadosMes.metaMensal;
+
+  if (resultado > 0) {
+    return `${resultado} atendimentos a mais do  que o esperado.`;
+  } else if (resultado < 0) {
+    return `${resultado * -1} atendimentos a menos do que o esperado.`;
+  } else {
+    return "100% da quantidade de atendimento esperada";
+  }
 }
 
 function somarAtendimentos(especialidades) {
@@ -78,21 +134,53 @@ function somarAtendimentos(especialidades) {
   return soma;
 }
 
-Font.register({
-  family: 'Open Sans',
-  fonts: [
-    { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-regular.ttf' },
-    { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-700.ttf', fontWeight: 700 }
-  ]
-})
+// Font.register({
+//   family: 'Open Sans',
+//   fonts: [
+//     { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-regular.ttf' },
+//     { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-700.ttf', fontWeight: 700 }
+//   ]
+// })
 
 const styles = StyleSheet.create({
   page: {
-    flexDirection: 'column',
+    width: "100%",
+    height: "100%",
+    paddingHorizontal: "32px",
   },
-  section: {
-    margin: 10,
-    padding: 10,
-    flexGrow: 1
+  containerPagina: {
+    display: "flex",  
+    flexDirection: "column",
+    width: "100%",
+    height: "50%",
+    borderBottom: "1px solid black",
+  },
+  titulo: {
+    fontFamily: 'Open Sans',
+    fontSize: 12,
+    fontWeight: 700,
+    textAlign: "center",
+    marginTop: "16px",
+  },
+  descricao: {
+    display: "flex", 
+    flexDirection: "column",
+    marginTop: "16px",
+  },
+  componenteDescricao: {
+    display: "flex", 
+    flexDirection: "row"
+  },
+  textDescriptionBold: {
+    fontFamily: 'Open Sans',
+    fontSize: 10,
+    lineHeight: 1.5,
+    fontWeight: "bold"
+  },
+  textDescription: {
+    fontFamily: 'Open Sans',
+    fontSize: 10,
+    lineHeight: 1.5,
+    fontWeight: 'normal'
   }
 });

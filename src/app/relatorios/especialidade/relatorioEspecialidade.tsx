@@ -11,7 +11,8 @@ import { PdfCapaEspecialidade } from "./PdfCapaEspecialidade";
 import { PdfCorpoEspecialidade } from './PdfCorpoEspecialidade';
 
 export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelatorio}) {
-    const chartRef = useRef<ChartJS<"bar", number[], string>[]>([]);
+    const chartRefCapa = useRef<ChartJS<"bar", number[], string>[]>([]);
+    const chartRefCorpo = useRef<ChartJS<"line", number[], string>[]>([]);
     const [base64Image, setBase64Image] = useState([]);
     const [openPdf, setOpenPdf] = useState(false);
   
@@ -23,8 +24,14 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
         } else {
             const newChartRef = [];
   
-            newChartRef.push(chartRef.current[0].toBase64Image());
-            newChartRef.push(chartRef.current[1].toBase64Image());
+            newChartRef.push(chartRefCapa.current[0].toBase64Image());
+            newChartRef.push(chartRefCapa.current[1].toBase64Image());
+
+            for (let i = 0; i < 22; i++) {
+                if (chartRefCorpo.current[i] != undefined) {
+                    newChartRef.push(chartRefCorpo.current[i].toBase64Image());
+                }
+            }
         
             setBase64Image(newChartRef);
             setOpenPdf(true);
@@ -57,10 +64,10 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
         </div>
         
         <div className={openPdf ? "hidden" : ""}>
-            <CapaEspecialidade especialidades={dadosRelatorio} mes={mesRelatorio} ano={anoRelatorio} chartRef={chartRef}/>
+            <CapaEspecialidade especialidades={dadosRelatorio} mes={mesRelatorio} ano={anoRelatorio} chartRef={chartRefCapa}/>
             {dadosRelatorio.map((especialidade, index) => (
                 (especialidade.resultadosMensais[0].metaMensal > 0) ?
-                <CorpoEspecialidade key={index} especialidade={especialidade} chartRef={chartRef} base64Image={base64Image}/> :
+                <CorpoEspecialidade key={index} especialidade={especialidade} chartRef={chartRefCorpo} index={index}/> :
                 null
             ))}
         </div>

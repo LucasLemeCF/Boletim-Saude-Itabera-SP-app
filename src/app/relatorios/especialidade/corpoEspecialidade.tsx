@@ -4,14 +4,14 @@ import LineChartEspecialidade from "../../../components/Charts/Especialidade/Lin
 
 Chart.register(CategoryScale);
 
-export function CorpoEspecialidade({especialidade, chartRef, base64Image}) {  
+export function CorpoEspecialidade({especialidade, chartRef, index}) {  
   const dadosMes = especialidade.resultadosMensais[0];
 
   return (
     <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[630px] p-8`}> 
       {titulo(especialidade)}
       {descricao(dadosMes)}
-      <LineChartEspecialidade dadosMes={dadosMes}/>
+      <LineChartEspecialidade dadosMes={dadosMes} chartRef={chartRef} index={index}/>
     </div>
   );
 }
@@ -45,8 +45,7 @@ const descricao = (dadosMes) => {
         </div>
       </div>
       <div className="mt-4">
-          <p>A especialidade {dadosMes.especialidade} atendeu {calcularPorcentagem(dadosMes.atendimentos, dadosMes.metaMensal)}% da meta mensal, com {calcularResultado(dadosMes)}
-          </p>
+        <p>A especialidade {dadosMes.especialidade} atendeu {calcularPorcentagem(dadosMes.atendimentos, dadosMes.metaMensal)}% da meta mensal, com {calcularResultado(dadosMes)}</p>
       </div>
     </>
   )
