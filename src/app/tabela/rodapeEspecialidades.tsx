@@ -65,9 +65,10 @@ function somarAtendimentosMes(dadosTabela) {
   let totalMes = 0;
 
   dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-      cabecalho.especialidades.map((especialidade) => {
-        totalMes += especialidade.pacientesAtendidosMes;
-      });
+    cabecalho.especialidades.map((especialidade) => {
+      totalMes += especialidade.pacientesAtendidosMes;
+      totalMes -= especialidade.pacientesAtendidosDia;
+    });
   });
 
   return totalMes;

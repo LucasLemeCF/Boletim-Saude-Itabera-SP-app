@@ -11,7 +11,7 @@ export function RodapeCirurgioes({dadosTabela, linhasTabela}) {
       </div>
 
       <div className="flex items-center justify-center border-black w-[100px]">
-        <p className="font-semibold text-white">{totalMes}</p>
+        <p className="font-semibold text-white">{totalDia}</p>
       </div>
       <div className="flex items-center justify-center border-black w-[100px]">
         <p className="font-semibold text-white">{totalMes}</p>
@@ -48,6 +48,7 @@ function somarAtendimentosMes(dadosTabela) {
     cabecalho.cirurgioes.map((cirurgiao) => {
       if (cirurgiao.procedimento != "Procedimento Anestésico") {
         totalMes += cirurgiao.pacientesAtendidosMes;
+        totalMes -= cirurgiao.pacientesAtendidosDia;
       }
     });
   });
@@ -62,6 +63,7 @@ function somarAtendimentosAno(dadosTabela) {
     cabecalho.cirurgioes.map((cirurgiao) => {
       if (cirurgiao.procedimento != "Procedimento Anestésico") {
         totalAno += cirurgiao.pacientesAtendidosAno;
+        totalAno -= cirurgiao.pacientesAtendidosDia;
       }
     });
   });

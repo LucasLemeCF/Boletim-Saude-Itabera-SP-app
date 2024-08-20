@@ -1,6 +1,6 @@
 
 export function RodapeTotal({dadosTabela, linhasTabela}) {
-  const total = somarAtendimentosDia(dadosTabela, linhasTabela);
+  const totalDia = somarAtendimentosMes(dadosTabela, linhasTabela);
 
   return (
     <div className="flex border border-t-0 divide-x border-black bg-[#337B5B] w-full">
@@ -9,13 +9,13 @@ export function RodapeTotal({dadosTabela, linhasTabela}) {
       </div>
 
       <div className="flex items-center justify-center border-black w-[300px]">
-        <p className="font-semibold text-white">{total}</p>
+        <p className="font-semibold text-white">{totalDia}</p>
       </div>
     </div>
   )
 }
 
-function somarAtendimentosDia(dadosTabela, linhasTabela) {
+function somarAtendimentosMes(dadosTabela, linhasTabela) {
   let totalDia = 0;
 
   linhasTabela.map((linha) => {
@@ -36,5 +36,23 @@ function somarAtendimentosDia(dadosTabela, linhasTabela) {
     });
   });
 
-  return totalDia;
+  let totalMes = totalDia;
+
+  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+    cabecalho.especialidades.map((especialidade) => {
+      totalMes += especialidade.pacientesAtendidosMes;
+      totalMes -= especialidade.pacientesAtendidosDia;
+    });
+  });
+
+  dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
+    cabecalho.cirurgioes.map((cirurgiao) => {
+      if (cirurgiao.procedimento != "Procedimento Anestésico") {
+        totalMes += cirurgiao.pacientesAtendidosMes;
+        totalMes -= cirurgiao.pacientesAtendidosDia;
+      }
+    });
+  });
+
+  return totalMes;
 }
