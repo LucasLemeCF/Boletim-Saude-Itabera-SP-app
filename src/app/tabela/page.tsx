@@ -12,7 +12,9 @@ import ConverterData from './converterData';
 import Especialidades from './especialidades';
 import HeaderTabela from './headerTabela';
 import { MontarCabecalhos, montarValoresLinhas } from './montarDados';
-import { Rodape } from './rodape';
+import { RodapeCirurgioes } from './rodapeCirurgioes';
+import { RodapeEspecialidades } from './rodapeEspecialidades';
+import { RodapeTotal } from './rodapeTotal';
 
 export default function Tabela() {
   const [data, setData] = useState(new Date());
@@ -98,11 +100,14 @@ function Linhas({dataCalendario, BaixarTabela}) {
           <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
         : null}
 
-        <Rodape dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+        <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
 
         {TemDadadosCirurgioes({dadosTabela}) ? 
           <Cirurgioes dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
         : null}
+
+        <RodapeCirurgioes dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+        <RodapeTotal dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
 
         {!TemDadadosEspecialidades({dadosTabela}) && !TemDadadosCirurgioes({dadosTabela}) ?
           <p>Não foi possível encontrar dados para a data</p>

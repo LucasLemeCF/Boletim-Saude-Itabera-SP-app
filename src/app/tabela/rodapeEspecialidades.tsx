@@ -1,17 +1,17 @@
 
-export function Rodape({dadosTabela, linhasTabela}) {
-  let totalDia = somarAtendimentosDia(linhasTabela);
+export function RodapeEspecialidades({dadosTabela, linhasTabela}) {
+  const totalDia = somarAtendimentosDia(linhasTabela);
   const totalMetaDia = somarMetaDia(dadosTabela);
-  let totalAtingidoDia = calculaPorcentagemDia(dadosTabela);
+  const totalAtingidoDia = calculaPorcentagemDia(dadosTabela);
 
-  let totalMes = somarAtendimentosMes(dadosTabela) + totalDia;
+  const totalMes = somarAtendimentosMes(dadosTabela) + totalDia;
   const totalMetaMes = somarMetaMes(dadosTabela);
-  let totalAtingidoMes = calcularPorcentagemMes(dadosTabela);
+  const totalAtingidoMes = calcularPorcentagemMes(dadosTabela);
 
   return (
     <div className="flex border border-t-0 divide-x border-black bg-[#337B5B] w-full">
       <div className="flex items-center justify-center border-black w-[300px]">
-        <p className="font-semibold text-white">Total</p>
+        <p className="font-semibold text-white">Total de Consultas</p>
       </div>
 
       <div className="flex items-center justify-center border-black w-[100px]">
@@ -41,9 +41,7 @@ function somarAtendimentosDia(linhasTabela) {
   let totalDia = 0;
 
   linhasTabela.map((linha) => {
-    if (Number.isNaN(linha.pacientesAtendidos)) {
-      totalDia += 0;
-    } else {
+    if (!Number.isNaN(linha.pacientesAtendidos) && linha.tipo === "ESPECIALIDADE_LINHA") {
       totalDia += linha.pacientesAtendidos;
     }
   });
@@ -55,9 +53,9 @@ function somarMetaDia(dadosTabela) {
   let totalMetaDia = 0;
   
   dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-      cabecalho.especialidades.map((especialidade) => {
-        totalMetaDia += especialidade.metaDiaria;
-      });
+    cabecalho.especialidades.map((especialidade) => {
+      totalMetaDia += especialidade.metaDiaria;
+    });
   });
   
   return totalMetaDia;

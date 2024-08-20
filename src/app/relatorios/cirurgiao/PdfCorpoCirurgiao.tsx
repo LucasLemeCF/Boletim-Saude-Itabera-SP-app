@@ -75,8 +75,6 @@ function separarProcedimentos(cirurgioes) {
   const procedimentosPagina = [];
   let procedimentos = [];
 
-  console.log("Teste: " + cirurgioes.length);
-
   cirurgioes.map(cirurgiao => {
     cirurgiao.procedimentos.map(procedimento => {
       procedimentos.push(procedimento);

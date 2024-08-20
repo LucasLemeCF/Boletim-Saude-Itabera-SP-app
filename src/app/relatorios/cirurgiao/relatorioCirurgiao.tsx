@@ -28,8 +28,6 @@ export function RelatorioCirurgiao({dadosRelatorio, mesRelatorio, anoRelatorio})
       newChartRef.push(chartRefCapa.current[0].toBase64Image());
       newChartRef.push(chartRefCapa.current[1].toBase64Image());
 
-      console.log("Tamanho: " + chartRefCorpo.current.length);
-
       for (let i = 0; i < chartRefCorpo.current.length; i++) {
         if (chartRefCorpo.current[i] != undefined) {
           newChartRef.push(chartRefCorpo.current[i].toBase64Image());
