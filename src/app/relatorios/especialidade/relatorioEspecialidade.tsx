@@ -67,7 +67,7 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
                 <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start bg-[#337B5B]`} type={"button"}>
                     <MdOutlineFileDownload className="w-6 h-6 ml-4"/>
                     <div className={"ml-4"}>
-                        <PDFDownloadLink document={<PdfEspecialidade especialidades={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>} fileName={"Boletim Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"}>
+                        <PDFDownloadLink document={<PdfEspecialidade especialidades={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>} fileName={"Relatório Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"}>
                             Baixar
                         </PDFDownloadLink>
                     </div>
@@ -94,7 +94,7 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
 }
 
 export const PdfEspecialidade = ({ especialidades, mesRelatorio, anoRelatorio, base64Image, mesString, dadosRelatorio }) => (
-    <Document title={"Boletim Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"} >
+    <Document title={"Relatório Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"} >
         <PdfCapaEspecialidade img={base64Image} mes={mesString} ano={anoRelatorio} especialidades={dadosRelatorio}/>
         <PdfCorpoEspecialidade especialidades={especialidades} img={base64Image}/>
     </Document>

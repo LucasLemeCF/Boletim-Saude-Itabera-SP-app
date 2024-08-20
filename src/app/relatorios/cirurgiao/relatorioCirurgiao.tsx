@@ -53,7 +53,7 @@ export function RelatorioCirurgiao({dadosRelatorio, mesRelatorio, anoRelatorio})
           <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start bg-[#337B5B]`} type={"button"}>
             <MdOutlineFileDownload className="w-6 h-6 ml-4"/>
             <div className={"ml-4"}>
-              <PDFDownloadLink document={<PdfCirurgiao cirurgioes={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>} fileName={"Boletim Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"}>
+              <PDFDownloadLink document={<PdfCirurgiao cirurgioes={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>} fileName={"Relatório de Cirurgias - " + mesRelatorio + "-" + anoRelatorio + ".pdf"}>
                 Baixar
               </PDFDownloadLink>
             </div>
@@ -84,7 +84,7 @@ export function RelatorioCirurgiao({dadosRelatorio, mesRelatorio, anoRelatorio})
 }
 
 export const PdfCirurgiao = ({ cirurgioes, mesRelatorio, anoRelatorio, base64Image, mesString, dadosRelatorio }) => (
-  <Document title={"Boletim Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"} >
+  <Document title={"Relatório de Cirurgias - " + mesRelatorio + "-" + anoRelatorio + ".pdf"} >
     <PdfCapaCirurgiao img={base64Image} mes={mesString} ano={anoRelatorio} cirurgioes={dadosRelatorio}/>
     <PdfCorpoCirurgiao cirurgioes={cirurgioes} img={base64Image}/>
   </Document>

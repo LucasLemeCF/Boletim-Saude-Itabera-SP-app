@@ -66,7 +66,7 @@ const cabecalhoCirurgioes = (cabecalho, tamanhoCabecalhoAnterior, qtdLinhasEspec
         <div className="flex items-center justify-center border-black font-semibold text-center text-white w-[100px] h-[50px]">
           <p>Mensal</p>
         </div>
-        <div className="flex items-center justify-center border-black text-center text-white w-[100px] h-[50px]">
+        <div className="flex items-center justify-center border-black font-semibold text-center text-white w-[100px] h-[50px]">
           <p>Anual</p>
         </div>
       </div>
@@ -101,8 +101,7 @@ const linhaCirurgiao = (cirurgiao, posicaoLinha, register, watchLinha) => {
         <p>{cirurgiao.procedimento}</p>
       </div>
 
-      <input  className="flex items-center justify-center border-black font-semibold text-center w-[100px] h-[25px] bg-[#E2EFDB]" 
-        type="number"
+      <input  className="flex items-center justify-center border-black text-center text-center w-[100px] h-[25px] bg-[#E2EFDB]" 
         name={`linhas.${posicaoLinha}.pacientesAtendidos`} {...register(`linhas.${Number(posicaoLinha)}.pacientesAtendidos`, { valueAsNumber: true, required: "Digite os numeros restantes" })}
       />
 
