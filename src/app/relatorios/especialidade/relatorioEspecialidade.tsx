@@ -27,7 +27,7 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
             newChartRef.push(chartRefCapa.current[0].toBase64Image());
             newChartRef.push(chartRefCapa.current[1].toBase64Image());
 
-            for (let i = 0; i < 22; i++) {
+            for (let i = 0; i < chartRefCorpo.current.length; i++) {
                 if (chartRefCorpo.current[i] != undefined) {
                     newChartRef.push(chartRefCorpo.current[i].toBase64Image());
                 }
@@ -36,6 +36,21 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
             setBase64Image(newChartRef);
             setOpenPdf(true);
         }
+    }
+
+    const novoGerarPdfReader = () => {
+        const newChartRef = [];
+
+        newChartRef.push(chartRefCapa.current[0].toBase64Image());
+        newChartRef.push(chartRefCapa.current[1].toBase64Image());
+
+        for (let i = 0; i < chartRefCorpo.current.length; i++) {
+            if (chartRefCorpo.current[i] != undefined) {
+                newChartRef.push(chartRefCorpo.current[i].toBase64Image());
+            }
+        }
+    
+        setBase64Image(newChartRef);
     }
   
     return (
@@ -47,14 +62,17 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
                 <Switch onClick={() => gerarPdfReader()}/>
                 <Label>Modo PDF</Label>
             </div>
-            <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start bg-[#337B5B]`} type={"button"}>
-                <MdOutlineFileDownload className="w-6 h-6 ml-4"/>
-                <div className={"ml-4"}>
-                    <PDFDownloadLink document={<PdfEspecialidade especialidades={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>} fileName={"Boletim Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"}>
-                        Baixar
-                    </PDFDownloadLink>
-                </div>
-            </button>
+            {
+                openPdf ? 
+                <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start bg-[#337B5B]`} type={"button"}>
+                    <MdOutlineFileDownload className="w-6 h-6 ml-4"/>
+                    <div className={"ml-4"}>
+                        <PDFDownloadLink document={<PdfEspecialidade especialidades={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio} base64Image={base64Image} mesString={mesString} dadosRelatorio={dadosRelatorio}/>} fileName={"Boletim Médico - " + mesRelatorio + "-" + anoRelatorio + ".pdf"}>
+                            Baixar
+                        </PDFDownloadLink>
+                    </div>
+                </button> : null
+            }
         </div>
        
         <div className={`flex flex-col justify-items-start w-[891px] h-[1260px] mt-8 px-0 ` + (openPdf ? "" : "hidden")}>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { numeroParaMes } from "../../../utils/meses";
 
-function TotalMesesCirurgiao({ ano }) {
+function TotalMesesCirurgiao({ ano, chartRef }) {
   const [isLoading, setLoading] = useState(true);
 
   const [chartData, setChartData] = useState({
@@ -36,8 +36,6 @@ function TotalMesesCirurgiao({ ano }) {
             }
           ]
         });
-      } catch (error) {
-        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }
@@ -51,6 +49,7 @@ function TotalMesesCirurgiao({ ano }) {
   return (
     <div className="chart-container mt-4 px-8">
       <Bar
+        ref={el => chartRef.current[1] = el}
         height='50vh'
         width='80vw'
         type='bar'

@@ -1,5 +1,6 @@
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
+import Image from 'next/image';
 import LineChartEspecialidade from "../../../components/Charts/Especialidade/LineChartEspecialidade";
 
 Chart.register(CategoryScale);
@@ -36,10 +37,10 @@ const descricao = (dadosMes) => {
           </p>
         </div>
         <div className="flex flex-row h-[60px] mr-4">
-          <img 
+          <Image 
             src="/logo.png"
-            width="60px"
-            height="60px"
+            width={60}
+            height={60}
             alt="Logo Itaberá SP"
           />
         </div>

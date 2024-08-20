@@ -101,7 +101,7 @@ function Paginas() {
           {tipoRelatorio == "especialidade" ?
             <RelatorioEspecialidade dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
             : tipoRelatorio == "cirurgiao" ?
-            <RelatorioCirurgiao cirurgioes={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
+            <RelatorioCirurgiao dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
             : 
             <p>Tipo de relatório não encontrado</p>
           }

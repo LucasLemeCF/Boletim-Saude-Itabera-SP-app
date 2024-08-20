@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Bar } from "react-chartjs-2";
 
-function BarChartCapaCirurgiao({ cirurgioes }) {
+function BarChartCapaCirurgiao({ cirurgioes, chartRef }) {
   const [chartData] = useState({
     type: 'bar',
     labels: montarLabels(cirurgioes),
@@ -18,6 +18,7 @@ function BarChartCapaCirurgiao({ cirurgioes }) {
   return (
     <div className="chart-container mt-4 px-8">
       <Bar
+        ref={el => chartRef.current[0] = el}
         height='50vh'
         width='80vw'
         type='bar'

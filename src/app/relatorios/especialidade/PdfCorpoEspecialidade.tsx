@@ -29,7 +29,7 @@ const Pagina = ({especialidadesPagina, img, indexEspecialidade}) => {
   return (
     <Page size="A4" style={styles.page}>
       {especialidadesPagina.map((especialidade, index) => (
-        <Especialidade especialidade={especialidade} img={img} indexEspecialidade={indexEspecialidade} index={index}/>
+        <Especialidade key={index} especialidade={especialidade} img={img} indexEspecialidade={indexEspecialidade} index={index}/>
       ))}
     </Page>
   )
@@ -37,22 +37,15 @@ const Pagina = ({especialidadesPagina, img, indexEspecialidade}) => {
 
 const Especialidade = ({especialidade, img, indexEspecialidade, index}) => {
   const dadosMes = especialidade.resultadosMensais[0];
-
-  let testIndex = 0;
-
-  if ((indexEspecialidade * 2 + index + 2) > 22) {
-    testIndex = 2;
-  } else {
-    testIndex = Number(indexEspecialidade) * 2 + index + 2;
-  }
+  const novoIndex = Number(indexEspecialidade) * 2 + index + 2;
 
   return (
     <View style={[styles.containerPagina]}>
       <Titulo especialidade={especialidade.especialidade}/>
       {descricao(dadosMes)}
       <Image
-        source={img[testIndex]}
-        style={{ height: "322", width: "552", padding: "16px" }}
+        src={img[novoIndex]}
+        style={{ height: "322px", width: "552px", padding: "16px" }}
       />
     </View> 
   )
@@ -85,7 +78,7 @@ const descricao = (dadosMes) => {
           </View>
         </View>
           <Image
-            source={"/logo.png"}
+            src={"/logo.png"}
             style={{height: "40px", width: "40px", marginRight: "10px", marginTop: "8px"}}
           />
       </View>
@@ -133,14 +126,6 @@ function somarAtendimentos(especialidades) {
 
   return soma;
 }
-
-// Font.register({
-//   family: 'Open Sans',
-//   fonts: [
-//     { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-regular.ttf' },
-//     { src: 'https://cdn.jsdelivr.net/npm/open-sans-all@0.1.3/fonts/open-sans-700.ttf', fontWeight: 700 }
-//   ]
-// })
 
 const styles = StyleSheet.create({
   page: {

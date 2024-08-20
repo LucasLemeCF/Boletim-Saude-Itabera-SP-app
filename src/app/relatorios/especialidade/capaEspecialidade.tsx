@@ -3,7 +3,7 @@ import Image from 'next/image';
 import BarChartCapaEspecialidade from "../../../components/Charts/Especialidade/BarChartCapaEspecialidade";
 import BarChartPorcentagem from "../../../components/Charts/Especialidade/BarChartPorcentagem";
 
-export function CapaEspecialidade({especialidades, mes, ano, chartRef}) {  
+export function CapaEspecialidade({especialidades, mes, ano, chartRef}) {
     return (
         <>
             <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[1260px] pt-4 pb-8`}>

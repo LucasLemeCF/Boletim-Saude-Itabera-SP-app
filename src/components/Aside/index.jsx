@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Navigation } from './navigation';
 
 export const Aside = () => {
@@ -21,10 +22,10 @@ const header = () => {
 const logo = () => {
     return (
        <div className="flex items-center gap-6 self-stretch w-48">
-            <img 
+            <Image 
                 src="/logo.png"
-                width="50px"
-                height="50px"
+                width={50}
+                height={50}
                 alt="Logo Itaberá SP"
             />
             <div>
@@ -38,17 +39,3 @@ const logo = () => {
        </div>
     )
 }
-
-// const seta = () => {
-//     return (
-//         <div className="flex justify-end items-center gap-10">
-//             <Image 
-//                 src="/seta.png"
-//                 width={6}
-//                 height={10}
-//                 alt="Seta para esquerda"
-//             />
-//         </div>
-//     )
-// }
-

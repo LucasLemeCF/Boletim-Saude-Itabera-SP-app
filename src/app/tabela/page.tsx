@@ -60,8 +60,6 @@ function Linhas({dataCalendario, BaixarTabela}) {
         const dataResponse = await response.json();
         setDadosTabela(dataResponse);
         setValue("linhas", montarValoresLinhas(dataResponse))
-      } catch (error) {
-        console.error('Error fetching data:', error);
       } finally {
         setLoading(false);
       }

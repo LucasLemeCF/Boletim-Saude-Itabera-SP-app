@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Line } from "react-chartjs-2";
 
-function LineChartCirurgiao({ dadosMes }) {
+function LineChartCirurgiao({ dadosMes, chartRef, index }) {
 
   const [chartData] = useState({
     type: 'line',
@@ -19,6 +19,7 @@ function LineChartCirurgiao({ dadosMes }) {
   return (
     <div className="chart-container mt-4">
       <Line
+        ref={el => chartRef.current[index] = el}
         data={chartData}
         options={{
           responsive: true,

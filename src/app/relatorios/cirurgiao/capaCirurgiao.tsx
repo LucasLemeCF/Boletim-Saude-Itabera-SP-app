@@ -4,13 +4,13 @@ import BarChartCapaCirurgiao from "../../../components/Charts/Cirurgiao/BarChart
 import TotalMesesCirurgiao from "../../../components/Charts/Cirurgiao/TotalMesesCirurgiao";
 import { numeroParaMes } from "../../../utils/meses";
 
-export function CapaCirurgiao({cirurgioes, mes, ano}) {  
+export function CapaCirurgiao({cirurgioes, mes, ano, chartRef}) {  
     return (
       <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[1260px] pt-4 pb-8`}> 
         {titulo(mes, ano)}
-        <BarChartCapaCirurgiao cirurgioes={cirurgioes}/>
+        <BarChartCapaCirurgiao cirurgioes={cirurgioes} chartRef={chartRef}/>
         {descricao(cirurgioes, mes)}
-        <TotalMesesCirurgiao ano={ano}/>
+        <TotalMesesCirurgiao ano={ano} chartRef={chartRef}/>
       </div>
     );
 }

@@ -1,5 +1,6 @@
 "use client"
 
+import Image from "next/image";
 import { DatePickerDemo } from "./calendario";
 
 export default function HeaderTabela({data, setData}) {
@@ -15,10 +16,10 @@ export default function HeaderTabela({data, setData}) {
     return (
       <div className="flex items-center justify-between divide-x border-t border-x border-black bg-[#337B5B]">
         <div className="flex items-centerflex items-center justify-start border-b-0 border-black w-[300px] h-[75px] h-[75px] px-2 gap-4">
-          <img 
+          <Image 
             src="/logo.png"
-            width="60px"
-            height="60px"
+            width={60}
+            height={60}
             alt="Logo Itaberá SP"
           />
           <div>
@@ -41,10 +42,10 @@ export default function HeaderTabela({data, setData}) {
           <p className="text-white text-center text-xl font-impact w-[175px]">
             SECRETARIA MUNICIPAL DE SAÚDE
           </p>
-          <img 
+          <Image 
             src="/logoSaude.png"
-            width="60px"
-            height="60px"
+            width={60}
+            height={60}
             alt="Logo da secretaria de saúde"
           />
         </div>
