@@ -1,12 +1,12 @@
 import { UseFormRegister } from 'react-hook-form';
-import { FormField, FormItem } from '../../components/ui/form';
+import { FormField, FormItem } from '../../../components/ui/form';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../../components/ui/select";
+} from "../../../components/ui/select";
 
 interface SelectProps {
     register: UseFormRegister<{

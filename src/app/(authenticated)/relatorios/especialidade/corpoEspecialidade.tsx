@@ -1,7 +1,7 @@
 import { CategoryScale } from "chart.js";
 import Chart from "chart.js/auto";
 import Image from 'next/image';
-import LineChartEspecialidade from "../../../components/Charts/Especialidade/LineChartEspecialidade";
+import LineChartEspecialidade from "../../../../components/Charts/Especialidade/LineChartEspecialidade";
 
 Chart.register(CategoryScale);
 

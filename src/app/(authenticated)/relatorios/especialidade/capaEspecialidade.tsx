@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/alt-text */
 import Image from 'next/image';
-import BarChartCapaEspecialidade from "../../../components/Charts/Especialidade/BarChartCapaEspecialidade";
-import BarChartPorcentagem from "../../../components/Charts/Especialidade/BarChartPorcentagem";
+import BarChartCapaEspecialidade from "../../../../components/Charts/Especialidade/BarChartCapaEspecialidade";
+import BarChartPorcentagem from "../../../../components/Charts/Especialidade/BarChartPorcentagem";
 
 export function CapaEspecialidade({especialidades, mes, ano, chartRef}) {
     return (

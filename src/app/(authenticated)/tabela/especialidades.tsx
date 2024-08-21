@@ -1,5 +1,5 @@
 import { UseFormRegister } from 'react-hook-form';
-import { CabecalhoTabela, EspecialidadesTabela, Tabela } from '../../schemas/tabela';
+import { CabecalhoTabela, EspecialidadesTabela, Tabela } from '../../../schemas/tabela';
 
 interface EspecialidadesProps {
   dadosTabela: Tabela;

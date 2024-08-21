@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiSave } from "react-icons/bi";
 import { MdOutlineFileDownload } from "react-icons/md";
-import { dadosTabelaSchema, TabelaFormData } from '../../schemas/responseTabela';
+import { dadosTabelaSchema, TabelaFormData } from '../../../schemas/responseTabela';
 import Cirurgioes from './cirurgioes';
 import ConverterData from './converterData';
 import Especialidades from './especialidades';

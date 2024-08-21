@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
 import generatePDF, { Options, usePDF } from "react-to-pdf";
-import { Form } from "../../components/ui/form";
-import { RelatorioFormData } from '../../schemas/relatorio';
-import { Button } from "../tabela/page";
+import { Button } from "../../(authenticated)/tabela/page";
+import { Form } from "../../../components/ui/form";
+import { RelatorioFormData } from '../../../schemas/relatorio';
 import { RelatorioCirurgiao } from "./cirurgiao/relatorioCirurgiao";
 import { RelatorioEspecialidade } from './especialidade/relatorioEspecialidade';
 import { SelectMonth, SelectTipoRelatorio, SelectYear } from "./select";

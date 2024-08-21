@@ -1,5 +1,5 @@
 import { UseFormRegister } from "react-hook-form";
-import { Tabela } from "../../schemas/tabela";
+import { Tabela } from "../../../schemas/tabela";
 
 interface CirurgioesProps {
   dadosTabela: Tabela;
