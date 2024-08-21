@@ -28,7 +28,6 @@ export function DatePickerDemo({data, setData}) {
       <PopoverContent className="w-auto p-0 border-[#337B5B]">
         <Calendar
           mode="single"
-          selected={data}
           onSelect={setData}
           initialFocus
           defaultMonth={data}

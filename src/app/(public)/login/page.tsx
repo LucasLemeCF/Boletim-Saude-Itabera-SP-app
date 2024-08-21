@@ -42,14 +42,14 @@ function FormLogin () {
       <form>
         <div className="w-full">
           <p className="w-full h-4 mb-3 text-sm">Usuário</p>
-          <input className="bg-white w-full h-12 py-3 px-4 border rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" type="text" placeholder="Digite o nome do usuário"
+          <input className="bg-white w-full h-12 py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" type="text" placeholder="Digite o nome do usuário"
             // {...register(`usuario`, { required: "Digite o nome do usuário" })}
           />
         </div>
     
         <div className="w-full mt-6">
           <p className="w-full h-4 mb-3 text-sm">Senha</p>
-          <input className="bg-white w-full h-12 py-3 px-4 border rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" type="text" placeholder="Digite a senha"
+          <input className="bg-white w-full h-12 py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" type="text" placeholder="Digite a senha"
             // {...register(`senha`, { required: "Digite a senha" })}
           />
         </div>

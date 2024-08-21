@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
+import { CgSpinner } from "react-icons/cg";
 import { Options, usePDF } from "react-to-pdf";
 import { Button } from "../../(authenticated)/tabela/page";
 import { Form } from "../../../components/ui/form";
@@ -125,7 +126,10 @@ function TemDadados(dadosTabela) {
 
 function Carregando() {
   return (
-    <p>Carregando...</p>
+    <div className="bg-[#337B5B] w-[891px] mt-8 p-8 rounded-[5px] flex items-center justify-center">
+      <CgSpinner className="animate-spin text-white h-5 w-5 mr-1"/>
+      <p className="text-white">Carregando...</p>
+    </div>
   )
 }
 

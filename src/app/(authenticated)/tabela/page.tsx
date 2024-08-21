@@ -5,6 +5,7 @@ import { toPng } from 'html-to-image';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiSave } from "react-icons/bi";
+import { CgSpinner } from "react-icons/cg";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { dadosTabelaSchema, TabelaFormData } from '../../../schemas/responseTabela';
 import Cirurgioes from './cirurgioes';
@@ -184,6 +185,9 @@ function TemDadadosCirurgioes({dadosTabela}) {
 
 function Carregando() {
   return (
-    <p>Carregando...</p>
+    <div className="bg-[#E2EFDB] w-full h-[100px] border border-black flex items-center justify-center">
+      <CgSpinner className="animate-spin h-5 w-5 mr-1"/>
+      <p>Carregando...</p>
+    </div>
   )
 }
