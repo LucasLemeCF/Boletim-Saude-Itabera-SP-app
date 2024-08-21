@@ -1,4 +1,3 @@
-import { UseFormRegister } from 'react-hook-form';
 import { FormField, FormItem } from '../../../components/ui/form';
 import {
   Select,
@@ -7,14 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../../../components/ui/select";
-
-interface SelectProps {
-    register: UseFormRegister<{
-        tipo?: string;
-        mes?: string;
-        ano?: string;
-    }>;
-  }
 
 export function SelectTipoRelatorio({control}) {
   return (

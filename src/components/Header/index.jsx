@@ -7,12 +7,16 @@ export const Header = () => {
                 <p className="text-white">
                     Administrador
                 </p>
-                <Image
-                    src="/user.png"
-                    width={40}
-                    height={40}
-                    alt="Icone de usuário"
-                />
+                <a href="/login">
+                    <Image
+                        src="/user.png"
+                        width={40}
+                        height={40}
+                        alt="Icone de usuário"
+                        href="/"
+                        className="cursor-pointer"
+                    />
+                </a>
             </div>
         </header>
     )

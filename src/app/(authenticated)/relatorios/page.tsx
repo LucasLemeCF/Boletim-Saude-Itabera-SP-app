@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
-import generatePDF, { Options, usePDF } from "react-to-pdf";
+import { Options, usePDF } from "react-to-pdf";
 import { Button } from "../../(authenticated)/tabela/page";
 import { Form } from "../../../components/ui/form";
 import { RelatorioFormData } from '../../../schemas/relatorio';
@@ -64,8 +64,6 @@ function Paginas() {
   const options: Options = {
     filename: montarNomeDoArquivo(),
   };
-
-  const downloadPdf = () => generatePDF(targetRef, options);
 
   async function onSubmit(dadosNovos: RelatorioFormData) {
     const fetchData = async () => {
