@@ -1,4 +1,10 @@
-import Image from 'next/image'
+import Image from 'next/image';
+import { MdLogout } from "react-icons/md";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "../ui/popover";
 
 export const Header = () => {
     return (
@@ -7,16 +13,25 @@ export const Header = () => {
                 <p className="text-white">
                     Administrador
                 </p>
-                <a href="/login">
-                    <Image
-                        src="/user.png"
-                        width={40}
-                        height={40}
-                        alt="Icone de usuário"
-                        href="/"
-                        className="cursor-pointer"
-                    />
-                </a>
+                <Popover>
+                    <PopoverTrigger>
+                        <div>
+                            <Image
+                                src="/user.png"
+                                width={40}
+                                height={40}
+                                alt="Icone de usuário"
+                                className="cursor-pointer"
+                            />
+                        </div>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        <a href="/login" className="flex items-center">
+                            <MdLogout className="w-6 h-6 mr-2 text-[#337B5B]"/>
+                            <p className="text-lg text-[#337B5B]">Sair</p>
+                        </a>
+                    </PopoverContent>
+                </Popover>
             </div>
         </header>
     )

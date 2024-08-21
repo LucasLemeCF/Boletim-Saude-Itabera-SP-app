@@ -14,7 +14,6 @@ const header = () => {
     return (
         <div className="flex flex-row justify-center items-center self-stretch mt-5">
            {logo()}
-           {/* {seta()} */}
         </div>
     )
 }
