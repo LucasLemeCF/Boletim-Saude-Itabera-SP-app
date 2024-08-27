@@ -22,7 +22,12 @@ function TotalMesesCirurgiao({ ano, chartRef }) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/cirurgiao/resultadoAno/' + ano);
+        const response = await fetch('http://localhost:8080/api/cirurgiao/resultadoAno/' + ano, {
+          method: "Get",
+          headers: {
+            authorization: session?.user.token,
+          },
+        });
         const dataResponse = await response.json();
         setChartData({
           type: 'bar',

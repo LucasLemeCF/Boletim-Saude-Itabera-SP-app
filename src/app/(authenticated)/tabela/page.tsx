@@ -2,6 +2,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod';
 import { toPng } from 'html-to-image';
+import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { BiSave } from "react-icons/bi";
@@ -18,6 +19,7 @@ import { RodapeEspecialidades } from './rodapeEspecialidades';
 import { RodapeTotal } from './rodapeTotal';
 
 export default function Tabela() {
+  const { data: session } = useSession();
   const [data, setData] = useState(new Date());
   const imgRef = useRef(null);
 
@@ -35,15 +37,21 @@ export default function Tabela() {
     <main className="flex flex-col items-center justify-between bg-[#F8FAFC] overscroll-none">
       <div className="flex flex-col items-center justify-between">
         <div className="flex flex-col items-center justify-between mt-[50px] mb-[25px] border-collapse" ref={imgRef}>
-          <HeaderTabela data={data} setData={setData}/> 
-          <Linhas dataCalendario={data} BaixarTabela={BaixarTabela}/>
+          {
+            session ?
+            <>
+              <HeaderTabela data={data} setData={setData}/> 
+              <Linhas dataCalendario={data} BaixarTabela={BaixarTabela} session={session}/>
+            </>
+            : null
+          }
         </div>
       </div>
     </main>
   )
 }
 
-function Linhas({dataCalendario, BaixarTabela}) {
+function Linhas({dataCalendario, BaixarTabela, session}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [isLoading, setLoading] = useState(true);
   
@@ -59,7 +67,12 @@ function Linhas({dataCalendario, BaixarTabela}) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/tabela/' + ConverterData(dataCalendario));   
+        const response = await fetch('http://localhost:8080/api/tabela/' + ConverterData(dataCalendario), {
+          method: "GET",
+          headers: {
+            authorization: session?.user.token,
+          },
+        }); 
         const dataResponse = await response.json();
         setDadosTabela(dataResponse);
         setValue("linhas", montarValoresLinhas(dataResponse))
@@ -69,7 +82,7 @@ function Linhas({dataCalendario, BaixarTabela}) {
     };
 
     fetchData();
-  }, [dataCalendario, getValues, setValue]);
+  }, [dataCalendario, getValues, session?.user.token, setValue]);
 
   if (isLoading) return Carregando()
 
@@ -82,7 +95,10 @@ function Linhas({dataCalendario, BaixarTabela}) {
 
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 
+        'Content-Type': 'application/json',
+        'authorization': session?.user.token,
+      },
       body: JSON.stringify(resultado)
     };
 
@@ -96,25 +112,27 @@ function Linhas({dataCalendario, BaixarTabela}) {
 
   return (
     <>
-      <form className="w-full">
-        {TemDadadosEspecialidades({dadosTabela}) ? 
-          <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
-        : null}
+      {dadosTabela != null ?
+        <form className="w-full">
+          {TemDadadosEspecialidades({dadosTabela}) ? 
+            <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
+          : null}
 
-        <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+          <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
 
-        {TemDadadosCirurgioes({dadosTabela}) ? 
-          <Cirurgioes dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
-        : null}
+          {TemDadadosCirurgioes({dadosTabela}) ? 
+            <Cirurgioes dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
+          : null}
 
-        <RodapeCirurgioes dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
-        <RodapeTotal dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+          <RodapeCirurgioes dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+          <RodapeTotal dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
 
-        {!TemDadadosEspecialidades({dadosTabela}) && !TemDadadosCirurgioes({dadosTabela}) ?
-          <p>Não foi possível encontrar dados para a data</p>
-        : null}
-      </form>
-      
+          {!TemDadadosEspecialidades({dadosTabela}) && !TemDadadosCirurgioes({dadosTabela}) ?
+            <p>Não foi possível encontrar dados para a data</p>
+          : null}
+        </form>
+        : null      
+      }
       <div className="flex items-center justify-end gap-8 w-full mt-8">
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela} type={"button"}/>
         <Button texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"}/>

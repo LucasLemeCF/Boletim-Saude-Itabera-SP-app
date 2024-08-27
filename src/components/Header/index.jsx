@@ -1,3 +1,6 @@
+"use client"
+
+import { signOut } from 'next-auth/react';
 import Image from 'next/image';
 import { MdLogout } from "react-icons/md";
 import {
@@ -26,10 +29,10 @@ export const Header = () => {
                         </div>
                     </PopoverTrigger>
                     <PopoverContent>
-                        <a href="/login" className="flex items-center">
+                        <button onClick={() => signOut({ callbackUrl: '/login', redirect:true })} className="flex flex-row">
                             <MdLogout className="w-6 h-6 mr-2 text-[#337B5B]"/>
                             <p className="text-lg text-[#337B5B]">Sair</p>
-                        </a>
+                        </button>
                     </PopoverContent>
                 </Popover>
             </div>

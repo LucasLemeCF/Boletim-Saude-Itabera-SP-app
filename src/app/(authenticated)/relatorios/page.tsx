@@ -1,5 +1,6 @@
 "use client"
 
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from 'react-hook-form';
 import { CgSpinner } from "react-icons/cg";
@@ -20,6 +21,7 @@ export default function Relatorio() {
 }
 
 function Paginas() {
+  const { data: session } = useSession();
   const [dadosRelatorio, setDadosRelatorio] = useState(null)
   const [tipoRelatorio, setTipoRelatorio] = useState("especialidade");
   const [mesRelatorio, setMesRelatorio] = useState(buscaMesAtual());
@@ -35,7 +37,12 @@ function Paginas() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio);
+        const response = await fetch('http://localhost:8080/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio, {
+          method: "GET",
+          headers: {
+            authorization: session?.user.token,
+          },
+        });
         const dataResponse = await response.json();
         setDadosRelatorio(dataResponse);
       } catch (error) {
@@ -46,7 +53,7 @@ function Paginas() {
     };
 
     fetchData();
-  }, [anoRelatorio, mesRelatorio, tipoRelatorio]);
+  }, [anoRelatorio, mesRelatorio, session?.user.token, tipoRelatorio]);
 
   if (isLoading) return Carregando()
 
@@ -70,7 +77,12 @@ function Paginas() {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch('http://localhost:8080/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano);   
+        const response = await fetch('http://localhost:8080/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano, {
+          method: "POST",
+          headers: {
+            authorization: session?.user.token,
+          },
+        }); 
         const dataResponse = await response.json();
         setDadosRelatorio(dataResponse);
       } catch (error) {
@@ -87,30 +99,36 @@ function Paginas() {
   }
 
   return (
-    <Form {...form}>
-      <form className="flex justify-between w-[891px] mt-8 p-8 rounded-[5px] bg-[#337B5B]">
-        <SelectTipoRelatorio control={control}/>
-        <SelectMonth control={control}/>
-        <SelectYear control={control}/>
-        <Button texto={"Gerar Gráfico"} color={"bg-blue-800 border border-black"} onClick={handleSubmit(onSubmit)} type={"button"}/>
-      </form>
+    <>
       {
-        TemDadados(dadosRelatorio) ? 
-        <div ref={targetRef} className="flex flex-col items-center justify-between my-8 w-[891px]"> 
-          {tipoRelatorio == "especialidade" ?
-            <RelatorioEspecialidade dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
-            : tipoRelatorio == "cirurgiao" ?
-            <RelatorioCirurgiao dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
-            : 
-            <p>Tipo de relatório não encontrado</p>
-          }
-        </div>
-        :
-        <div className="text-white rounded-[5px] mt-20 p-4 bg-[#337B5B]">
-          <p>Não foi possível encontrar dados para a data selecionada</p> 
-        </div>
+        session ?
+          <Form {...form}>
+            <form className="flex justify-between w-[891px] mt-8 p-8 rounded-[5px] bg-[#337B5B]">
+              <SelectTipoRelatorio control={control}/>
+              <SelectMonth control={control}/>
+              <SelectYear control={control}/>
+              <Button texto={"Gerar Gráfico"} color={"bg-blue-800 border border-black"} onClick={handleSubmit(onSubmit)} type={"button"}/>
+            </form>
+            {
+              TemDadados(dadosRelatorio) ? 
+              <div ref={targetRef} className="flex flex-col items-center justify-between my-8 w-[891px]"> 
+                {tipoRelatorio == "especialidade" ?
+                  <RelatorioEspecialidade dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
+                  : tipoRelatorio == "cirurgiao" ?
+                  <RelatorioCirurgiao dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
+                  : 
+                  <p>Tipo de relatório não encontrado</p>
+                }
+              </div>
+              :
+              <div className="text-white rounded-[5px] mt-20 p-4 bg-[#337B5B]">
+                <p>Não foi possível encontrar dados para a data selecionada</p> 
+              </div>
+            }
+          </Form>
+        : null
       }
-    </Form>
+    </>
   );
 }
 
