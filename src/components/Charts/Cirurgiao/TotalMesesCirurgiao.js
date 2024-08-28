@@ -1,9 +1,11 @@
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import { numeroParaMes } from "../../../utils/meses";
 
 function TotalMesesCirurgiao({ ano, chartRef }) {
   const [isLoading, setLoading] = useState(true);
+  const { data: session } = useSession();
 
   const [chartData, setChartData] = useState({
     type: 'bar',
@@ -19,34 +21,37 @@ function TotalMesesCirurgiao({ ano, chartRef }) {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch('http://localhost:8080/api/cirurgiao/resultadoAno/' + ano, {
-          method: "Get",
-          headers: {
-            authorization: session?.user.token,
-          },
-        });
-        const dataResponse = await response.json();
-        setChartData({
-          type: 'bar',
-          labels: montarLabels(),
-          datasets: [
-            {
-              label: "Total",
-              data: montarData(dataResponse),
-              borderColor: '#337B5B',
-              backgroundColor: '#337B5B',
-            }
-          ]
-        });
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (session) {
+      const fetchData = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch('http://localhost:8080/api/cirurgiao/resultadoAno/' + ano, {
+            method: "GET",
+            headers: {
+              authorization: session?.user.token,
+            },
+          });
+          const dataResponse = await response.json();
+          setChartData({
+            type: 'bar',
+            labels: montarLabels(),
+            datasets: [
+              {
+                label: "Total",
+                data: montarData(dataResponse),
+                borderColor: '#337B5B',
+                backgroundColor: '#337B5B',
+              }
+            ]
+          });
+        } finally {
+          setLoading(false);
+        }
+        
+      };
 
-    fetchData();
+      fetchData();
+    }
   }, [ano]);
 
   if (isLoading) return Carregando()

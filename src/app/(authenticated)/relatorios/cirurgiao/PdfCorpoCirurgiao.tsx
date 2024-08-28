@@ -5,8 +5,6 @@ export const PdfCorpoCirurgiao = ({ cirurgioes, img }) => {
   const procedimentosPagina = separarProcedimentos(cirurgioes);
   const nomesCirurgioes = separarNomesCirurgioes(cirurgioes);
 
-  console.log(procedimentosPagina);
-
   return (
     <>
       {procedimentosPagina.map((procedimentos, index) => (
@@ -29,8 +27,6 @@ const Pagina = ({procedimentosPagina, img, indexProcedimento, nomesCirurgioes}) 
 const Procedimento = ({procedimento, img, indexProcedimento, index, nomesCirurgioes}) => {
   const dadosMes = procedimento.resultadosMensais[0];
   const novoIndex = Number(indexProcedimento) * 2 + index + 2;
-
-  console.log("Procedimento: " + procedimento.nome + " - " + nomesCirurgioes[novoIndex-2]);
 
   return (
     <View style={[styles.containerPagina]}>

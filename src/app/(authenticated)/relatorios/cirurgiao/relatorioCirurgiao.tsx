@@ -5,10 +5,10 @@ import { MdOutlineFileDownload } from 'react-icons/md';
 import { Label } from "../../../../components/ui/label";
 import { Switch } from "../../../../components/ui/switch";
 import { numeroParaMes } from "../../../../utils/meses";
-import { CapaCirurgiao } from "./capaCirurgiao";
-import { CorpoCirurgiao } from "./corpoCirurgiao";
 import { PdfCapaCirurgiao } from "./PdfCapaCirurgiao";
 import { PdfCorpoCirurgiao } from './PdfCorpoCirurgiao';
+import { CapaCirurgiao } from './capaCirurgiao';
+import { CorpoCirurgiao } from './corpoCirurgiao';
 
 export function RelatorioCirurgiao({dadosRelatorio, mesRelatorio, anoRelatorio}) {
   const chartRefCapa = useRef<ChartJS<"bar", number[], string>[]>([]);
