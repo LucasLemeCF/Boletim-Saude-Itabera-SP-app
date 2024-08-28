@@ -43,7 +43,7 @@ export default function Tabela() {
               <HeaderTabela data={data} setData={setData}/> 
               <Linhas dataCalendario={data} BaixarTabela={BaixarTabela} session={session}/>
             </>
-            : null
+            : Carregando()
           }
         </div>
       </div>
@@ -203,7 +203,7 @@ function TemDadadosCirurgioes({dadosTabela}) {
 
 function Carregando() {
   return (
-    <div className="bg-[#E2EFDB] w-full h-[100px] border border-black flex items-center justify-center">
+    <div className="bg-[#E2EFDB] w-full min-w-40 h-[100px] border border-black flex items-center justify-center">
       <CgSpinner className="animate-spin h-5 w-5 mr-1"/>
       <p>Carregando...</p>
     </div>

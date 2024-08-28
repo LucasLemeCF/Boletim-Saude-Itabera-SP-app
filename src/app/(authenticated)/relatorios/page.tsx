@@ -126,7 +126,7 @@ function Paginas() {
               </div>
             }
           </Form>
-        : null
+        : Carregando()
       }
     </>
   );

@@ -7,11 +7,8 @@ interface Props {
 }
 
 function Provider({ children }: Props) {
-  // const { data: session } = useSession();
-  
   return (
     <SessionProvider>
-      {/* {session? children : null} */}
       {children}
     </SessionProvider>
   );
