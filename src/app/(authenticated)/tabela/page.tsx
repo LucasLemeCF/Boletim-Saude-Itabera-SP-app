@@ -8,6 +8,8 @@ import { useForm } from 'react-hook-form';
 import { BiSave } from "react-icons/bi";
 import { CgSpinner } from "react-icons/cg";
 import { MdOutlineFileDownload } from "react-icons/md";
+import { Toaster } from "../../../components/ui/toaster";
+import { useToast } from '../../../components/ui/use-toast';
 import { dadosTabelaSchema, TabelaFormData } from '../../../schemas/responseTabela';
 import Cirurgioes from './cirurgioes';
 import ConverterData from './converterData';
@@ -54,6 +56,7 @@ export default function Tabela() {
 function Linhas({dataCalendario, BaixarTabela, session}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [isLoading, setLoading] = useState(true);
+  const { toast } = useToast()
   
   const { watch, register, handleSubmit, setValue, getValues } = useForm<TabelaFormData>({
     resolver: zodResolver(dadosTabelaSchema),
@@ -102,10 +105,9 @@ function Linhas({dataCalendario, BaixarTabela, session}) {
       body: JSON.stringify(resultado)
     };
 
-    fetch('http://localhost:8080/api/tabela', requestOptions)
-      .then(response => response)
-
-    console.log("Tabela salva com sucesso!");
+    fetch('http://localhost:8080/api/tabela', requestOptions).then(response => response)
+    toast({description: "Tabela salva com sucesso!"})
+    console.log("Tabela salva com sucesso!")
   }
 
   const watchLinha = watch("linhas");
@@ -137,6 +139,7 @@ function Linhas({dataCalendario, BaixarTabela, session}) {
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela} type={"button"}/>
         <Button texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"}/>
       </div>
+      <Toaster/>
     </>
   )
 }
