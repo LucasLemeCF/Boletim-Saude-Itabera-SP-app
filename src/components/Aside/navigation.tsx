@@ -6,9 +6,9 @@ import { usePathname } from "next/navigation";
 const navLinks = [
     {name: "BoletimMedico", href: "/tabela"},
     {name: "Relatorios", href: "/relatorios"},
-    {name: "EditarBoletim", href: "/editar-tabela"},
-    {name: "Especialidades", href: "/especialidades"},
-    {name: "Cirurgioes", href: "/cirurgiaos"}
+    // {name: "Editar Boletim", href: "/editar-tabela"},
+    // {name: "Especialidades", href: "/especialidades"},
+    // {name: "Cirurgioes", href: "/cirurgiaos"}
 ]
 
 export function Navigation() {

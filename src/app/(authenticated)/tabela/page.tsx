@@ -45,7 +45,7 @@ export default function Tabela() {
               <HeaderTabela data={data} setData={setData}/> 
               <Linhas dataCalendario={data} BaixarTabela={BaixarTabela} session={session}/>
             </>
-            : Carregando()
+            : CarregandoSession()
           }
         </div>
       </div>
@@ -107,7 +107,6 @@ function Linhas({dataCalendario, BaixarTabela, session}) {
 
     fetch('http://localhost:8080/api/tabela', requestOptions).then(response => response)
     toast({description: "Tabela salva com sucesso!"})
-    console.log("Tabela salva com sucesso!")
   }
 
   const watchLinha = watch("linhas");
@@ -202,6 +201,15 @@ function TemDadadosCirurgioes({dadosTabela}) {
   });
 
   return temDados;
+}
+
+function CarregandoSession() {
+  return (
+    <div className="bg-[#337B5B] w-40 h-16 border rounded-[5px] text-white flex items-center justify-center">
+      <CgSpinner className="animate-spin h-5 w-5 mr-1"/>
+      <p>Carregando...</p>
+    </div>
+  )
 }
 
 function Carregando() {

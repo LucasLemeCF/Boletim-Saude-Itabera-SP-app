@@ -111,7 +111,7 @@ function Paginas() {
         <Button texto={"Gerar Gráfico"} color={"bg-blue-800 border border-black"} onClick={handleSubmit(onSubmit)} type={"button"}/>
       </form>
       {
-        TemDadados(dadosRelatorio) && session ? 
+        TemDadados(dadosRelatorio, tipoRelatorio) && session ? 
         <div ref={targetRef} className="flex flex-col items-center justify-between my-8 w-[891px]"> 
           {tipoRelatorio == "especialidade" ?
             <RelatorioEspecialidade dadosRelatorio={dadosRelatorio} mesRelatorio={mesRelatorio} anoRelatorio={anoRelatorio}/>
@@ -130,11 +130,17 @@ function Paginas() {
   );
 }
 
-function TemDadados(dadosTabela) {
+function TemDadados(dadosTabela, tipoRelatorio) {
   let temDados = false;
 
-  if (dadosTabela && dadosTabela.length > 0) {
+  if (tipoRelatorio == "especialidade" && dadosTabela && dadosTabela.length > 0) {
     temDados = true;
+  } else if (tipoRelatorio == "cirurgiao" && dadosTabela) {
+    dadosTabela.forEach((linha) => {
+      if (linha.procedimentos.length > 0) {
+        temDados = true;
+      }
+    });
   }
 
   return temDados;

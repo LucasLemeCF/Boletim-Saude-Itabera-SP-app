@@ -1,7 +1,21 @@
 "use client";
 
+import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import Image from 'next/image';
+import { useTransition } from "react";
+import { useForm } from 'react-hook-form';
+import { CgSpinner } from 'react-icons/cg';
+import { z } from 'zod';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../../../components/ui/form";
+import { LoginSchema } from '../../../schemas/login';
 
 export default function Login() {
   return ( 
@@ -31,48 +45,91 @@ const Logo = () => (
 )
 
 function FormLogin () {
-  async function login(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-
-    const data = {
-      usuario: formData.get("usuario"),
-      senha: formData.get("senha")
+  const [isPending, startTransition] = useTransition();
+  const form = useForm<z.infer<typeof LoginSchema>> ({
+    resolver: zodResolver(LoginSchema),
+    defaultValues: {
+      usuario: '',
+      senha: ''
     }
+  });
 
-    signIn('credentials', {
-      ...data,
-      callbackUrl: '/tabela',
-    })
+  const onSubmit = async (values: z.infer<typeof LoginSchema>) => {
+    startTransition(() => {
+      const data = {
+        usuario: values.usuario,
+        senha: values.senha
+      }
+  
+      signIn('credentials', {
+          ...data,
+          callbackUrl: '/tabela',
+      })
+    });
   }
 
   return  (
     <div className="w-full mt-8">
-      <form onSubmit={login}>
-        <div className="w-full">
-          <p className="w-full h-4 mb-3 text-sm">Usuário</p>
-          <input 
-            className="bg-white w-full h-12 py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
-            name="usuario"
-            type="text" 
-            placeholder="Digite o nome do usuário"
-          />
-        </div>
-    
-        <div className="w-full mt-6">
-          <p className="w-full h-4 mb-3 text-sm">Senha</p>
-          <input 
-            className="bg-white w-full h-12 py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
-            name="senha"
-            type="password"
-            placeholder="Digite a senha"
-          />
-        </div>
-    
-        <div className="bg-[#337B5B] w-full h-[50px] mt-8 rounded-[8px] flex items-center hover:bg-[#2f7052]">
-          <button className="w-full text-white text-center" type="submit">Entrar</button>
-        </div>
-      </form>
+      <Form  {...form}>
+        <form onSubmit={form.handleSubmit((onSubmit))}>
+          <div>
+            <FormField
+              control={form.control}
+              name="usuario"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Usuário</FormLabel>
+                  <FormControl>
+                    <input 
+                      className="bg-white w-full h-12 py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
+                      {...field}
+                      disabled={isPending}
+                      type="text" 
+                      placeholder="Digite o nome do usuário"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500"/>
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="senha"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Senha</FormLabel>
+                  <FormControl>
+                    <input 
+                      className="bg-white w-full h-12 py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
+                      {...field}
+                      disabled={isPending}
+                      type="password" 
+                      placeholder="Digite a senha"
+                    />
+                  </FormControl>
+                  <FormMessage className="text-red-500"/>
+                </FormItem>
+              )}
+            />
+          </div>
+          <div className="bg-[#337B5B] w-full h-[50px] mt-8 rounded-[8px] flex items-center hover:bg-[#2f7052]">
+            <button 
+              className="w-full text-white flex items-center justify-center"
+              disabled={isPending}
+              type="submit"
+            >
+              {isPending ? 
+                <div className="flex flex-row items-center">
+                  <CgSpinner className="animate-spin text-white text-center h-5 w-5 mr-1"/>
+                  <p>Carregando...</p>
+                </div>
+                : 
+                'Entrar'
+              }
+            </button>
+          </div>
+        </form>
+      </Form>
     </div>
   )
 }
