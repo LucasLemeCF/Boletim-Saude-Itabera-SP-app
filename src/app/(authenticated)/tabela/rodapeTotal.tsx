@@ -24,35 +24,42 @@ function somarAtendimentosMes(dadosTabela, linhasTabela) {
     }
   });
 
-  dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
-    cabecalho.cirurgioes.map((cirurgiao) => {
-      if (cirurgiao.procedimento != "Procedimento Anestésico") {
-        linhasTabela.map((linha) => {
-          if (!Number.isNaN(linha.pacientesAtendidos) && linha.posicao === cirurgiao.posicao) {
-            totalDia += linha.pacientesAtendidos;
-          }
-        });
-      }
+  if (dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
+      cabecalho.cirurgioes.map((cirurgiao) => {
+        if (cirurgiao.procedimento != "Procedimento Anestésico") {
+          linhasTabela.map((linha) => {
+            if (!Number.isNaN(linha.pacientesAtendidos) && linha.posicao === cirurgiao.posicao) {
+              totalDia += linha.pacientesAtendidos;
+            }
+          });
+        }
+      });
     });
-  });
+  }
+
 
   let totalMes = totalDia;
 
-  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-    cabecalho.especialidades.map((especialidade) => {
-      totalMes += especialidade.pacientesAtendidosMes;
-      totalMes -= especialidade.pacientesAtendidosDia;
+  if (dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+      cabecalho.especialidades.map((especialidade) => {
+        totalMes += especialidade.pacientesAtendidosMes;
+        totalMes -= especialidade.pacientesAtendidosDia;
+      });
     });
-  });
+  }
 
-  dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
-    cabecalho.cirurgioes.map((cirurgiao) => {
-      if (cirurgiao.procedimento != "Procedimento Anestésico") {
-        totalMes += cirurgiao.pacientesAtendidosMes;
-        totalMes -= cirurgiao.pacientesAtendidosDia;
-      }
+  if (dadosTabela.cirurgioesCabecalhos !== undefined) {
+    dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
+      cabecalho.cirurgioes.map((cirurgiao) => {
+        if (cirurgiao.procedimento != "Procedimento Anestésico") {
+          totalMes += cirurgiao.pacientesAtendidosMes;
+          totalMes -= cirurgiao.pacientesAtendidosDia;
+        }
+      });
     });
-  });
+  }
 
   return totalMes;
 }

@@ -52,11 +52,13 @@ function somarAtendimentosDia(linhasTabela) {
 function somarMetaDia(dadosTabela) {
   let totalMetaDia = 0;
   
-  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-    cabecalho.especialidades.map((especialidade) => {
-      totalMetaDia += especialidade.metaDiaria;
+  if (dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+      cabecalho.especialidades.map((especialidade) => {
+        totalMetaDia += especialidade.metaDiaria;
+      });
     });
-  });
+  }
   
   return totalMetaDia;
 }
@@ -64,12 +66,14 @@ function somarMetaDia(dadosTabela) {
 function somarAtendimentosMes(dadosTabela) {
   let totalMes = 0;
 
-  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-    cabecalho.especialidades.map((especialidade) => {
-      totalMes += especialidade.pacientesAtendidosMes;
-      totalMes -= especialidade.pacientesAtendidosDia;
+  if (dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+      cabecalho.especialidades.map((especialidade) => {
+        totalMes += especialidade.pacientesAtendidosMes;
+        totalMes -= especialidade.pacientesAtendidosDia;
+      });
     });
-  });
+  }
 
   return totalMes;
 }
@@ -77,11 +81,13 @@ function somarAtendimentosMes(dadosTabela) {
 function somarMetaMes(dadosTabela) {
   let totalMetaMes = 0;
 
-  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+  if (dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
       cabecalho.especialidades.map((especialidade) => {
         totalMetaMes += especialidade.metaMensal;
       });
-  });
+    });
+  }
 
   return totalMetaMes;
 }
@@ -90,14 +96,16 @@ function calculaPorcentagemDia(dadosTabela) {
     let totalPorcentagemDia = 0;
     let qtdEspecialidades = 0;
 
-    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-      cabecalho.especialidades.map((especialidade) => {
-        if (especialidade.metaDiaria > 0) {
-          totalPorcentagemDia += Number(especialidade.pacientesAtendidosDia / Number(especialidade.metaDiaria));
-          qtdEspecialidades++;
-        }
+    if (dadosTabela.especialidadesCabecalhos !== undefined) {
+      dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+        cabecalho.especialidades.map((especialidade) => {
+          if (especialidade.metaDiaria > 0) {
+            totalPorcentagemDia += Number(especialidade.pacientesAtendidosDia / Number(especialidade.metaDiaria));
+            qtdEspecialidades++;
+          }
+        });
       });
-    });
+    }
 
     return ((totalPorcentagemDia/qtdEspecialidades) * 100).toFixed(2);
 }
@@ -106,14 +114,16 @@ function calcularPorcentagemMes(dadosTabela) {
   let totalPorcentagemMes = 0;
   let qtdEspecialidades = 0;
 
-  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-    cabecalho.especialidades.map((especialidade) => {
-      if (especialidade.metaMensal > 0) {
-        totalPorcentagemMes += Number(especialidade.pacientesAtendidosMes / Number(especialidade.metaMensal));
-        qtdEspecialidades++;
-      }
+  if (dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+      cabecalho.especialidades.map((especialidade) => {
+        if (especialidade.metaMensal > 0) {
+          totalPorcentagemMes += Number(especialidade.pacientesAtendidosMes / Number(especialidade.metaMensal));
+          qtdEspecialidades++;
+        }
+      });
     });
-  });
+  }
 
   return ((totalPorcentagemMes/qtdEspecialidades) * 100).toFixed(2);
 } 

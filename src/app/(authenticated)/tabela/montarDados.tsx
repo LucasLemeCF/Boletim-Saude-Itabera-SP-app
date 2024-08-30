@@ -21,7 +21,7 @@ export function montarTabelaFormData(dadosTabela: Tabela, dadosNovos: TabelaForm
 export function montarValoresLinhas(dadosTabela: Tabela) {
     const linhas = [] as any;
 
-    if (dadosTabela !== null) {
+    if (dadosTabela !== null && dadosTabela.especialidadesCabecalhos !== undefined) {
         dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
             cabecalho.especialidades.map((especialidade) => {
                 linhas.push({
@@ -34,7 +34,7 @@ export function montarValoresLinhas(dadosTabela: Tabela) {
         });
     }
 
-    if (dadosTabela !== null) {
+    if (dadosTabela !== null && dadosTabela.cirurgioesCabecalhos !== undefined) {
         dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
             cabecalho.cirurgioes.map((cirurgiao) => {
                 linhas.push({

@@ -26,17 +26,19 @@ export function RodapeCirurgioes({dadosTabela, linhasTabela}) {
 function somarAtendimentosDia(dadosTabela, linhasTabela) {
   let totalDia = 0;
 
-  dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
-    cabecalho.cirurgioes.map((cirurgiao) => {
-      if (cirurgiao.procedimento != "Procedimento Anestésico") {
-        linhasTabela.map((linha) => {
-          if (!Number.isNaN(linha.pacientesAtendidos) && linha.posicao === cirurgiao.posicao) {
-            totalDia += linha.pacientesAtendidos;
-          }
-        });
-      }
+  if (dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
+      cabecalho.cirurgioes.map((cirurgiao) => {
+        if (cirurgiao.procedimento != "Procedimento Anestésico") {
+          linhasTabela.map((linha) => {
+            if (!Number.isNaN(linha.pacientesAtendidos) && linha.posicao === cirurgiao.posicao) {
+              totalDia += linha.pacientesAtendidos;
+            }
+          });
+        }
+      });
     });
-  });
+  }
 
   return totalDia;
 }
@@ -44,14 +46,17 @@ function somarAtendimentosDia(dadosTabela, linhasTabela) {
 function somarAtendimentosMes(dadosTabela) {
   let totalMes = 0;
 
-  dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
-    cabecalho.cirurgioes.map((cirurgiao) => {
-      if (cirurgiao.procedimento != "Procedimento Anestésico") {
-        totalMes += cirurgiao.pacientesAtendidosMes;
-        totalMes -= cirurgiao.pacientesAtendidosDia;
-      }
+  if (dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
+      cabecalho.cirurgioes.map((cirurgiao) => {
+        if (cirurgiao.procedimento != "Procedimento Anestésico") {
+          totalMes += cirurgiao.pacientesAtendidosMes;
+          totalMes -= cirurgiao.pacientesAtendidosDia;
+        }
+      });
     });
-  });
+  }
+
 
   return totalMes;
 }
@@ -59,14 +64,16 @@ function somarAtendimentosMes(dadosTabela) {
 function somarAtendimentosAno(dadosTabela) {
   let totalAno = 0;
 
-  dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
-    cabecalho.cirurgioes.map((cirurgiao) => {
-      if (cirurgiao.procedimento != "Procedimento Anestésico") {
-        totalAno += cirurgiao.pacientesAtendidosAno;
-        totalAno -= cirurgiao.pacientesAtendidosDia;
-      }
+  if (dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
+      cabecalho.cirurgioes.map((cirurgiao) => {
+        if (cirurgiao.procedimento != "Procedimento Anestésico") {
+          totalAno += cirurgiao.pacientesAtendidosAno;
+          totalAno -= cirurgiao.pacientesAtendidosDia;
+        }
+      });
     });
-  });
+  }
 
   return totalAno;
 }

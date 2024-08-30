@@ -113,26 +113,25 @@ function Linhas({dataCalendario, BaixarTabela, session}) {
 
   return (
     <>
-      {dadosTabela != null ?
+      {(dadosTabela != null) && (TemDadadosEspecialidades({dadosTabela}) || TemDadadosCirurgioes({dadosTabela})) ?
         <form className="w-full">
           {TemDadadosEspecialidades({dadosTabela}) ? 
-            <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
+            <>
+              <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
+              <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+            </>
           : null}
-
-          <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
 
           {TemDadadosCirurgioes({dadosTabela}) ? 
-            <Cirurgioes dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
+            <>
+              <Cirurgioes dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
+              <RodapeCirurgioes dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+            </>
           : null}
 
-          <RodapeCirurgioes dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
           <RodapeTotal dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
-
-          {!TemDadadosEspecialidades({dadosTabela}) && !TemDadadosCirurgioes({dadosTabela}) ?
-            <p>Não foi possível encontrar dados para a data</p>
-          : null}
         </form>
-        : null      
+        : <DadosNaoEncontrados/>      
       }
       <div className="flex items-center justify-end gap-8 w-full mt-8">
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela} type={"button"}/>
@@ -182,11 +181,13 @@ const IconeBotao = (texto: String) => {
 function TemDadadosEspecialidades({dadosTabela}) {
   let temDados = false;
 
-  dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
-    if (cabecalho.especialidades.length > 0) {
-      temDados = true;
-    }
-  });
+  if(dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.especialidadesCabecalhos.map((cabecalho) => {
+      if (cabecalho.especialidades.length > 0) {
+        temDados = true;
+      }
+    });
+  }
 
   return temDados;
 }
@@ -194,11 +195,13 @@ function TemDadadosEspecialidades({dadosTabela}) {
 function TemDadadosCirurgioes({dadosTabela}) {
   let temDados = false;
 
-  dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
-    if (cabecalho.cirurgioes.length > 0) {
-      temDados = true;
-    }
-  });
+  if(dadosTabela.especialidadesCabecalhos !== undefined) {
+    dadosTabela.cirurgioesCabecalhos.map((cabecalho) => {
+      if (cabecalho.cirurgioes.length > 0) {
+        temDados = true;
+      }
+    });
+  }
 
   return temDados;
 }
@@ -217,6 +220,14 @@ function Carregando() {
     <div className="bg-[#E2EFDB] w-full min-w-40 h-[100px] border border-black flex items-center justify-center">
       <CgSpinner className="animate-spin h-5 w-5 mr-1"/>
       <p>Carregando...</p>
+    </div>
+  )
+}
+
+function DadosNaoEncontrados() {
+  return (
+    <div className="bg-[#E2EFDB] w-full min-w-40 h-[100px] border border-black flex items-center justify-center">
+      <p>Não foi possível encontrar dados para a data</p>
     </div>
   )
 }
