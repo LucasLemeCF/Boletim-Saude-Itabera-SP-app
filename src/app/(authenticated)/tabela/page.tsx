@@ -5,12 +5,11 @@ import { toPng } from 'html-to-image';
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { BiSave } from "react-icons/bi";
 import { CgSpinner } from "react-icons/cg";
-import { MdOutlineFileDownload } from "react-icons/md";
 import { Toaster } from "../../../components/ui/toaster";
 import { useToast } from '../../../components/ui/use-toast';
 import { dadosTabelaSchema, TabelaFormData } from '../../../schemas/responseTabela';
+import Button from '../../../utils/Button';
 import Cirurgioes from './cirurgioes';
 import ConverterData from './converterData';
 import Especialidades from './especialidades';
@@ -142,42 +141,6 @@ function Linhas({dataCalendario, BaixarTabela, session}) {
   )
 }
 
-interface ButtomProps {
-  texto: string;
-  color: string;
-  onClick?: () => void;
-  type?: "button" | "submit" | "reset";
-  comBotao?: boolean;
-}
-
-export function Button({ texto, color, onClick, type, comBotao = true}: ButtomProps) {
-  return (
-    <>
-      {
-        comBotao ?
-        <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-start ${color}`} type={type} onClick={onClick}>
-          {IconeBotao(texto)}
-          <div className="ml-4">{texto}</div>
-        </button>
-        :
-        <button className={`w-[150px] h-[50px] rounded-[5px] text-white flex items-center justify-center ${color}`} type={type} onClick={onClick}>
-          <div className="ml-4">{texto}</div>
-        </button>
-      }
-    </>
-  )
-}
-
-const IconeBotao = (texto: String) => {
-  if (texto === "Baixar") {
-    return <MdOutlineFileDownload className="w-6 h-6 ml-4"/>
-  } else if (texto === "Salvar") {
-    return <BiSave className="w-6 h-6 ml-4"/>
-  } else {
-    return <div></div>
-  }
-}
-
 function TemDadadosEspecialidades({dadosTabela}) {
   let temDados = false;
 
@@ -227,7 +190,7 @@ function Carregando() {
 function DadosNaoEncontrados() {
   return (
     <div className="bg-[#E2EFDB] w-full min-w-40 h-[100px] border border-black flex items-center justify-center">
-      <p>Não foi possível encontrar dados para a data</p>
+      <p>Não foi possível encontrar tabelas cadastradas</p>
     </div>
   )
 }

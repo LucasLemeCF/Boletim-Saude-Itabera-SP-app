@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import { Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 
 export const PdfCorpoCirurgiao = ({ cirurgioes, img }) => {
