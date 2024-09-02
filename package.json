@@ -1,7 +1,8 @@
 {
-  "name": "boletim-saude-itabera-sp",
-  "version": "0.1.0",
+  "name": "boletim-saude-itabera-sp-app",
+  "version": "1.0.0",
   "private": true,
+  "author": "Lucas Leme <lucasleme09@gmail.com>",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
