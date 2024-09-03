@@ -1,9 +1,9 @@
 FROM node:20-alpine AS base
 ENV NODE_ENV=production
-ENV NEXTAUTH_URL=https://localhost:3000
-ENV NEXTAUTH_SECRET=
-EXPOSE 5000
-ENV PORT 5000
+ENV NEXTAUTH_URL=http://localhost:3000
+ENV NEXTAUTH_SECRET="OFsQ6wuWlBCetNwuME5qus2Zocu23bF0W9d3dZo5hGk="
+EXPOSE 3000
+ENV PORT 3000
 
 #Install dependencies only when needed
 FROM node:20-alpine AS deps
@@ -11,30 +11,16 @@ FROM node:20-alpine AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 
-# Install dependencies based on the preferred package manager
-COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
-RUN \
-    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
-    elif [ -f package-lock.json ]; then npm ci; \
-    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm i; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
-
+# Install dependencies
+COPY package.json package-lock.json* ./
+RUN npm install
 
 # Rebuild the source code only when needed
 FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-RUN \
-    if [ -f yarn.lock ]; then yarn build; \
-    elif [ -f package-lock.json ]; then npx build; \
-    elif [ -f pnpm-lock.yaml ]; then yarn global add pnpm && pnpm build; \
-    else echo "Lockfile not found." && exit 1; \
-    fi
-
-# If using npm comment out above and use below instead
-# RUN npm run build
+RUN npm run build
 
 # Production image, copy all the files and run next
 FROM base AS runner
