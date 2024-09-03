@@ -19,7 +19,7 @@ export const PdfCapaCirurgiao = ({ img, mes, ano, cirurgioes }) => (
             />
             <View style={{ display: "flex",  flexDirection: "column", justifyContent: "space-between", height: "30px", marginTop: "32px"}}>
                 <Text style={{ textAlign: "center", fontFamily: 'Open Sans', fontSize: 12, fontWeight: 700}}>
-                    No total foram atendidos {somarAtendimentos(cirurgioes)} pacientes.
+                    No total foram realizadas {somarAtendimentos(cirurgioes)} cirurgias.
                 </Text>
             </View>
             <Image
@@ -35,9 +35,11 @@ const somarAtendimentos = (cirurgioes) => {
     
     cirurgioes.map(cirurgiao => {
         cirurgiao.procedimentos.map(procedimento => {
-            procedimento.resultadosMensais[0].resultadosDiarios.map(resultadosDiario => {
-                soma += resultadosDiario.atendimentos;
-            });
+            if (procedimento.nome !== "Procedimento Anestésico") {
+                procedimento.resultadosMensais[0].resultadosDiarios.map(resultadosDiario => {
+                    soma += resultadosDiario.atendimentos;
+                });
+            }
         });
     });
   

@@ -38,7 +38,7 @@ const descricao = (cirurgioes, mesInt) => {
 
     return (
         <div className="flex flex-col justify-between h-[30px] mt-4 px-8">
-            <div className="text-center font-bold text-base">No total foram realizadas {somarAtendimentos(cirurgioes)} cirurgias no mês de {mes}.</div>
+            <div className="text-center font-bold text-base">No total foram realizadas {somarAtendimentos(cirurgioes)} cirurgias.</div>
         </div>
     )
 }
@@ -48,9 +48,11 @@ const somarAtendimentos = (cirurgioes) => {
     
     cirurgioes.map(cirurgiao => {
         cirurgiao.procedimentos.map(procedimento => {
-            procedimento.resultadosMensais[0].resultadosDiarios.map(resultadosDiario => {
-                soma += resultadosDiario.atendimentos;
-            });
+            if (procedimento.nome !== "Procedimento Anestésico") {
+                procedimento.resultadosMensais[0].resultadosDiarios.map(resultadosDiario => {
+                    soma += resultadosDiario.atendimentos;
+                });
+            }
         });
     });
   
