@@ -6,7 +6,7 @@ import LineChartEspecialidade from "../../../../components/Charts/Especialidade/
 Chart.register(CategoryScale);
 
 export function CorpoEspecialidade({especialidade, chartRef, index}) {  
-  const dadosMes = especialidade.resultadosMensais[0];
+  const dadosMes = reorganizarDados(especialidade.resultadosMensais[0]);
 
   return (
     <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[630px] p-8`}> 
@@ -15,6 +15,11 @@ export function CorpoEspecialidade({especialidade, chartRef, index}) {
       <LineChartEspecialidade dadosMes={dadosMes} chartRef={chartRef} index={index}/>
     </div>
   );
+}
+
+function reorganizarDados(dadosMes) {
+  dadosMes.resultadosDiarios.sort((a, b) => a.dia - b.dia);
+  return dadosMes;
 }
 
 const titulo = (especialidade) => {
@@ -67,13 +72,13 @@ const calcularPorcentagem = (atendidos, meta) => {
 }
 
 function calcularResultado(dadosMes) {
-    const resultado = dadosMes.atendimentos - dadosMes.metaMensal;
-  
-    if (resultado > 0) {
-      return `${resultado} atendimentos a mais do  que o esperado.`;
-    } else if (resultado < 0) {
-      return `${resultado * -1} atendimentos a menos do que o esperado.`;
-    } else {
-      return "100% da quantidade de atendimento esperada";
-    }
+  const resultado = dadosMes.atendimentos - dadosMes.metaMensal;
+
+  if (resultado > 0) {
+    return `${resultado} atendimentos a mais do  que o esperado.`;
+  } else if (resultado < 0) {
+    return `${resultado * -1} atendimentos a menos do que o esperado.`;
+  } else {
+    return "100% da quantidade de atendimento esperada";
+  }
 }
