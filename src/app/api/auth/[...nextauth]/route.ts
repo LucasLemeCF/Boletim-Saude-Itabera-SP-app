@@ -16,7 +16,8 @@ const handler = NextAuth({
                 senha: { label: "Senha", type: "password" }
             },
             async authorize(credentials, req) {
-                const res = await fetch("http://localhost:8080/api/login", {
+                const url = process.env.NEXT_PUBLIC_BASE_API;
+                const res = await fetch(url+"/api/login", {
                     method: "POST",
                     headers: {
                       "Content-Type": "application/json",
@@ -26,6 +27,7 @@ const handler = NextAuth({
                         senha: credentials?.senha,
                     }),
                 });
+
                 const user = await res.json();
         
                 if (res.ok && user) {
