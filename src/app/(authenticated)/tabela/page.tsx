@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toPng } from 'html-to-image';
+import { toJpeg } from 'html-to-image';
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -25,7 +25,7 @@ export default function Tabela() {
   const imgRef = useRef(null);
 
   function BaixarTabela() {
-    toPng(imgRef.current, { cacheBust: false })
+    toJpeg(imgRef.current, { cacheBust: false })
       .then((dataUrl) => {
         const link = document.createElement("a");
         link.download = "Boletim Saúde - " + ConverterData(data);

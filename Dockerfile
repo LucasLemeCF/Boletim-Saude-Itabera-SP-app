@@ -1,7 +1,8 @@
 FROM node:20-alpine AS base
-ENV NODE_ENV=production
-ENV NEXTAUTH_URL=http://localhost:3000
-ENV NEXTAUTH_SECRET="OFsQ6wuWlBCetNwuME5qus2Zocu23bF0W9d3dZo5hGk="
+ENV NODE_ENV Production
+
+ENV NEXT_PUBLIC_BASE_API http://boletim-saude-api:8080
+
 EXPOSE 3000
 ENV PORT 3000
 
