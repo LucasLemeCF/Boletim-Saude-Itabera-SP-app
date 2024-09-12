@@ -37,21 +37,6 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
             setOpenPdf(true);
         }
     }
-
-    const novoGerarPdfReader = () => {
-        const newChartRef = [];
-
-        newChartRef.push(chartRefCapa.current[0].toBase64Image());
-        newChartRef.push(chartRefCapa.current[1].toBase64Image());
-
-        for (let i = 0; i < chartRefCorpo.current.length; i++) {
-            if (chartRefCorpo.current[i] != undefined) {
-                newChartRef.push(chartRefCorpo.current[i].toBase64Image());
-            }
-        }
-    
-        setBase64Image(newChartRef);
-    }
   
     return (
       <>

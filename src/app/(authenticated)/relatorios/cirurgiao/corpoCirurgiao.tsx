@@ -6,7 +6,7 @@ import LineChartCirurgiao from "../../../../components/Charts/Cirurgiao/LineChar
 Chart.register(CategoryScale);
 
 export function CorpoCirurgiao({cirurgiao, procedimento, chartRef, index}) {  
-  const dadosMes = procedimento.resultadosMensais[0];
+  const dadosMes = reorganizarDados(procedimento.resultadosMensais[0]);
 
   return (
     <div className={`flex flex-col justify-items-start border-b border-black w-[891px] h-[630px] p-8`}> 
@@ -15,6 +15,11 @@ export function CorpoCirurgiao({cirurgiao, procedimento, chartRef, index}) {
       <LineChartCirurgiao dadosMes={dadosMes} chartRef={chartRef} index={index}/>
     </div>
   );
+}
+
+function reorganizarDados(dadosMes) {
+  dadosMes.resultadosDiarios.sort((a, b) => a.data - b.data);
+  return dadosMes;
 }
 
 const titulo = (cirurgiao, procedimento) => {

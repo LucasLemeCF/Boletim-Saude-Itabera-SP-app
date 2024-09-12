@@ -2,19 +2,8 @@
 import { Image, Page, StyleSheet, Text, View } from '@react-pdf/renderer';
 
 export const PdfCorpoEspecialidade = ({ especialidades, img }) => {
-  const especialidadesComMeta = [];
-
-  especialidades.map(especialidade => {
-    if (especialidade.resultadosMensais[0].metaMensal > 0) {
-      especialidadesComMeta.push(especialidade);
-    }
-  });
-
-  const especialidadesPagina = [];
-
-  for (let i = 0; i < especialidadesComMeta.length; i += 2) {
-    especialidadesPagina.push(especialidadesComMeta.slice(i, i + 2));
-  }
+  const especialidadesComMeta = organizarDados(especialidades);
+  const especialidadesPagina = dividirEmDuasPartes(especialidadesComMeta);
 
   return (
     <>
@@ -23,6 +12,28 @@ export const PdfCorpoEspecialidade = ({ especialidades, img }) => {
       ))}
     </>
   )
+}
+
+function organizarDados(especialidades) {
+  const especialidadesComMeta = [];
+
+  especialidades.map(especialidade => {
+    if (especialidade.resultadosMensais[0].metaMensal > 0) {
+      especialidadesComMeta.push(especialidade);
+    }
+  });
+
+  return especialidadesComMeta;
+}
+
+function dividirEmDuasPartes(especialidadesComMeta) {
+  const especialidadesPagina = [];
+
+  for (let i = 0; i < especialidadesComMeta.length; i += 2) {
+    especialidadesPagina.push(especialidadesComMeta.slice(i, i + 2));
+  }
+
+  return especialidadesPagina;
 }
 
 const Pagina = ({especialidadesPagina, img, indexEspecialidade}) => {
