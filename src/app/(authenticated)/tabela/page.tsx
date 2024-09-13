@@ -1,7 +1,7 @@
 "use client"
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { toPng } from 'html-to-image';
+import { toJpeg } from 'html-to-image';
 import { useSession } from 'next-auth/react';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -22,28 +22,14 @@ import { RodapeTotal } from './rodapeTotal';
 export default function Tabela() {
   const { data: session } = useSession();
   const [data, setData] = useState(new Date());
-  const imgRef = useRef(null);
-
-  function BaixarTabela() {
-    toPng(imgRef.current, { cacheBust: true })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "Boletim Saúde - " + ConverterData(data);
-        link.href = dataUrl;
-        link.click();
-      })
-  }
   
   return (
     <main className="flex flex-col items-center justify-between bg-[#F8FAFC] overscroll-none">
-      <div className="flex flex-col items-center justify-between">
-        <div className="flex flex-col items-center justify-between mt-[50px] mb-[25px] border-collapse" ref={imgRef}>
+      <div className="flex flex-col items-center justify-between pt-[50px] pb-[25px]">
+        <div className="flex flex-col items-center justify-between mt-0 mb-0 border-collapse">
           {
             session ?
-            <>
-              <HeaderTabela data={data} setData={setData}/> 
-              <Linhas dataCalendario={data} BaixarTabela={BaixarTabela} session={session}/>
-            </>
+            <ConteudoTabela dataCalendario={data} setData={setData} session={session}/>
             : CarregandoSession()
           }
         </div>
@@ -52,10 +38,11 @@ export default function Tabela() {
   )
 }
 
-function Linhas({dataCalendario, BaixarTabela, session}) {
+function ConteudoTabela({dataCalendario, setData, session}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [isLoading, setLoading] = useState(true);
   const { toast } = useToast()
+  const imgRef = useRef(null);
   
   const { watch, register, handleSubmit, setValue, getValues } = useForm<TabelaFormData>({
     resolver: zodResolver(dadosTabelaSchema),
@@ -64,6 +51,16 @@ function Linhas({dataCalendario, BaixarTabela, session}) {
       linhas: montarValoresLinhas(dadosTabela)
     }
   });
+
+  function BaixarTabela() {
+    toJpeg(imgRef.current, { cacheBust: true, quality: 1 })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "Boletim Saúde - " + ConverterData(dataCalendario);
+        link.href = dataUrl;
+        link.click();
+      })
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -112,26 +109,29 @@ function Linhas({dataCalendario, BaixarTabela, session}) {
 
   return (
     <>
-      {(dadosTabela != null) && (TemDadadosEspecialidades({dadosTabela}) || TemDadadosCirurgioes({dadosTabela})) ?
-        <form className="w-full">
-          {TemDadadosEspecialidades({dadosTabela}) ? 
-            <>
-              <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
-              <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
-            </>
-          : null}
+      <div ref={imgRef}>
+        <HeaderTabela data={dataCalendario} setData={setData}/> 
+        {(dadosTabela != null) && (TemDadadosEspecialidades({dadosTabela}) || TemDadadosCirurgioes({dadosTabela})) ?
+          <form className="w-full">
+            {TemDadadosEspecialidades({dadosTabela}) ? 
+              <>
+                <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
+                <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+              </>
+            : null}
 
-          {TemDadadosCirurgioes({dadosTabela}) ? 
-            <>
-              <Cirurgioes dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
-              <RodapeCirurgioes dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
-            </>
-          : null}
+            {TemDadadosCirurgioes({dadosTabela}) ? 
+              <>
+                <Cirurgioes dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
+                <RodapeCirurgioes dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+              </>
+            : null}
 
-          <RodapeTotal dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
-        </form>
-        : <DadosNaoEncontrados/>      
-      }
+            <RodapeTotal dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
+          </form>
+          : <DadosNaoEncontrados/>      
+        }
+      </div>
       <div className="flex items-center justify-end gap-8 w-full mt-8">
         <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela} type={"button"}/>
         <Button texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"}/>
