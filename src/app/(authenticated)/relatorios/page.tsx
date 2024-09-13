@@ -38,7 +38,7 @@ function Paginas() {
       const fetchData = async () => {
         setLoading(true);
         try {
-          const response = await fetch(process.env.NEXT_PUBLIC_BASE_API + '/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio, {
+          const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio, {
             method: "GET",
             headers: {
               authorization: session?.user.token,
@@ -80,7 +80,7 @@ function Paginas() {
       const fetchData = async () => {
         setLoading(true);
         try {
-          const response = await fetch(process.env.NEXT_PUBLIC_BASE_API + '/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano, {
+          const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano, {
             method: "GET",
             headers: {
               authorization: session?.user.token,

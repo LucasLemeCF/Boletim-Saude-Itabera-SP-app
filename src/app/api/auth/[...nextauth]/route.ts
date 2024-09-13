@@ -16,7 +16,7 @@ const handler = NextAuth({
                 senha: { label: "Senha", type: "password" }
             },
             async authorize(credentials, req) {
-                const url = process.env.NEXT_PUBLIC_BASE_API;
+                const url = process.env.NEXT_PUBLIC_API;
                 const res = await fetch(url+"/api/login", {
                     method: "POST",
                     headers: {

@@ -69,7 +69,7 @@ function Linhas({dataCalendario, BaixarTabela, session}) {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await fetch(process.env.NEXT_PUBLIC_BASE_API + '/api/tabela/' + ConverterData(dataCalendario), {
+        const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/tabela/' + ConverterData(dataCalendario), {
           method: "GET",
           headers: {
             authorization: session?.user.token,
@@ -104,7 +104,7 @@ function Linhas({dataCalendario, BaixarTabela, session}) {
       body: JSON.stringify(resultado)
     };
 
-    fetch(process.env.NEXT_PUBLIC_BASE_API + '/api/tabela', requestOptions).then(response => response)
+    fetch(process.env.NEXT_PUBLIC_API + '/api/tabela', requestOptions).then(response => response)
     toast({description: "Tabela salva com sucesso!"})
   }
 
