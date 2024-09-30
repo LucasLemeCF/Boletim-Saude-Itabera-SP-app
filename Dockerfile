@@ -5,7 +5,7 @@ EXPOSE 3000
 ENV PORT 3000
 
 ENV NEXTAUTH_URL http://localhost:3000
-ENV NEXT_PUBLIC_API http://boletim-saude-api:8080
+ENV NEXT_PUBLIC_API http://localhost:8080
 
 # Completar com a chave secreta gerada pelo comando: openssl rand -base64 32
 # ENV NEXTAUTH_SECRET  
