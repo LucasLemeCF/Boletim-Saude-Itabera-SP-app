@@ -122,7 +122,9 @@ function LinhaEspecialidade({especialidade, posicaoLinha, register, watchLinha}:
       </div>
 
       <input  className="flex items-center justify-center border-black font-semibold text-center w-[100px] h-[25px] bg-[#E2EFDB]" 
-        name={`linhas.${posicaoLinha}.pacientesAtendidos`} {...register(`linhas.${Number(posicaoLinha)}.pacientesAtendidos`, { valueAsNumber: true, required: "Digite os numeros restantes" })}
+        name={`linhas.${posicaoLinha}.pacientesAtendidos`} {...register(`linhas.${Number(posicaoLinha)}.pacientesAtendidos`, {
+          valueAsNumber: true, required: "Digite os numeros restantes" 
+        })}
       />
      
       <div className="flex items-center justify-center border-black font-semibold w-[100px] h-[25px]">

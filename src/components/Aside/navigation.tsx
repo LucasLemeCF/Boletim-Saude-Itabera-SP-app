@@ -4,10 +4,10 @@
 import { usePathname } from "next/navigation";
 
 const navLinks = [
-    {name: "BoletimMedico", href: "/tabela"},
-    {name: "Relatorios", href: "/relatorios"},
+    {name: "Boletim Médico", href: "/tabela"},
+    {name: "Relatórios", href: "/relatorios"},
     // {name: "Editar Boletim", href: "/editar-tabela"},
-    // {name: "Especialidades", href: "/especialidades"},
+    {name: "Especialidades", href: "/especialidades"},
     // {name: "Cirurgioes", href: "/cirurgiaos"}
 ]
 

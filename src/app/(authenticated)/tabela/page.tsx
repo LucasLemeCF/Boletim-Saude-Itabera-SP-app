@@ -9,9 +9,9 @@ import { CgSpinner } from "react-icons/cg";
 import { Toaster } from "../../../components/ui/toaster";
 import { useToast } from '../../../components/ui/use-toast';
 import { dadosTabelaSchema, TabelaFormData } from '../../../schemas/responseTabela';
-import Button from '../../../utils/Button';
+import ButtonLocal from '../../../utils/ButtonLocal';
+import ConverterData from '../../../utils/converterData';
 import Cirurgioes from './cirurgioes';
-import ConverterData from './converterData';
 import Especialidades from './especialidades';
 import HeaderTabela from './headerTabela';
 import { MontarCabecalhos, montarValoresLinhas } from './montarDados';
@@ -111,9 +111,9 @@ function ConteudoTabela({dataCalendario, setData, session}) {
     <>
       <div ref={imgRef}>
         <HeaderTabela data={dataCalendario} setData={setData}/> 
-        {(dadosTabela != null) && (TemDadadosEspecialidades({dadosTabela}) || TemDadadosCirurgioes({dadosTabela})) ?
+        {(dadosTabela != null) && (TemDadosEspecialidades({dadosTabela}) || TemDadadosCirurgioes({dadosTabela})) ?
           <form className="w-full">
-            {TemDadadosEspecialidades({dadosTabela}) ? 
+            {TemDadosEspecialidades({dadosTabela}) ? 
               <>
                 <Especialidades dadosTabela={dadosTabela} register={register} watchLinha={watchLinha}/>
                 <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/>
@@ -133,15 +133,15 @@ function ConteudoTabela({dataCalendario, setData, session}) {
         }
       </div>
       <div className="flex items-center justify-end gap-8 w-full mt-8">
-        <Button texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela} type={"button"}/>
-        <Button texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"}/>
+        <ButtonLocal texto={"Baixar"} color={"bg-blue-800"} onClick={BaixarTabela} type={"button"} icon={"Baixar"}/>
+        <ButtonLocal texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"} icon={"Salvar"}/>
       </div>
       <Toaster/>
     </>
   )
 }
 
-function TemDadadosEspecialidades({dadosTabela}) {
+function TemDadosEspecialidades({dadosTabela}) {
   let temDados = false;
 
   if(dadosTabela.especialidadesCabecalhos !== undefined) {

@@ -72,7 +72,7 @@ function FormLogin () {
     <div className="w-full mt-8">
       <Form  {...form}>
         <form onSubmit={form.handleSubmit((onSubmit))}>
-          <div>
+          <div className="flex flex-col gap-y-4">
             <FormField
               control={form.control}
               name="usuario"
