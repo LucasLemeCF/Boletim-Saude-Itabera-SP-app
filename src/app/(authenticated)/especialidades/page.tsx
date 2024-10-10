@@ -5,10 +5,10 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CgSpinner } from "react-icons/cg";
-import { FaTrashAlt } from "react-icons/fa";
 import { dadosEspecialidadeSchema, EspecialidadeFormData } from "../../../schemas/responseEspecialidade";
 import { CardAdicionarEspecialidade } from './cadastrarEspecialidade';
 import { CardEditarEspecialidade } from './editarEspecialidade';
+import { CardExcluirEspecialidade } from './excluirEspecialidade';
 
 export default function Tabela() {
   const { data: session } = useSession();
@@ -105,29 +105,6 @@ function CabecalhoTabela() {
 }
 
 function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset}) {
-  const excluirEspecialidade = (id: Number) => {
-    if (session) {
-      const excluirEspecialidade = async () => {
-        setLoading(true);
-        try {
-          await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade/' + id, {
-            method: "DELETE",
-            headers: {
-              authorization: session?.user.token
-            },
-          }); 
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        } finally {
-          fetchData();
-          setLoading(false);
-        }
-      };
-      
-      excluirEspecialidade();
-    }
-  }
-
   return (
     <tbody>
       {dadosTabela.map(field => {
@@ -141,7 +118,7 @@ function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, 
               {CardEditarEspecialidade({register, handleSubmit, session, setLoading, fetchData, field, reset})}
             </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600 hover:bg-red-50">
-              <FaTrashAlt onClick={() => excluirEspecialidade(field.id)}/>
+              {CardExcluirEspecialidade({handleSubmit, session, setLoading, fetchData, field})}
             </td>
           </tr>
         ) 

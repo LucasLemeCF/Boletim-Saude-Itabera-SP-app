@@ -99,7 +99,7 @@ export function CardEditarEspecialidade({register, handleSubmit, session, setLoa
                         </Button>
                     </DialogClose>
                     <Button type="button" className="bg-[#337B5B] hover:bg-[#337B5B]/90 rounded-[6px] text-white" onClick={handleSubmit(onSubmit)}>
-                        Cadastrar
+                        Editar
                     </Button>
                 </DialogFooter>
             </DialogContent>
