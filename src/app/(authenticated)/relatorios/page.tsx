@@ -7,7 +7,7 @@ import { CgSpinner } from "react-icons/cg";
 import { Options, usePDF } from "react-to-pdf";
 import { Form } from "../../../components/ui/form";
 import { RelatorioFormData } from '../../../schemas/relatorio';
-import Button from "../../../utils/Button";
+import ButtonLocal from "../../../utils/ButtonLocal";
 import { RelatorioCirurgiao } from "./cirurgiao/relatorioCirurgiao";
 import { RelatorioEspecialidade } from './especialidade/relatorioEspecialidade';
 import { SelectMonth, SelectTipoRelatorio, SelectYear } from "./select";
@@ -38,7 +38,7 @@ function Paginas() {
       const fetchData = async () => {
         setLoading(true);
         try {
-          const response = await fetch('http://localhost:8080/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio, {
+          const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/' + tipoRelatorio + '/' + mesRelatorio + '-' + anoRelatorio, {
             method: "GET",
             headers: {
               authorization: session?.user.token,
@@ -80,7 +80,7 @@ function Paginas() {
       const fetchData = async () => {
         setLoading(true);
         try {
-          const response = await fetch('http://localhost:8080/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano, {
+          const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/' + dadosNovos.tipo + '/' + dadosNovos.mes + '-' + dadosNovos.ano, {
             method: "GET",
             headers: {
               authorization: session?.user.token,
@@ -108,7 +108,7 @@ function Paginas() {
         <SelectTipoRelatorio control={control}/>
         <SelectMonth control={control}/>
         <SelectYear control={control}/>
-        <Button texto={"Gerar Gráfico"} color={"bg-blue-800 border border-black"} onClick={handleSubmit(onSubmit)} type={"button"}/>
+        <ButtonLocal texto={"Gerar Gráfico"} color={"bg-blue-800 border border-black"} onClick={handleSubmit(onSubmit)} type={"button"}/>
       </form>
       {
         TemDadados(dadosRelatorio, tipoRelatorio) && session ? 

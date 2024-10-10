@@ -25,7 +25,7 @@ function TotalMesesCirurgiao({ ano, chartRef }) {
       const fetchData = async () => {
         setLoading(true);
         try {
-          const response = await fetch('http://localhost:8080/api/cirurgiao/resultadoAno/' + ano, {
+          const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/cirurgiao/resultadoAno/' + ano, {
             method: "GET",
             headers: {
               authorization: session?.user.token,
