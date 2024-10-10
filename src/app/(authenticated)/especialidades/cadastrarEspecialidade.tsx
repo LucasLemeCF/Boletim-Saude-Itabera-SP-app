@@ -3,34 +3,34 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { EspecialidadeFormData } from "../../../schemas/responseEspecialidade";
 import ButtonLocal from "../../../utils/ButtonLocal";
 
-export function DialogCloseButton({register, handleSubmit, session, setLoading}) {
+export function DialogCloseButton({register, handleSubmit, session, setLoading, fetchData}) {
     async function onSubmit(dadosNovos: EspecialidadeFormData) {
-        console.log(dadosNovos);
         if (session) {
-            const fetchData = async () => {
+            const cadastrarEspecialidade = async () => {
                 setLoading(true);
                 try {
-                const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade', {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        authorization: session?.user.token
-                    },
-                    body: JSON.stringify({
-                        especialidade: dadosNovos.especialidade,
-                        medico: dadosNovos.medico,
-                        metaDiaria: dadosNovos.metaDiaria,
-                        metaMensal: dadosNovos.metaMensal,
-                    }),
-                }); 
+                    await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade', {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            authorization: session?.user.token
+                        },
+                        body: JSON.stringify({
+                            especialidade: dadosNovos.especialidade,
+                            medico: dadosNovos.medico,
+                            metaDiaria: dadosNovos.metaDiaria,
+                            metaMensal: dadosNovos.metaMensal,
+                        }),
+                    }); 
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 } finally {
+                    fetchData();
                     setLoading(false);
                 }
             };
             
-            fetchData();
+            cadastrarEspecialidade();
         }
     }
 
@@ -43,10 +43,11 @@ export function DialogCloseButton({register, handleSubmit, session, setLoading})
                 <DialogHeader>
                     <DialogTitle>Cadastrar Especialidade</DialogTitle>
                 </DialogHeader>
-                <form className="flex flex-col items-center">
+                <form className="flex flex-col items-center space-y-2">
                     <div>
                         <label className="ml-4">Especialidade</label>
                         <input className="bg-white w-[400px] h-[40px] py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
+                            placeholder="Insira a especialidade"
                             name="especialidade" {...register("especialidade", {
                                 required: "Insira a especialidade" 
                             })}
@@ -55,12 +56,14 @@ export function DialogCloseButton({register, handleSubmit, session, setLoading})
                     <div>
                         <label className="ml-4">Médico</label>
                         <input className="bg-white w-[400px] h-[40px] py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
+                            placeholder="Insira o nome do médico"
                             name="medico" {...register("medico")}
                         />
                     </div>
                     <div>
                         <label className="ml-4">Meta Diária</label>
                         <input className="bg-white w-[400px] h-[40px] py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
+                            placeholder="Insira a meta diária"
                             name="metaDiaria" {...register("metaDiaria", {
                                 valueAsNumber: true,
                                 required: "Insira a meta diária" 
@@ -70,6 +73,7 @@ export function DialogCloseButton({register, handleSubmit, session, setLoading})
                     <div>
                         <label className="ml-4">Meta Mensal</label>
                         <input className="bg-white w-[400px] h-[40px] py-3 px-4 border-2 rounded-[8px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
+                            placeholder="Insira a meta mensal"
                             name="metaMensal" {...register("metaMensal", {
                                 valueAsNumber: true,
                                 required: "Insira a meta mensal" 

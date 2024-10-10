@@ -40,10 +40,10 @@ export function RelatorioEspecialidade({dadosRelatorio, mesRelatorio, anoRelator
   
     return (
       <>
-        <div className={`flex flex justify-between w-full px-8`}>
+        <div className={`flex justify-between w-full px-8`}>
             <div className="w-[150px]"></div>
             <div className="w-[150px]"></div>
-            <div className="flex items-center space-x-2 w-[150px] h-[50px] rounded-[5px] flex items-center justify-center">
+            <div className="space-x-2 w-[150px] h-[50px] rounded-[5px] flex items-center justify-center">
                 <Switch onClick={() => gerarPdfReader()}/>
                 <Label>Modo PDF</Label>
             </div>

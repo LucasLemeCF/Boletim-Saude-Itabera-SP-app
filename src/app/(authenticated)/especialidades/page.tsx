@@ -11,7 +11,6 @@ import { DialogCloseButton } from './cadastrarEspecialidade';
 
 export default function Tabela() {
   const { data: session } = useSession();
-  const [data, setData] = useState(new Date());
   
   return (
     <main className="flex flex-col items-center justify-between bg-[#F8FAFC] overscroll-none">
@@ -19,7 +18,7 @@ export default function Tabela() {
         <div className="flex flex-col items-center justify-between mt-0 mb-0 border-collapse">
           {
             session ?
-            <ConteudoTabela dataCalendario={data} setData={setData} session={session}/>
+            <ConteudoTabela session={session}/>
             : CarregandoSession()
           }
         </div>
@@ -28,7 +27,7 @@ export default function Tabela() {
   )
 }
 
-function ConteudoTabela({dataCalendario, setData, session}) {
+function ConteudoTabela({session}) {
   const [dadosTabela, setDadosTabela] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
@@ -40,43 +39,42 @@ function ConteudoTabela({dataCalendario, setData, session}) {
       metaDiaria: 0,
       metaMensal: 0,
     }
-});
+  });
+
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade', {
+        method: "GET",
+        headers: {
+          authorization: session?.user.token,
+        },
+      }); 
+      const dataResponse = await response.json();
+      setDadosTabela(dataResponse);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade', {
-          method: "GET",
-          headers: {
-            authorization: session?.user.token,
-          },
-        }); 
-        const dataResponse = await response.json();
-        setDadosTabela(dataResponse);
-        // console.log(dataResponse)
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
-  }, [dataCalendario, session?.user.token]);
+  }, [session?.user.token]);
 
   if (isLoading) return Carregando();
 
   return (
     <div className="">
-      {CabecalhoEspecialidade({register, handleSubmit, session, setLoading})}
+      {CabecalhoEspecialidade({register, handleSubmit, session, setLoading, fetchData})}
       <table className="flex mt-4 flex-col border border-collapse border-black/20 rounded-[5px] overflow-hidden">
         {CabecalhoTabela()}
-        {CorpoTabela({dadosTabela})}
+        {CorpoTabela({dadosTabela, session, setLoading, fetchData})}
       </table>
     </div>
   )
 }
 
-function CabecalhoEspecialidade({register, handleSubmit, session, setLoading}) {
+function CabecalhoEspecialidade({register, handleSubmit, session, setLoading, fetchData}) {
   return (
     <div className="w-full flex justify-between">
       <div>
@@ -84,7 +82,7 @@ function CabecalhoEspecialidade({register, handleSubmit, session, setLoading}) {
         <div>Consulte as especilidades da plataforma</div>
       </div>
       <div>
-        {DialogCloseButton({register, handleSubmit, session, setLoading})}
+        {DialogCloseButton({register, handleSubmit, session, setLoading, fetchData})}
       </div>
     </div>
   )
@@ -105,7 +103,30 @@ function CabecalhoTabela() {
   )
 }
 
-function CorpoTabela({dadosTabela}) {
+function CorpoTabela({dadosTabela, session, setLoading, fetchData}) {
+  const excluirEspecialidade = (id: Number) => {
+    if (session) {
+      const deletarEspecialidade = async () => {
+        setLoading(true);
+        try {
+          await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade/' + id, {
+            method: "DELETE",
+            headers: {
+              authorization: session?.user.token
+            },
+          }); 
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        } finally {
+          fetchData();
+          setLoading(false);
+        }
+      };
+      
+      deletarEspecialidade();
+    }
+  }
+
   return (
     <tbody>
       {dadosTabela.map(field => {
@@ -115,8 +136,8 @@ function CorpoTabela({dadosTabela}) {
             <td className="w-[300px] border-t border-black/20">{field.medicoAtual}</td>
             <td className="w-[150px] border-t border-black/20 flex justify-center">{field.metaDiariaAtual}</td>
             <td className="w-[150px] border-t border-black/20 flex justify-center">{field.metaMensalAtual}</td>
-            <td className="w-[100px] border-t border-black/20 flex justify-center items-center"><FaEdit/></td>
-            <td className="w-[100px] border-t border-black/20 flex justify-center items-center"><FaTrashAlt/></td>
+            <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-yellow-500"><FaEdit/></td>
+            <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600"><FaTrashAlt onClick={() => excluirEspecialidade(field.id)}/></td>
           </tr>
         ) 
       })}
