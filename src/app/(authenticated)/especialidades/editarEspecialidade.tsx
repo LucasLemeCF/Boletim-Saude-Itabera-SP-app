@@ -1,47 +1,58 @@
+import { FaEdit } from "react-icons/fa";
 import { Button } from "../../../components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../../components/ui/dialog';
 import { EspecialidadeFormData } from "../../../schemas/responseEspecialidade";
-import ButtonLocal from "../../../utils/ButtonLocal";
 
-export function CardAdicionarEspecialidade({register, handleSubmit, session, setLoading, fetchData}) {
+export function CardEditarEspecialidade({register, handleSubmit, session, setLoading, fetchData, field, reset}) {
+    function setValues() {
+        const novosDados = {
+          especialidade: field.especialidade,
+          medico: field.medicoAtual,
+          metaDiaria: field.metaDiariaAtual,
+          metaMensal: field.metaMensalAtual,
+        };
+    
+        reset(novosDados);
+    }
+      
     async function onSubmit(dadosNovos: EspecialidadeFormData) {
         if (session) {
-            const cadastrarEspecialidade = async () => {
-                setLoading(true);
-                try {
-                    await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            authorization: session?.user.token
-                        },
-                        body: JSON.stringify({
-                            especialidade: dadosNovos.especialidade,
-                            medico: dadosNovos.medico,
-                            metaDiaria: dadosNovos.metaDiaria,
-                            metaMensal: dadosNovos.metaMensal,
-                        }),
-                    }); 
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                } finally {
-                    fetchData();
-                    setLoading(false);
-                }
+            const editarEspecialidade = async () => {
+              setLoading(true);
+              try {
+                await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade/' + field.id, {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                    authorization: session?.user.token
+                  },
+                  body: JSON.stringify({
+                    especialidade: dadosNovos.especialidade,
+                    medico: dadosNovos.medico,
+                    metaDiaria: dadosNovos.metaDiaria,
+                    metaMensal: dadosNovos.metaMensal,
+                  }),
+                }); 
+              } catch (error) {
+                console.error('Error fetching data:', error);
+              } finally {
+                fetchData();
+                setLoading(false);
+              }
             };
             
-            cadastrarEspecialidade();
+            editarEspecialidade();
         }
     }
 
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <ButtonLocal texto={"Cadastrar Especialidade"} color={"bg-[#337B5B] w-[270px] h-[40px]"} type={"button"} icon="Adicionar"/>
+                <FaEdit onClick={() => setValues()}/>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Cadastrar Especialidade</DialogTitle>
+                    <DialogTitle>Editar Especialidade</DialogTitle>
                 </DialogHeader>
                 <form className="flex flex-col items-center space-y-2">
                     <div>

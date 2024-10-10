@@ -5,9 +5,10 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CgSpinner } from "react-icons/cg";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaTrashAlt } from "react-icons/fa";
 import { dadosEspecialidadeSchema, EspecialidadeFormData } from "../../../schemas/responseEspecialidade";
-import { DialogCloseButton } from './cadastrarEspecialidade';
+import { CardAdicionarEspecialidade } from './cadastrarEspecialidade';
+import { CardEditarEspecialidade } from './editarEspecialidade';
 
 export default function Tabela() {
   const { data: session } = useSession();
@@ -31,7 +32,7 @@ function ConteudoTabela({session}) {
   const [dadosTabela, setDadosTabela] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
-  const { register, handleSubmit } = useForm<EspecialidadeFormData>({
+  const { register, handleSubmit, reset } = useForm<EspecialidadeFormData>({
     resolver: zodResolver(dadosEspecialidadeSchema),
     defaultValues: {  
       especialidade: "",
@@ -68,7 +69,7 @@ function ConteudoTabela({session}) {
       {CabecalhoEspecialidade({register, handleSubmit, session, setLoading, fetchData})}
       <table className="flex mt-4 flex-col border border-collapse border-black/20 rounded-[5px] overflow-hidden">
         {CabecalhoTabela()}
-        {CorpoTabela({dadosTabela, session, setLoading, fetchData})}
+        {CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset})}
       </table>
     </div>
   )
@@ -82,7 +83,7 @@ function CabecalhoEspecialidade({register, handleSubmit, session, setLoading, fe
         <div>Consulte as especilidades da plataforma</div>
       </div>
       <div>
-        {DialogCloseButton({register, handleSubmit, session, setLoading, fetchData})}
+        {CardAdicionarEspecialidade({register, handleSubmit, session, setLoading, fetchData})}
       </div>
     </div>
   )
@@ -103,10 +104,10 @@ function CabecalhoTabela() {
   )
 }
 
-function CorpoTabela({dadosTabela, session, setLoading, fetchData}) {
+function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset}) {
   const excluirEspecialidade = (id: Number) => {
     if (session) {
-      const deletarEspecialidade = async () => {
+      const excluirEspecialidade = async () => {
         setLoading(true);
         try {
           await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade/' + id, {
@@ -123,7 +124,7 @@ function CorpoTabela({dadosTabela, session, setLoading, fetchData}) {
         }
       };
       
-      deletarEspecialidade();
+      excluirEspecialidade();
     }
   }
 
@@ -136,13 +137,16 @@ function CorpoTabela({dadosTabela, session, setLoading, fetchData}) {
             <td className="w-[300px] border-t border-black/20">{field.medicoAtual}</td>
             <td className="w-[150px] border-t border-black/20 flex justify-center">{field.metaDiariaAtual}</td>
             <td className="w-[150px] border-t border-black/20 flex justify-center">{field.metaMensalAtual}</td>
-            <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-yellow-500"><FaEdit/></td>
-            <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600"><FaTrashAlt onClick={() => excluirEspecialidade(field.id)}/></td>
+            <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-yellow-600 hover:bg-yellow-50">
+              {CardEditarEspecialidade({register, handleSubmit, session, setLoading, fetchData, field, reset})}
+            </td>
+            <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600 hover:bg-red-50">
+              <FaTrashAlt onClick={() => excluirEspecialidade(field.id)}/>
+            </td>
           </tr>
         ) 
       })}
     </tbody>
-  
   )
 }
 
