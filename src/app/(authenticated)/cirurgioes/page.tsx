@@ -5,10 +5,10 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CgSpinner } from "react-icons/cg";
-import { dadosEspecialidadeSchema, EspecialidadeFormData } from "../../../schemas/responseEspecialidade";
-import { CardAdicionarEspecialidade } from './cadastrarEspecialidade';
-import { CardEditarEspecialidade } from './editarEspecialidade';
-import { CardExcluirEspecialidade } from './excluirEspecialidade';
+import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEye } from "react-icons/fa6";
+import { CirurgiaoFormData, dadosCirurgiaoSchema } from "../../../schemas/responseCirurgiao";
+import { CardAdicionarCirurgiao } from './cadastrarCirurgiao';
 
 export default function Tabela() {
   const { data: session } = useSession();
@@ -32,13 +32,10 @@ function ConteudoTabela({session}) {
   const [dadosTabela, setDadosTabela] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
-  const { register, handleSubmit, reset } = useForm<EspecialidadeFormData>({
-    resolver: zodResolver(dadosEspecialidadeSchema),
+  const { register, handleSubmit, reset } = useForm<CirurgiaoFormData>({
+    resolver: zodResolver(dadosCirurgiaoSchema),
     defaultValues: {  
-      especialidade: "",
-      medico: "",
-      metaDiaria: 0,
-      metaMensal: 0,
+      nome: "",
     }
   });
 
@@ -46,7 +43,7 @@ function ConteudoTabela({session}) {
     if (session) {
       setLoading(true);
       try {
-        const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade', {
+        const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/cirurgiao', {
           method: "GET",
           headers: {
             authorization: session?.user.token,
@@ -68,7 +65,7 @@ function ConteudoTabela({session}) {
 
   return (
     <div className="">
-      {CabecalhoEspecialidade({register, handleSubmit, session, setLoading, fetchData})}
+      {CabecalhoCirurgiao({register, handleSubmit, session, setLoading, fetchData})}
       <table className="flex mt-4 flex-col border border-collapse border-black/20 rounded-[5px] overflow-hidden">
         {CabecalhoTabela()}
         {
@@ -76,21 +73,20 @@ function ConteudoTabela({session}) {
           CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset})
           : <div className="flex justify-center items-center h-40">Erro ao carregar os dados</div>
         }
-        
       </table>
     </div>
   )
 }
 
-function CabecalhoEspecialidade({register, handleSubmit, session, setLoading, fetchData}) {
+function CabecalhoCirurgiao({register, handleSubmit, session, setLoading, fetchData}) {
   return (
     <div className="w-full flex justify-between">
       <div>
-        <h1 className="text-2xl font-bold">Especialidades</h1>
-        <div>Consulte as especilidades da plataforma</div>
+        <h1 className="text-2xl font-bold">Cirurgiões</h1>
+        <div>Consulte os cirurgiões da plataforma</div>
       </div>
       <div>
-        {CardAdicionarEspecialidade({register, handleSubmit, session, setLoading, fetchData})}
+        {CardAdicionarCirurgiao({register, handleSubmit, session, setLoading, fetchData})}
       </div>
     </div>
   )
@@ -100,10 +96,8 @@ function CabecalhoTabela() {
   return (
     <thead className="w-full flex justify-between bg-[#337B5B] overflow-hidden">
       <div className="py-2 flex">
-        <p className="w-[300px] overflow-hidden border-black text-white flex justify-center">Especialidade</p>
-        <p className="w-[300px] border-black text-white flex justify-center">Médico</p>
-        <p className="w-[150px] border-black text-white flex justify-center">Meta Diária</p>
-        <p className="w-[150px] border-black text-white flex justify-center">Meta Mensal</p>
+        <p className="w-[300px] overflow-hidden border-black text-white flex justify-center">Cirurgião</p>
+        <p className="w-[100px] border-black text-white flex justify-center">Visualizar</p>
         <p className="w-[100px] border-black text-white flex justify-center">Editar</p>
         <p className="w-[100px] border-black text-white flex justify-center">Excluir</p>
       </div>
@@ -117,15 +111,17 @@ function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, 
       {dadosTabela.map(field => {
         return(
           <tr className="flex">
-            <td className="w-[300px] border-t border-black/20 ml-1">{field.especialidade}</td>
-            <td className="w-[300px] border-t border-black/20">{field.medicoAtual}</td>
-            <td className="w-[150px] border-t border-black/20 flex justify-center">{field.metaDiariaAtual}</td>
-            <td className="w-[150px] border-t border-black/20 flex justify-center">{field.metaMensalAtual}</td>
+            <td className="w-[300px] border-t border-black/20 ml-1">{field.nome}</td>
+            <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-[#337B5B] hover:bg-green-50">
+              <FaEye/>
+            </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-yellow-600 hover:bg-yellow-50">
-              {CardEditarEspecialidade({register, handleSubmit, session, setLoading, fetchData, field, reset})}
+              <FaEdit/>
+              {/* {CardEditarEspecialidade({register, handleSubmit, session, setLoading, fetchData, field, reset})} */}
             </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600 hover:bg-red-50">
-              {CardExcluirEspecialidade({handleSubmit, session, setLoading, fetchData, field})}
+              <FaTrashAlt/>
+              {/* {CardExcluirEspecialidade({handleSubmit, session, setLoading, fetchData, field})} */}
             </td>
           </tr>
         ) 
