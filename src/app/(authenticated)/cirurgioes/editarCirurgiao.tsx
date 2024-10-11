@@ -1,44 +1,52 @@
+import { FaEdit } from "react-icons/fa";
 import { Button } from "../../../components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../../components/ui/dialog';
 import { CirurgiaoFormData } from "../../../schemas/responseCirurgiao";
-import ButtonLocal from "../../../utils/ButtonLocal";
 
-export function CardAdicionarCirurgiao({register, handleSubmit, session, setLoading, fetchData}) {
+export function CardEditarCirurgiao({register, handleSubmit, session, setLoading, fetchData, field, reset}) {
+    function setValues() {
+        const novosDados = {
+          nome: field.nome,
+        };
+    
+        reset(novosDados);
+    }
+      
     async function onSubmit(dadosNovos: CirurgiaoFormData) {
         if (session) {
-            const cadastrarEspecialidade = async () => {
-                setLoading(true);
-                try {
-                    await fetch(process.env.NEXT_PUBLIC_API + '/api/cirurgiao', {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            authorization: session?.user.token
-                        },
-                        body: JSON.stringify({
-                            nome: dadosNovos.nome
-                        }),
-                    }); 
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                } finally {
-                    fetchData();
-                    setLoading(false);
-                }
+            const editarCirurgiao = async () => {
+              setLoading(true);
+              try {
+                await fetch(process.env.NEXT_PUBLIC_API + '/api/cirurgiao/' + field.id, {
+                  method: "PATCH",
+                  headers: {
+                    "Content-Type": "application/json",
+                    authorization: session?.user.token
+                  },
+                  body: JSON.stringify({
+                    nome: dadosNovos.nome,
+                  }),
+                }); 
+              } catch (error) {
+                console.error('Error fetching data:', error);
+              } finally {
+                fetchData();
+                setLoading(false);
+              }
             };
             
-            cadastrarEspecialidade();
+            editarCirurgiao();
         }
     }
 
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <ButtonLocal texto={"Cadastrar Cirurgião"} color={"bg-[#337B5B] w-[230px] h-[40px]"} type={"button"} icon="Adicionar"/>
+                <FaEdit onClick={() => setValues()}/>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                    <DialogTitle>Cadastrar Cirurgião</DialogTitle>
+                    <DialogTitle>Editar Cirurgião</DialogTitle>
                 </DialogHeader>
                 <form className="flex flex-col items-center space-y-2">
                     <div>
@@ -58,7 +66,7 @@ export function CardAdicionarCirurgiao({register, handleSubmit, session, setLoad
                         </Button>
                     </DialogClose>
                     <Button type="button" className="bg-[#337B5B] hover:bg-[#337B5B]/90 rounded-[6px] text-white" onClick={handleSubmit(onSubmit)}>
-                        Cadastrar
+                        Editar
                     </Button>
                 </DialogFooter>
             </DialogContent>

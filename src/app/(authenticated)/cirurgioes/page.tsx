@@ -5,10 +5,11 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CgSpinner } from "react-icons/cg";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { FaEye } from "react-icons/fa6";
 import { CirurgiaoFormData, dadosCirurgiaoSchema } from "../../../schemas/responseCirurgiao";
 import { CardAdicionarCirurgiao } from './cadastrarCirurgiao';
+import { CardEditarCirurgiao } from './editarCirurgiao';
+import { CardExcluirCirurgiao } from './excluirCirurgiao';
 
 export default function Tabela() {
   const { data: session } = useSession();
@@ -116,12 +117,10 @@ function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, 
               <FaEye/>
             </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-yellow-600 hover:bg-yellow-50">
-              <FaEdit/>
-              {/* {CardEditarEspecialidade({register, handleSubmit, session, setLoading, fetchData, field, reset})} */}
+              {CardEditarCirurgiao({register, handleSubmit, session, setLoading, fetchData, field, reset})}
             </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600 hover:bg-red-50">
-              <FaTrashAlt/>
-              {/* {CardExcluirEspecialidade({handleSubmit, session, setLoading, fetchData, field})} */}
+              {CardExcluirCirurgiao({handleSubmit, session, setLoading, fetchData, field})}
             </td>
           </tr>
         ) 
