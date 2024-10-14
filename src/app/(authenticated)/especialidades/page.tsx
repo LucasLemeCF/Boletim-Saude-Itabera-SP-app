@@ -125,7 +125,7 @@ function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, 
               {CardEditarEspecialidade({register, handleSubmit, session, setLoading, fetchData, field, reset})}
             </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600 hover:bg-red-50">
-              {CardExcluirEspecialidade({handleSubmit, session, setLoading, fetchData, field})}
+              {CardExcluirEspecialidade({session, setLoading, fetchData, field})}
             </td>
           </tr>
         ) 

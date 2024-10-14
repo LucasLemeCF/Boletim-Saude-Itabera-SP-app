@@ -2,10 +2,10 @@ import { FaTrashAlt } from "react-icons/fa";
 import { Button } from "../../../components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../../components/ui/dialog';
 
-export function CardExcluirEspecialidade({handleSubmit, session, setLoading, fetchData, field}) {
-    const excluirEspecialidade = (id: Number) => {
+export function CardExcluirEspecialidade({session, setLoading, fetchData, field}) {
+    const excluir = () => {
         if (session) {
-          const excluirEspecialidade = async () => {
+          const excluir = async () => {
             setLoading(true);
             try {
               await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade/' + field.id, {
@@ -22,7 +22,7 @@ export function CardExcluirEspecialidade({handleSubmit, session, setLoading, fet
             }
           };
           
-          excluirEspecialidade();
+          excluir();
         }
     }
 
@@ -41,7 +41,7 @@ export function CardExcluirEspecialidade({handleSubmit, session, setLoading, fet
                             Cancelar
                         </Button>
                     </DialogClose>
-                    <Button type="button" className="bg-red-600 hover:bg-red-700 rounded-[6px] text-white" onClick={() => excluirEspecialidade(field.id)}>
+                    <Button type="button" className="bg-red-600 hover:bg-red-700 rounded-[6px] text-white" onClick={() => excluir()}>
                         Excluir
                     </Button>
                 </DialogFooter>

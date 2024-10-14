@@ -1,14 +1,14 @@
 import { FaTrashAlt } from "react-icons/fa";
-import { Button } from "../../../components/ui/button";
-import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../../components/ui/dialog';
+import { Button } from "../../../../components/ui/button";
+import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '../../../../components/ui/dialog';
 
-export function CardExcluirCirurgiao({session, setLoading, fetchData, field}) {
-  const excluirCirurgiao = () => {
+export function CardExcluirProcedimento({session, setLoading, fetchData, field}) {
+  const excluir = () => {
     if (session) {
-      const excluirCirurgiao = async () => {
+      const excluir = async () => {
         setLoading(true);
         try {
-          await fetch(process.env.NEXT_PUBLIC_API + '/api/cirurgiao/' + field.id, {
+          await fetch(process.env.NEXT_PUBLIC_API + '/api/procedimentoCirurgiao/' + field.id, {
             method: "DELETE",
             headers: {
               authorization: session?.user.token
@@ -22,7 +22,7 @@ export function CardExcluirCirurgiao({session, setLoading, fetchData, field}) {
         }
       };
       
-      excluirCirurgiao();
+      excluir();
     }
   }
 
@@ -33,7 +33,7 @@ export function CardExcluirCirurgiao({session, setLoading, fetchData, field}) {
       </DialogTrigger>
       <DialogContent className="w-[400px] mt-4 flex flex-col justify-center">
         <DialogHeader>
-          <DialogTitle className="text-center text-xl">Tem certeza que deseja excluir o cirurgião {field.nome}?</DialogTitle>
+          <DialogTitle className="text-center text-xl">Tem certeza que deseja excluir o procedimento {field.nome}?</DialogTitle>
         </DialogHeader>
         <DialogFooter className="mt-4">
           <DialogClose asChild>
@@ -41,8 +41,8 @@ export function CardExcluirCirurgiao({session, setLoading, fetchData, field}) {
               Cancelar
             </Button>
           </DialogClose>
-          <Button type="button" className="bg-red-600 hover:bg-red-700 rounded-[6px] text-white" onClick={() => excluirCirurgiao()}>
-              Excluir
+          <Button type="button" className="bg-red-600 hover:bg-red-700 rounded-[6px] text-white" onClick={() => excluir()}>
+            Excluir
           </Button>
         </DialogFooter>
       </DialogContent>

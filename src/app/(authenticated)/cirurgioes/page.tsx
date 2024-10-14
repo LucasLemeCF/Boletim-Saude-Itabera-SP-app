@@ -120,7 +120,7 @@ function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, 
               {CardEditarCirurgiao({register, handleSubmit, session, setLoading, fetchData, field, reset})}
             </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600 hover:bg-red-50">
-              {CardExcluirCirurgiao({handleSubmit, session, setLoading, fetchData, field})}
+              {CardExcluirCirurgiao({session, setLoading, fetchData, field})}
             </td>
           </tr>
         ) 

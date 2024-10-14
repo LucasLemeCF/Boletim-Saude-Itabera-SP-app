@@ -5,9 +5,10 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CgSpinner } from "react-icons/cg";
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit } from 'react-icons/fa';
 import { CirurgiaoFormData, dadosCirurgiaoSchema } from '../../../../schemas/responseCirurgiao';
 import { CardAdicionarProcedimento } from './cadastrarProcedimento';
+import { CardExcluirProcedimento } from './excluirProcedimento';
 
 export default function Tabela({ params }) {
   const { data: session } = useSession();
@@ -119,8 +120,7 @@ function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, 
               {/* {CardEditarCirurgiao({register, handleSubmit, session, setLoading, fetchData, field, reset})} */}
             </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600 hover:bg-red-50">
-              <FaTrashAlt/>
-              {/* {CardExcluirCirurgiao({handleSubmit, session, setLoading, fetchData, field})} */}
+              {CardExcluirProcedimento({session, setLoading, fetchData, field})}
             </td>
           </tr>
         ) 
