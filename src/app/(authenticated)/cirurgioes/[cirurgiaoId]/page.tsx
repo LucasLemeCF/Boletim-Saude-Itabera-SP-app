@@ -5,9 +5,9 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CgSpinner } from "react-icons/cg";
-import { FaEdit } from 'react-icons/fa';
 import { CirurgiaoFormData, dadosCirurgiaoSchema } from '../../../../schemas/responseCirurgiao';
 import { CardAdicionarProcedimento } from './cadastrarProcedimento';
+import { CardEditarProcedimento } from './editarProcedimento';
 import { CardExcluirProcedimento } from './excluirProcedimento';
 
 export default function Tabela({ params }) {
@@ -71,7 +71,7 @@ function ConteudoTabela({session, cirurgiaoId}) {
           {CabecalhoProcedimentoCirurgiao({register, handleSubmit, session, setLoading, fetchData, dadosTabela, cirurgiaoId})}
           <table className="flex mt-4 flex-col border border-collapse border-black/20 rounded-[5px] overflow-hidden">
             {CabecalhoTabela()}
-            {CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset})}
+            {CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset, cirurgiaoId})}
           </table>
         </>
         : <div className="flex justify-center items-center h-40">Erro ao carregar os dados</div>
@@ -108,7 +108,7 @@ function CabecalhoTabela() {
   )
 }
 
-function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset}) {
+function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset, cirurgiaoId}) {
   return (
     <tbody>
       {dadosTabela.procedimentos.map(field => {
@@ -116,8 +116,7 @@ function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, 
           <tr className="flex">
             <td className="w-[400px] border-t border-black/20 ml-1">{field.nome}</td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-yellow-600 hover:bg-yellow-50">
-              <FaEdit/>
-              {/* {CardEditarCirurgiao({register, handleSubmit, session, setLoading, fetchData, field, reset})} */}
+              {CardEditarProcedimento({register, handleSubmit, session, setLoading, fetchData, field, reset, cirurgiaoId})}
             </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600 hover:bg-red-50">
               {CardExcluirProcedimento({session, setLoading, fetchData, field})}
