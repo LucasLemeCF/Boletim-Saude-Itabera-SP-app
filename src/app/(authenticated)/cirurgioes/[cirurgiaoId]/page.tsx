@@ -5,13 +5,11 @@ import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { CgSpinner } from "react-icons/cg";
-import { FaEye } from 'react-icons/fa';
-import { CirurgiaoFormData, dadosCirurgiaoSchema } from "../../../schemas/responseCirurgiao";
-import { CardAdicionarCirurgiao } from './cadastrarCirurgiao';
-import { CardEditarCirurgiao } from './editarCirurgiao';
-import { CardExcluirCirurgiao } from './excluirCirurgiao';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { CirurgiaoFormData, dadosCirurgiaoSchema } from '../../../../schemas/responseCirurgiao';
+import { CardAdicionarProcedimento } from './cadastrarProcedimento';
 
-export default function Tabela() {
+export default function Tabela({ params }) {
   const { data: session } = useSession();
   
   return (
@@ -20,7 +18,7 @@ export default function Tabela() {
         <div className="flex flex-col items-center justify-between mt-0 mb-0 border-collapse">
           {
             session ?
-            <ConteudoTabela session={session}/>
+            <ConteudoTabela session={session} cirurgiaoId={params.cirurgiaoId}/>
             : CarregandoSession()
           }
         </div>
@@ -29,7 +27,7 @@ export default function Tabela() {
   )
 }
 
-function ConteudoTabela({session}) {
+function ConteudoTabela({session, cirurgiaoId}) {
   const [dadosTabela, setDadosTabela] = useState(null);
   const [isLoading, setLoading] = useState(true);
 
@@ -44,7 +42,7 @@ function ConteudoTabela({session}) {
     if (session) {
       setLoading(true);
       try {
-        const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/cirurgiao', {
+        const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/procedimentoCirurgiao/' + cirurgiaoId, {
           method: "GET",
           headers: {
             authorization: session?.user.token,
@@ -66,28 +64,32 @@ function ConteudoTabela({session}) {
 
   return (
     <div className="">
-      {CabecalhoCirurgiao({register, handleSubmit, session, setLoading, fetchData})}
-      <table className="flex mt-4 flex-col border border-collapse border-black/20 rounded-[5px] overflow-hidden">
-        {CabecalhoTabela()}
-        {
-          dadosTabela != null ?
-          CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset})
-          : <div className="flex justify-center items-center h-40">Erro ao carregar os dados</div>
-        }
-      </table>
+       {
+        dadosTabela != null ?
+        <>
+          {CabecalhoProcedimentoCirurgiao({register, handleSubmit, session, setLoading, fetchData, dadosTabela, cirurgiaoId})}
+          <table className="flex mt-4 flex-col border border-collapse border-black/20 rounded-[5px] overflow-hidden">
+            {CabecalhoTabela()}
+            {CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset})}
+          </table>
+        </>
+        : <div className="flex justify-center items-center h-40">Erro ao carregar os dados</div>
+      }
     </div>
   )
 }
 
-function CabecalhoCirurgiao({register, handleSubmit, session, setLoading, fetchData}) {
+function CabecalhoProcedimentoCirurgiao({register, handleSubmit, session, setLoading, fetchData, dadosTabela, cirurgiaoId}) {
+  console.log(dadosTabela)
+
   return (
     <div className="w-full flex justify-between">
       <div>
-        <h1 className="text-2xl font-bold">Cirurgiões</h1>
-        <div>Consulte os cirurgiões da plataforma</div>
+        <h1 className="text-xl font-bold">Procedimentos - {dadosTabela.nomeCirurgiao}</h1>
+        <div>Consulte os procedimentos do cirurgião</div>
       </div>
       <div>
-        {CardAdicionarCirurgiao({register, handleSubmit, session, setLoading, fetchData})}
+        {CardAdicionarProcedimento({register, handleSubmit, session, setLoading, fetchData, cirurgiaoId})}
       </div>
     </div>
   )
@@ -97,8 +99,7 @@ function CabecalhoTabela() {
   return (
     <thead className="w-full flex justify-between bg-[#337B5B] overflow-hidden">
       <div className="py-2 flex">
-        <p className="w-[300px] overflow-hidden border-black text-white flex justify-center">Cirurgião</p>
-        <p className="w-[100px] border-black text-white flex justify-center">Visualizar</p>
+        <p className="w-[400px] overflow-hidden border-black text-white flex justify-center">Procedimento</p>
         <p className="w-[100px] border-black text-white flex justify-center">Editar</p>
         <p className="w-[100px] border-black text-white flex justify-center">Excluir</p>
       </div>
@@ -109,18 +110,17 @@ function CabecalhoTabela() {
 function CorpoTabela({dadosTabela, register, handleSubmit, session, setLoading, fetchData, reset}) {
   return (
     <tbody>
-      {dadosTabela.map(field => {
+      {dadosTabela.procedimentos.map(field => {
         return(
           <tr className="flex">
-            <td className="w-[300px] border-t border-black/20 ml-1">{field.nome}</td>
-            <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-[#337B5B] hover:bg-green-50">
-              <a href={`/cirurgioes/${field.id}`}><FaEye/></a>
-            </td>
+            <td className="w-[400px] border-t border-black/20 ml-1">{field.nome}</td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-yellow-600 hover:bg-yellow-50">
-              {CardEditarCirurgiao({register, handleSubmit, session, setLoading, fetchData, field, reset})}
+              <FaEdit/>
+              {/* {CardEditarCirurgiao({register, handleSubmit, session, setLoading, fetchData, field, reset})} */}
             </td>
             <td className="w-[100px] border-t border-black/20 flex justify-center items-center hover:cursor-pointer hover:text-red-600 hover:bg-red-50">
-              {CardExcluirCirurgiao({handleSubmit, session, setLoading, fetchData, field})}
+              <FaTrashAlt/>
+              {/* {CardExcluirCirurgiao({handleSubmit, session, setLoading, fetchData, field})} */}
             </td>
           </tr>
         ) 
