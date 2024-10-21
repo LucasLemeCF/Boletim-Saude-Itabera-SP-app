@@ -15,7 +15,7 @@ export default function HeaderEditarTabela({data, setData}) {
   function Titulo() {
     return (
       <div className="flex items-center justify-between divide-x border-t border-x border-black bg-[#337B5B]">
-        <div className="flex items-centerflex items-center justify-start border-b-0 border-black w-[200px] h-[75px] px-2 gap-4">
+        <div className="flex items-centerflex items-center justify-center border-b-0 border-black w-[600px] h-[75px] px-2 gap-4">
           <img 
             src="/logo.png"
             width="60px"
@@ -33,8 +33,8 @@ export default function HeaderEditarTabela({data, setData}) {
         </div>
   
         <div className="flex items-center justify-center border-black w-[400px] h-[75px]">
-          <p className="text-white text-2xl font-impact">
-            BOLETIM MÉDICO DIÁRIO
+          <p className="text-white text-3xl font-impact">
+            EDITAR TABELA
           </p>
         </div>
       </div>
@@ -44,7 +44,7 @@ export default function HeaderEditarTabela({data, setData}) {
   function HeaderData({data, setData}) {
     return (
       <div className="flex items-center justify-between divide-x border border-black bg-[#337B5B] mt-0">
-        <div className="flex items-center justify-center border-black w-[300px] h-[25px]">
+        <div className="flex items-center justify-center border-black w-[600px] h-[25px]">
           <p className="text-center text-white text-base font-bold leading-6">Data</p>
         </div>
   

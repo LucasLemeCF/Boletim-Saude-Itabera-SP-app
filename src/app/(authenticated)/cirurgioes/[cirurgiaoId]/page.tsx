@@ -81,8 +81,6 @@ function ConteudoTabela({session, cirurgiaoId}) {
 }
 
 function CabecalhoProcedimentoCirurgiao({register, handleSubmit, session, setLoading, fetchData, dadosTabela, cirurgiaoId}) {
-  console.log(dadosTabela)
-
   return (
     <div className="w-full flex justify-between">
       <div>

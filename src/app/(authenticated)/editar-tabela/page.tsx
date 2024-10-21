@@ -13,7 +13,8 @@ import { dadosOrdemTabelaSchema, OrdemTabelaFormData } from '../../../schemas/re
 import { TabelaFormData } from '../../../schemas/responseTabela';
 import ConverterData from '../../../utils/converterData';
 import { montarValoresLinhas } from '../tabela/montarDados';
-import LinhasOrdemTabela from './corpoOrdemTabela';
+import LinhasOrdemTabelaCirurgiao from './corpoOrdemTabelaCirurgiao';
+import LinhasOrdemTabelaEspecialidade from './corpoOrdemTabelaEspecialidade';
 import HeaderEditarTabela from './headerEditarTabela';
 
 export default function Tabela() {
@@ -47,6 +48,7 @@ const FormSchema = z.object({
 function ConteudoTabela({dataCalendario, setData, session}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [especialidades, setEspecialidades] = useState(null)
+  const [procedimentosCirurgioes, setProcedimentosCirurgioes] = useState(null)
   const [isLoading, setLoading] = useState(true);
   const { toast } = useToast()
   const imgRef = useRef(null);
@@ -75,7 +77,7 @@ function ConteudoTabela({dataCalendario, setData, session}) {
           },
         }); 
         const dataResponse = await response.json();
-        console.log(dataResponse);
+        // console.log(dataResponse);
         setDadosTabela(dataResponse);
         setValue("linhas", montarValoresLinhas(dataResponse))
 
@@ -86,8 +88,18 @@ function ConteudoTabela({dataCalendario, setData, session}) {
           },
         }); 
         const responseEspecialidadeJson = await responseEspecialidade.json();
-        console.log(responseEspecialidadeJson);
+        // console.log(responseEspecialidadeJson);
         setEspecialidades(responseEspecialidadeJson);
+
+        const responseProcedimentoCirurgiao = await fetch(process.env.NEXT_PUBLIC_API + '/api/procedimentoCirurgiao/nomes', {
+          method: "GET",
+          headers: {
+            authorization: session?.user.token,
+          },
+        }); 
+        const responseProcedimentoCirurgiaoJson = await responseProcedimentoCirurgiao.json();
+        // console.log(responseProcedimentoCirurgiaoJson);
+        setProcedimentosCirurgioes(responseProcedimentoCirurgiaoJson);
       } finally {
         setLoading(false);
       }
@@ -126,7 +138,8 @@ function ConteudoTabela({dataCalendario, setData, session}) {
         <HeaderEditarTabela data={dataCalendario} setData={setData}/> 
         {dadosTabela != null ?
           <Form {...form}>
-            <LinhasOrdemTabela dadosTabela={dadosTabela} register={register} watchLinha={watchLinha} especialidades={especialidades} form={form}/>
+            <LinhasOrdemTabelaEspecialidade dadosTabela={dadosTabela} register={register} watchLinha={watchLinha} especialidades={especialidades} form={form}/>
+            <LinhasOrdemTabelaCirurgiao dadosTabela={dadosTabela} register={register} watchLinha={watchLinha} procedimentosCirurgioes={procedimentosCirurgioes} form={form}/>
             {/* <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/> */}
             {/* <RodapeTotal dadosTabela={dadosTabela} linhasTabela={watchLinha}/> */}
           </Form>

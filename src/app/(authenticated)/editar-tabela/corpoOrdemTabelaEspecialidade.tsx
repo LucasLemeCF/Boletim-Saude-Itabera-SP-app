@@ -18,13 +18,14 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 
-export default function LinhasOrdemTabela({ dadosTabela, register, watchLinha, especialidades, form }) {
+export default function LinhasOrdemTabelaEspecialidade({ dadosTabela, register, watchLinha, especialidades, form }) {
   const tamanhoCabecalho = dadosTabela.cabecalhosTabela.length;
+  let cabecalhos = SepararCabecalhosEspecialidade(dadosTabela.cabecalhosTabela);
   let indexLinha = -1;
 
   return (
     <div>
-      {dadosTabela.cabecalhosTabela.map((cabecalho, indexCabecalho) => {
+      {cabecalhos.map((cabecalho, indexCabecalho) => {
         return(
           <div className="border border-t-0 border-black">
             <LinhaCabecalho cabecalho={cabecalho}/>
@@ -63,6 +64,7 @@ function LinhaCabecalho({cabecalho}) {
       <div className="flex items-center justify-between border-black bg-[#337B5B] w-[300px] h-[25px]">
         <p className='w-full font-semibold text-center text-white'>{cabecalho.textos[0].texto}</p>
       </div>
+      <div className="flex items-center justify-between border-black bg-[#337B5B] w-[300px] h-[25px]"></div>
       <div className="flex items-center justify-center border-black bg-[#337B5B] w-[100px] h-[25px] px-1">
         <p className='font-semibold text-center text-white'><FaArrowUp className="w-[16px] h-[16px]"/></p>
       </div>
@@ -122,6 +124,7 @@ function LinhaTabela({linha, linhaAtual, especialidades, form}) {
           )}
         />
       </div>
+      <div className="flex items-center justify-between border-black w-[300px] h-[25px]"></div>
       <div className="flex items-center justify-center border-black w-[100px] h-[25px] px-1">
         <p className='font-semibold text-center text-black'><FaArrowUp className="w-[15px] h-[15px]"/></p>
       </div>
@@ -148,4 +151,16 @@ function buscarNomeEspecialidade({linha, especialidades}) {
   });
 
   return nomeEspecialidade;
+}
+
+function SepararCabecalhosEspecialidade(cabecalhos) {
+  let cabecalhosEspecialidade = [];
+
+  cabecalhos.map((cabecalho) => {
+    if (cabecalho.tipo == "ESPECIALIDADE_CABECALHO") {
+      cabecalhosEspecialidade.push(cabecalho);
+    }
+  });
+
+  return cabecalhosEspecialidade;
 }
