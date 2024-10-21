@@ -14,7 +14,7 @@ import ConverterData from '../../../utils/converterData';
 import Cirurgioes from './cirurgioes';
 import Especialidades from './especialidades';
 import HeaderTabela from './headerTabela';
-import { MontarCabecalhos, montarValoresLinhas } from './montarDados';
+import { montarCabecalhos, montarValoresLinhas } from './montarDados';
 import { RodapeCirurgioes } from './rodapeCirurgioes';
 import { RodapeEspecialidades } from './rodapeEspecialidades';
 import { RodapeTotal } from './rodapeTotal';
@@ -89,7 +89,7 @@ function ConteudoTabela({dataCalendario, setData, session}) {
     const resultado = {
       data: ConverterData(dataCalendario),
       linhas: dadosNovos.linhas,
-      cabecalhos: MontarCabecalhos(dadosTabela)
+      cabecalhos: montarCabecalhos(dadosTabela)
     }
 
     const requestOptions = {

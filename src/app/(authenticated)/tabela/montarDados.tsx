@@ -50,7 +50,7 @@ export function montarValoresLinhas(dadosTabela: Tabela) {
     return linhas;
 }
   
-export  function MontarCabecalhos(dadosTabela: Tabela) {
+export function montarCabecalhos(dadosTabela: Tabela) {
     const cabecalhos: any[] = [];
 
     for (let i = 0; i < dadosTabela.especialidadesCabecalhos.length; i++) {

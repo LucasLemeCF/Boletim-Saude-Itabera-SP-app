@@ -2,14 +2,14 @@
 
 
 import { format } from "date-fns"
-import { Button } from "../../../components/ui/button"
-import { Calendar } from "../../../components/ui/calendar"
+import { Button } from "../components/ui/button"
+import { Calendar } from "../components/ui/calendar"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "../../../components/ui/popover"
-import { cn } from "../../../lib/utils"
+} from "../components/ui/popover"
+import { cn } from "../lib/utils"
 
 export function DatePickerDemo({data, setData}) {
   return (

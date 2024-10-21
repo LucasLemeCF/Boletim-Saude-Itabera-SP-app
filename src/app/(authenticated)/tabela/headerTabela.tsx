@@ -1,7 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 "use client"
 
-import { DatePickerDemo } from "./calendario";
+import { DatePickerDemo } from "../../../schemas/calendario";
 
 export default function HeaderTabela({data, setData}) {
     return (
@@ -15,7 +15,7 @@ export default function HeaderTabela({data, setData}) {
   function Titulo() {
     return (
       <div className="flex items-center justify-between divide-x border-t border-x border-black bg-[#337B5B]">
-        <div className="flex items-centerflex items-center justify-start border-b-0 border-black w-[300px] h-[75px] h-[75px] px-2 gap-4">
+        <div className="flex items-centerflex items-center justify-start border-b-0 border-black w-[300px] h-[75px] px-2 gap-4">
           <img 
             src="/logo.png"
             width="60px"
