@@ -18,9 +18,10 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 
-export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, watchLinha, procedimentosCirurgioes, control, setValue }) {
+export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, watchLinha, procedimentosCirurgioes, control, setValue, register }) {
   const tamanhoCabecalho = dadosTabela.cabecalhosTabela.length;
   let cabecalhos = SepararCabecalhosCirurgiao(dadosTabela.cabecalhosTabela);
+  let qtdCabecalhosEspecialidade = BuscarQtdCabecalhosEspecialidade(dadosTabela.cabecalhosTabela);
   let indexLinha = -1;
 
   return (
@@ -28,7 +29,9 @@ export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, watchLinha, pr
       {cabecalhos.map((cabecalho, indexCabecalho) => {
         return(
           <div className="border border-t-0 border-black" key={indexCabecalho}>
-            <LinhaCabecalho cabecalho={cabecalho} key={cabecalho}/>
+            <LinhaCabecalho cabecalho={cabecalho} key={cabecalho} indexCabecalho={indexCabecalho} 
+              setValue={setValue} watchLinha={watchLinha} register={register} qtdCabecalhosEspecialidade={qtdCabecalhosEspecialidade}
+            />
             {dadosTabela.linhasTabela.map((linha, indexLinhaTabela) => {
               const linhaInicial = dadosTabela.cabecalhosTabela[indexCabecalho].posicao + 1;
               let linhaAtual = linhaInicial + indexLinhaTabela;
@@ -43,9 +46,9 @@ export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, watchLinha, pr
               if (linhaAtual <= linhaFinal) {
                 indexLinha++;
                 return(
-                  <LinhaTabela key={indexLinhaTabela} linha={dadosTabela.linhasTabela[indexLinha]} linhaAtual={linhaAtual} 
-                    procedimentosCirurgioes={procedimentosCirurgioes} control={control} indexLinhaTabela={indexLinhaTabela} 
-                    watchLinha={watchLinha} setValue={setValue}
+                  <LinhaTabela key={indexLinhaTabela} linha={dadosTabela.linhasTabela[indexLinha]}
+                    procedimentosCirurgioes={procedimentosCirurgioes} control={control} 
+                    indexLinhaTabela={indexLinhaTabela} setValue={setValue} linhaAtual={linhaAtual}
                   />
                 );
               }
@@ -57,15 +60,35 @@ export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, watchLinha, pr
   )
 }
 
-function LinhaCabecalho({cabecalho}) {
+function LinhaCabecalho({cabecalho, indexCabecalho, setValue, watchLinha, register, qtdCabecalhosEspecialidade}) {
+  let index = indexCabecalho + qtdCabecalhosEspecialidade
+
+  function onChangeCirurgiao(value) {
+    setValue("cabecalhos." + index + ".posicao", cabecalho);
+    setValue("cabecalhos." + index + ".tipo", "ESPECIALIDADE_CABECALHO");
+    setValue("cabecalhos." + index + ".textos.0.texto", value);
+    console.log(watchLinha);
+  }
+
+  function onChangeProcedimento(value) {
+    setValue("cabecalhos." + index + ".posicao", cabecalho);
+    setValue("cabecalhos." + index + ".tipo", "ESPECIALIDADE_CABECALHO");
+    setValue("cabecalhos." + index + ".textos.1.texto", value);
+    console.log(watchLinha);
+  }
+
   return (
     <div className="flex items-center justify-between divide-x bg-[#E2EFDB]">
-      <div className="flex items-center justify-between border-black bg-[#337B5B] w-[300px] h-[25px]">
-        <p className='w-full font-semibold text-center text-white'>{cabecalho.textos[0].texto}</p>
-      </div>
-      <div className="flex items-center justify-between border-black bg-[#337B5B] w-[300px] h-[25px]">
-        <p className='w-full font-semibold text-center text-white'>{cabecalho.textos[1].texto}</p>
-      </div>
+      <input className="flex items-center justify-between border-black font-semibold text-center text-white bg-[#337B5B] w-[300px] h-[25px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
+        placeholder="Insira o nome do cabeçalho"
+        name={`cabecalhos.${index}.textos.0.texto`} {...register(`cabecalhos.${Number(index)}.textos.0.texto`)}
+        onBlur={(e) => {onChangeCirurgiao(e.target.value)}}
+      />
+      <input className="flex items-center justify-between border-black font-semibold text-center text-white bg-[#337B5B] w-[300px] h-[25px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
+        placeholder="Insira o nome do cabeçalho"
+        name={`cabecalhos.${index}.textos.1.texto`} {...register(`cabecalhos.${Number(index)}.textos.1.texto`)}
+        onBlur={(e) => {onChangeProcedimento(e.target.value)}}
+      />
       <div className="flex items-center justify-center border-black bg-[#337B5B] w-[100px] h-[25px] px-1">
         <p className='font-semibold text-center text-white'><FaArrowUp className="w-[16px] h-[16px]"/></p>
       </div>
@@ -90,7 +113,7 @@ const FormSchema = z.object({
     .email(),
 })
 
-function LinhaTabela({linha, linhaAtual, procedimentosCirurgioes, control, indexLinhaTabela, watchLinha, setValue}) {
+function LinhaTabela({linha, procedimentosCirurgioes, control, indexLinhaTabela, setValue, linhaAtual}) {
   const nomeCirurgiao = BuscarNomeCirurgiao({linha, procedimentosCirurgioes});
   const nomeProcedimento = BuscarNomeProcedimento({linha, procedimentosCirurgioes});
   const listaCirurgioes = removerCirurgioesRepetidos(procedimentosCirurgioes);
@@ -101,7 +124,6 @@ function LinhaTabela({linha, linhaAtual, procedimentosCirurgioes, control, index
     setValue("procedimento." + indexLinhaTabela + ".procedimento", value);
     setValue("procedimento." + indexLinhaTabela + ".posicao", linhaAtual);
     setValue("procedimento." + indexLinhaTabela + ".tipo", "CIRURGIAO_LINHA");
-    // console.log(watchLinha);
   }
 
   let procedimento = {
@@ -219,6 +241,18 @@ function SepararCabecalhosCirurgiao(cabecalhos) {
   });
 
   return cabecalhosEspecialidade;
+}
+
+function BuscarQtdCabecalhosEspecialidade(cabecalhos) {
+  let qtdCabecalhosEspecialidade = 0;
+
+  cabecalhos.map((cabecalho) => {
+    if (cabecalho.tipo == "ESPECIALIDADE_CABECALHO") {
+      qtdCabecalhosEspecialidade++;
+    }
+  });
+
+  return qtdCabecalhosEspecialidade;
 }
 
 function removerCirurgioesRepetidos(procedimentosCirurgioes) {

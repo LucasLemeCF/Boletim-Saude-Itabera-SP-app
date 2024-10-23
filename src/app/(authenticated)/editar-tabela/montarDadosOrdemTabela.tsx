@@ -31,8 +31,6 @@ export function montarValoresLinhas(dadosTabela, especialidades, procedimentosCi
         });
     });
 
-    console.log(dadosTabela);
-
     return linhas;
 }
 
@@ -69,5 +67,38 @@ export function montarCabecalhos(dadosTabela: OrdemTabela) {
         });
     }
    
+    return cabecalhos;
+}
+
+export function montarValoresCabecalhos(dadosNovos) {
+    const cabecalhos = [] as any;
+
+    dadosNovos.cabecalhos.map((cabecalho) => {
+        if (cabecalho.tipo == "ESPECIALIDADE_CABECALHO") {
+            cabecalhos.push({
+                posicao: cabecalho.posicao,
+                tipo: "ESPECIALIDADE_CABECALHO",
+                textos: [
+                    {
+                        texto: cabecalho.textos[0].texto,
+                    }
+                ]
+            });
+        } else {
+            cabecalhos.push({
+                posicao: cabecalho.posicao,
+                tipo: "CIRURGIAO_CABECALHO",
+                textos: [
+                    {
+                        texto: cabecalho.textos[0].texto,
+                    },
+                    {
+                        texto: cabecalho.textos[1].texto,
+                    }
+                ]
+            });
+        }
+    });
+
     return cabecalhos;
 }

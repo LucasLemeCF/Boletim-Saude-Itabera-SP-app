@@ -15,7 +15,7 @@ import ConverterData from '../../../utils/converterData';
 import LinhasOrdemTabelaCirurgiao from './corpoOrdemTabelaCirurgiao';
 import LinhasOrdemTabelaEspecialidade from './corpoOrdemTabelaEspecialidade';
 import HeaderEditarTabela from './headerEditarTabela';
-import { montarCabecalhos, montarValoresLinhas } from './montarDadosOrdemTabela';
+import { montarCabecalhos, montarValoresCabecalhos, montarValoresLinhas } from './montarDadosOrdemTabela';
 
 export default function Tabela() {
   const { data: session } = useSession();
@@ -103,7 +103,16 @@ function ConteudoTabela({dataCalendario, setData, session}) {
   if (isLoading) return CarregandoSession()
 
   async function onSubmit(dadosNovos) {
-    montarValoresLinhas(dadosNovos, especialidades, procedimentosCirurgioes);
+    const linhas = montarValoresLinhas(dadosNovos, especialidades, procedimentosCirurgioes);
+    const cabecalhos = montarValoresCabecalhos(dadosNovos);
+
+    const resultado = {
+      data: ConverterData(dataCalendario),
+      linhas: linhas,
+      cabecalhos:cabecalhos
+    }
+
+    console.log(resultado);
 
     // const requestOptions = {
     //   method: 'POST',
@@ -130,7 +139,7 @@ function ConteudoTabela({dataCalendario, setData, session}) {
               especialidades={especialidades} control={control} setValue={setValue} register={register}
             />
             <LinhasOrdemTabelaCirurgiao dadosTabela={dadosTabela} watchLinha={watchLinha} 
-              procedimentosCirurgioes={procedimentosCirurgioes} control={control} setValue={setValue}
+              procedimentosCirurgioes={procedimentosCirurgioes} control={control} setValue={setValue} register={register}
             />
             <div className="flex items-center justify-end gap-8 w-full mt-8">
               <ButtonLocal texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"} icon={"Salvar"}/>
