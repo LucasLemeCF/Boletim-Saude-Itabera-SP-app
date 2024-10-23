@@ -18,17 +18,19 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 
-export default function LinhasOrdemTabelaEspecialidade({ dadosTabela, register, watchLinha, especialidades, form }) {
+export default function LinhasOrdemTabelaEspecialidade({ dadosTabela, watchLinha, especialidades, control, setValue, register }) {
   const tamanhoCabecalho = dadosTabela.cabecalhosTabela.length;
   let cabecalhos = SepararCabecalhosEspecialidade(dadosTabela.cabecalhosTabela);
   let indexLinha = -1;
+
+  console.log(watchLinha);
 
   return (
     <div>
       {cabecalhos.map((cabecalho, indexCabecalho) => {
         return(
-          <div className="border border-t-0 border-black">
-            <LinhaCabecalho cabecalho={cabecalho}/>
+          <div className="border border-t-0 border-black" key={indexCabecalho}>
+            <LinhaCabecalho cabecalho={cabecalho} register={register} indexCabecalho={indexCabecalho} setValue={setValue} watchLinha={watchLinha}/>
             {dadosTabela.linhasTabela.map((linha, indexLinhaTabela) => {
               const linhaInicial = dadosTabela.cabecalhosTabela[indexCabecalho].posicao + 1;
               let linhaAtual = linhaInicial + indexLinhaTabela;
@@ -43,11 +45,10 @@ export default function LinhasOrdemTabelaEspecialidade({ dadosTabela, register, 
               if (linhaAtual <= linhaFinal) {
                 indexLinha++;
                 return(
-                  <LinhaTabela linha={dadosTabela.linhasTabela[indexLinha]} linhaAtual={linhaAtual} especialidades={especialidades} form={form}/>
-                );
-              } else {
-                return(
-                  <></>
+                  <LinhaTabela key={indexLinhaTabela} linha={dadosTabela.linhasTabela[indexLinha]} linhaAtual={linhaAtual} 
+                    especialidades={especialidades} control={control} indexLinhaTabela={indexLinhaTabela}
+                    watchLinha={watchLinha} setValue={setValue}
+                  />
                 );
               }
             })}
@@ -58,12 +59,22 @@ export default function LinhasOrdemTabelaEspecialidade({ dadosTabela, register, 
   )
 }
 
-function LinhaCabecalho({cabecalho}) {
+function LinhaCabecalho({cabecalho, register, indexCabecalho, setValue, watchLinha}) {
+  function onChange(value) {
+    setValue("cabecalhos." + indexCabecalho + ".posicao", indexCabecalho);
+    setValue("cabecalhos." + indexCabecalho + ".tipo", "ESPECIALIDADE_CABECALHO");
+    setValue("cabecalhos." + indexCabecalho + ".textos.0.texto", value);
+    console.log(watchLinha);
+  }
+
   return (
     <div className="flex items-center justify-between divide-x bg-[#E2EFDB]">
-      <div className="flex items-center justify-between border-black bg-[#337B5B] w-[300px] h-[25px]">
-        <p className='w-full font-semibold text-center text-white'>{cabecalho.textos[0].texto}</p>
-      </div>
+      <input className="flex items-center justify-between border-black font-semibold text-center text-white bg-[#337B5B] w-[300px] h-[25px] focus:border-[#337B5B] focus:border-2 focus:outline-none focus:ring-0" 
+        placeholder="Insira o nome do cabeçalho"
+        // defaultValue={cabecalho.textos[0].texto}
+        name={`cabecalhos.${indexCabecalho}.textos.0.texto`} {...register(`cabecalhos.${Number(indexCabecalho)}.textos.0.texto`)}
+        onBlur={(e) => {onChange(e.target.value)}}
+      />
       <div className="flex items-center justify-between border-black bg-[#337B5B] w-[300px] h-[25px]"></div>
       <div className="flex items-center justify-center border-black bg-[#337B5B] w-[100px] h-[25px] px-1">
         <p className='font-semibold text-center text-white'><FaArrowUp className="w-[16px] h-[16px]"/></p>
@@ -89,29 +100,43 @@ const FormSchema = z.object({
     .email(),
 })
 
-function LinhaTabela({linha, linhaAtual, especialidades, form}) {
+function LinhaTabela({linha, linhaAtual, especialidades, control, indexLinhaTabela, watchLinha, setValue}) {
   const nomeEspecialidade = buscarNomeEspecialidade({linha, especialidades});
+
+  function onChange(value) {
+    setValue("especialidade." + indexLinhaTabela + ".especialidade", value);
+    setValue("especialidade." + indexLinhaTabela + ".posicao", linhaAtual);
+    setValue("especialidade." + indexLinhaTabela + ".tipo", "ESPECIALIDADE_LINHA");
+    // console.log(watchLinha);
+  }
+
+  let especialidade = {
+    especialidade: nomeEspecialidade,
+    posicao: linhaAtual,
+    tipo: "ESPECIALIDADE_LINHA"
+  }
 
   return(
     <div className="flex items-center justify-between divide-x divide-y border-black bg-[#E2EFDB]">
       <div className="flex items-center justify-between border-black border-t w-[300px] h-[25px]">
         <FormField
-          control={form.control}
-          name="data"
+          control={control}
+          name={"especialidade." + indexLinhaTabela}
+          defaultValue={especialidade}
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={nomeEspecialidade}>
+              <Select onValueChange={(value) => { field.onChange(value); onChange(value); }} defaultValue={nomeEspecialidade}>
                 <FormControl className="w-[300px] h-6 border-none hover:bg-[#d2dfcc]">
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione uma especialidade" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {especialidades.map((especialidade) => {
+                  {especialidades.map((especialidade, index) => {
                     return(
                       <SelectItem 
                         value={especialidade.especialidade}
-                        className=""
+                        key={index}
                       >
                         {especialidade.especialidade}
                       </SelectItem>

@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 
-export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, register, watchLinha, procedimentosCirurgioes, form }) {
+export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, watchLinha, procedimentosCirurgioes, control, setValue }) {
   const tamanhoCabecalho = dadosTabela.cabecalhosTabela.length;
   let cabecalhos = SepararCabecalhosCirurgiao(dadosTabela.cabecalhosTabela);
   let indexLinha = -1;
@@ -27,8 +27,8 @@ export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, register, watc
     <div>
       {cabecalhos.map((cabecalho, indexCabecalho) => {
         return(
-          <div className="border border-t-0 border-black">
-            <LinhaCabecalho cabecalho={cabecalho}/>
+          <div className="border border-t-0 border-black" key={indexCabecalho}>
+            <LinhaCabecalho cabecalho={cabecalho} key={cabecalho}/>
             {dadosTabela.linhasTabela.map((linha, indexLinhaTabela) => {
               const linhaInicial = dadosTabela.cabecalhosTabela[indexCabecalho].posicao + 1;
               let linhaAtual = linhaInicial + indexLinhaTabela;
@@ -43,11 +43,10 @@ export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, register, watc
               if (linhaAtual <= linhaFinal) {
                 indexLinha++;
                 return(
-                  <LinhaTabela linha={dadosTabela.linhasTabela[indexLinha]} linhaAtual={linhaAtual} procedimentosCirurgioes={procedimentosCirurgioes} form={form}/>
-                );
-              } else {
-                return(
-                  <></>
+                  <LinhaTabela key={indexLinhaTabela} linha={dadosTabela.linhasTabela[indexLinha]} linhaAtual={linhaAtual} 
+                    procedimentosCirurgioes={procedimentosCirurgioes} control={control} indexLinhaTabela={indexLinhaTabela} 
+                    watchLinha={watchLinha} setValue={setValue}
+                  />
                 );
               }
             })}
@@ -91,18 +90,34 @@ const FormSchema = z.object({
     .email(),
 })
 
-function LinhaTabela({linha, linhaAtual, procedimentosCirurgioes, form}) {
+function LinhaTabela({linha, linhaAtual, procedimentosCirurgioes, control, indexLinhaTabela, watchLinha, setValue}) {
   const nomeCirurgiao = BuscarNomeCirurgiao({linha, procedimentosCirurgioes});
   const nomeProcedimento = BuscarNomeProcedimento({linha, procedimentosCirurgioes});
   const listaCirurgioes = removerCirurgioesRepetidos(procedimentosCirurgioes);
   const listaProcedimentos = filtrarProcedimentos({nomeCirurgiao, procedimentosCirurgioes});
 
+  function onChange(value) {
+    setValue("procedimento." + indexLinhaTabela + ".cirurgiao", nomeCirurgiao);
+    setValue("procedimento." + indexLinhaTabela + ".procedimento", value);
+    setValue("procedimento." + indexLinhaTabela + ".posicao", linhaAtual);
+    setValue("procedimento." + indexLinhaTabela + ".tipo", "CIRURGIAO_LINHA");
+    // console.log(watchLinha);
+  }
+
+  let procedimento = {
+    cirurgiao: nomeCirurgiao,
+    procedimento: nomeProcedimento,
+    posicao: linhaAtual,
+    tipo: "CIRURGIAO_LINHA"
+  }
+
   return(
     <div className="flex items-center justify-between divide-x divide-y border-black bg-[#E2EFDB]">
       <div className="flex items-center justify-between border-black border-t w-[300px] h-[25px]">
         <FormField
-          control={form.control}
-          name="cirurgiao"
+          control={control}
+          name={"cirurgiao." + indexLinhaTabela}
+          defaultValue={nomeCirurgiao}
           render={({ field }) => (
             <FormItem>
               <Select onValueChange={field.onChange} defaultValue={nomeCirurgiao}>
@@ -112,10 +127,10 @@ function LinhaTabela({linha, linhaAtual, procedimentosCirurgioes, form}) {
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {listaCirurgioes.map((procedimento) => {
+                  {listaCirurgioes.map((cirurgiao, indexCirurgiao) => {
                     return(
-                      <SelectItem value={procedimento}>
-                        {procedimento}
+                      <SelectItem value={cirurgiao} key={indexCirurgiao}>
+                        {cirurgiao}
                       </SelectItem>
                     );
                   })}
@@ -128,21 +143,22 @@ function LinhaTabela({linha, linhaAtual, procedimentosCirurgioes, form}) {
       </div>
       <div className="flex items-center justify-between border-black border-t w-[300px] h-[25px]">
         <FormField
-          control={form.control}
-          name="procedimento"
+          control={control}
+          name={"procedimento." + indexLinhaTabela}
+          defaultValue={procedimento}
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={nomeProcedimento}>
+              <Select onValueChange={(value) => { field.onChange(value); onChange(value); }} defaultValue={nomeProcedimento}>
                 <FormControl className="w-[300px] h-6 border-none hover:bg-[#d2dfcc]">
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione um procedimento" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {listaProcedimentos.map((procedimento) => {
+                  {listaProcedimentos.map((procedimento, indexProcedimento) => {
                     return(
-                      <SelectItem value={procedimento}>
-                        {procedimento}
+                      <SelectItem value={procedimento.procedimento} key={indexProcedimento}>
+                        {procedimento.procedimento}
                       </SelectItem>
                     );
                   })}
@@ -234,7 +250,7 @@ function filtrarProcedimentos({nomeCirurgiao, procedimentosCirurgioes}) {
 
   procedimentosCirurgioes.map((procedimento) => {
     if (nomeCirurgiao == procedimento.cirurgiao) {
-      listaProcedimentos.push(procedimento.procedimento);
+      listaProcedimentos.push(procedimento);
     }
   });
 

@@ -64,41 +64,41 @@ export function SelectMonth({control}) {
 }
 
 export function SelectYear({control}) {
-    return (
-        <FormField
-          defaultValue={(new Date().getFullYear()).toString()}
-          control={control}
-          name="ano"
-          render={({ field }) => (
-            <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-              <SelectTrigger id="framework">
-                <SelectValue placeholder="Ano"/>
-                </SelectTrigger>
-                <SelectContent position="popper">
-                    {Array.from({length: calculaTamanhoSelect()}, (_, i) => new Date().getFullYear() - i).map((ano) => (
-                        <SelectItem key={ano} value={ano.toString()}>{ano}</SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </FormItem>
-          )}
-        />
-    )
+  return (
+    <FormField
+      defaultValue={(new Date().getFullYear()).toString()}
+      control={control}
+      name="ano"
+      render={({ field }) => (
+        <FormItem>
+          <Select onValueChange={field.onChange} defaultValue={field.value}>
+          <SelectTrigger id="framework">
+            <SelectValue placeholder="Ano"/>
+            </SelectTrigger>
+            <SelectContent position="popper">
+              {Array.from({length: calculaTamanhoSelect()}, (_, i) => new Date().getFullYear() - i).map((ano) => (
+                <SelectItem key={ano} value={ano.toString()}>{ano}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </FormItem>
+      )}
+    />
+  )
 }
 
 const calculaTamanhoSelect = () => {
-    let array = [];
+  let array = [];
 
-    for (let i = new Date().getFullYear(); i >= 2020; i--) {
-        array.push(i);
-    }
+  for (let i = new Date().getFullYear(); i >= 2020; i--) {
+      array.push(i);
+  }
 
-    return array.length;
+  return array.length;
 }
 
 const buscaMesAtual = () => {
-    const data = new Date();
-    const mes = data.getMonth() + 1;
-    return mes < 10 ? "0" + mes : mes.toString();
+  const data = new Date();
+  const mes = data.getMonth() + 1;
+  return mes < 10 ? "0" + mes : mes.toString();
 }

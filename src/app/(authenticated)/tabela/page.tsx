@@ -83,7 +83,7 @@ function ConteudoTabela({dataCalendario, setData, session}) {
     fetchData();
   }, [dataCalendario, getValues, session?.user.token, setValue]);
 
-  if (isLoading) return Carregando()
+  if (isLoading) return CarregandoSession()
 
   async function onSubmit(dadosNovos: TabelaFormData) {
     const resultado = {
@@ -172,15 +172,6 @@ function TemDadadosCirurgioes({dadosTabela}) {
 function CarregandoSession() {
   return (
     <div className="bg-[#337B5B] w-40 h-16 border rounded-[5px] text-white flex items-center justify-center">
-      <CgSpinner className="animate-spin h-5 w-5 mr-1"/>
-      <p>Carregando...</p>
-    </div>
-  )
-}
-
-function Carregando() {
-  return (
-    <div className="bg-[#E2EFDB] w-full min-w-40 h-[100px] border border-black flex items-center justify-center">
       <CgSpinner className="animate-spin h-5 w-5 mr-1"/>
       <p>Carregando...</p>
     </div>

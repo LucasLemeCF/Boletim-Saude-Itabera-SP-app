@@ -9,13 +9,13 @@ import { z } from 'zod';
 import { Form } from '../../../components/ui/form';
 import { Toaster } from '../../../components/ui/toaster';
 import { useToast } from '../../../components/ui/use-toast';
-import { dadosOrdemTabelaSchema, OrdemTabelaFormData } from '../../../schemas/responseOrdemTabela';
-import { TabelaFormData } from '../../../schemas/responseTabela';
+import { OrdemTabelaFormData } from '../../../schemas/responseOrdemTabela';
+import ButtonLocal from '../../../utils/ButtonLocal';
 import ConverterData from '../../../utils/converterData';
-import { montarValoresLinhas } from '../tabela/montarDados';
 import LinhasOrdemTabelaCirurgiao from './corpoOrdemTabelaCirurgiao';
 import LinhasOrdemTabelaEspecialidade from './corpoOrdemTabelaEspecialidade';
 import HeaderEditarTabela from './headerEditarTabela';
+import { montarCabecalhos, montarValoresLinhas } from './montarDadosOrdemTabela';
 
 export default function Tabela() {
   const { data: session } = useSession();
@@ -44,7 +44,6 @@ const FormSchema = z.object({
     .email(),
 })
  
-
 function ConteudoTabela({dataCalendario, setData, session}) {
   const [dadosTabela, setDadosTabela] = useState(null)
   const [especialidades, setEspecialidades] = useState(null)
@@ -53,14 +52,7 @@ function ConteudoTabela({dataCalendario, setData, session}) {
   const { toast } = useToast()
   const imgRef = useRef(null);
   
-  const { watch, register, handleSubmit, setValue, getValues, control } = useForm<OrdemTabelaFormData>({
-    resolver: zodResolver(dadosOrdemTabelaSchema),
-    defaultValues: {  
-      data: ConverterData(dataCalendario),
-      linhas: montarValoresLinhas(dadosTabela),
-      // cabecalhos: montarCabecalhos(dadosTabela)
-    }
-  });
+  const { watch, register, handleSubmit, setValue, getValues, control } = useForm<OrdemTabelaFormData>();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -79,7 +71,7 @@ function ConteudoTabela({dataCalendario, setData, session}) {
         const dataResponse = await response.json();
         // console.log(dataResponse);
         setDadosTabela(dataResponse);
-        setValue("linhas", montarValoresLinhas(dataResponse))
+        setValue("cabecalhos", montarCabecalhos(dataResponse))
 
         const responseEspecialidade = await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade/nomes', {
           method: "GET",
@@ -110,27 +102,23 @@ function ConteudoTabela({dataCalendario, setData, session}) {
 
   if (isLoading) return CarregandoSession()
 
-  async function onSubmit(dadosNovos: TabelaFormData) {
-    const resultado = {
-      data: ConverterData(dataCalendario),
-      linhas: dadosNovos.linhas,
-      // cabecalhos: montarCabecalhos(dadosTabela)
-    }
+  async function onSubmit(dadosNovos) {
+    montarValoresLinhas(dadosNovos, especialidades, procedimentosCirurgioes);
 
-    const requestOptions = {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'authorization': session?.user.token,
-      },
-      body: JSON.stringify(resultado)
-    };
+    // const requestOptions = {
+    //   method: 'POST',
+    //   headers: { 
+    //     'Content-Type': 'application/json',
+    //     'authorization': session?.user.token,
+    //   },
+    //   body: JSON.stringify(resultado)
+    // };
 
-    fetch(process.env.NEXT_PUBLIC_API + '/api/tabela', requestOptions).then(response => response)
-    toast({description: "Tabela salva com sucesso!"})
+    // fetch(process.env.NEXT_PUBLIC_API + '/api/tabela', requestOptions).then(response => response)
+    // toast({description: "Tabela salva com sucesso!"})
   }
 
-  const watchLinha = watch("linhas");
+  const watchLinha = watch();
 
   return (
     <>
@@ -138,16 +126,18 @@ function ConteudoTabela({dataCalendario, setData, session}) {
         <HeaderEditarTabela data={dataCalendario} setData={setData}/> 
         {dadosTabela != null ?
           <Form {...form}>
-            <LinhasOrdemTabelaEspecialidade dadosTabela={dadosTabela} register={register} watchLinha={watchLinha} especialidades={especialidades} form={form}/>
-            <LinhasOrdemTabelaCirurgiao dadosTabela={dadosTabela} register={register} watchLinha={watchLinha} procedimentosCirurgioes={procedimentosCirurgioes} form={form}/>
-            {/* <RodapeEspecialidades dadosTabela={dadosTabela} linhasTabela={watchLinha}/> */}
-            {/* <RodapeTotal dadosTabela={dadosTabela} linhasTabela={watchLinha}/> */}
+            <LinhasOrdemTabelaEspecialidade dadosTabela={dadosTabela} watchLinha={watchLinha} 
+              especialidades={especialidades} control={control} setValue={setValue} register={register}
+            />
+            <LinhasOrdemTabelaCirurgiao dadosTabela={dadosTabela} watchLinha={watchLinha} 
+              procedimentosCirurgioes={procedimentosCirurgioes} control={control} setValue={setValue}
+            />
+            <div className="flex items-center justify-end gap-8 w-full mt-8">
+              <ButtonLocal texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"} icon={"Salvar"}/>
+            </div>
           </Form>
           : <DadosNaoEncontrados/>      
         }
-      </div>
-      <div className="flex items-center justify-end gap-8 w-full mt-8">
-        {/* <ButtonLocal texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"} icon={"Salvar"}/> */}
       </div>
       <Toaster/>
     </>
