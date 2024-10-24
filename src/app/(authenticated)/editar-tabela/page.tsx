@@ -45,11 +45,9 @@ const FormSchema = z.object({
 })
  
 function ConteudoTabela({dataCalendario, setData, session}) {
-  const [dadosTabela, setDadosTabela] = useState(null)
-  const [especialidades, setEspecialidades] = useState(null)
-  const [procedimentosCirurgioes, setProcedimentosCirurgioes] = useState(null)
+  const [tabela, setTabela] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  const { toast } = useToast()
+  const { toast } = useToast();
   const imgRef = useRef(null);
   
   const { watch, register, handleSubmit, setValue, getValues, control } = useForm<OrdemTabelaFormData>();
@@ -61,37 +59,18 @@ function ConteudoTabela({dataCalendario, setData, session}) {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+
       try {
-        const response = await fetch(process.env.NEXT_PUBLIC_API + '/api/ordem-tabela/' + ConverterData(dataCalendario), {
+        const responseTabela = await fetch(process.env.NEXT_PUBLIC_API + '/api/ordem-tabela/teste/' + ConverterData(dataCalendario), {
           method: "GET",
           headers: {
             authorization: session?.user.token,
           },
         }); 
-        const dataResponse = await response.json();
-        // console.log(dataResponse);
-        setDadosTabela(dataResponse);
-        setValue("cabecalhos", montarCabecalhos(dataResponse))
+        const responseTabelaJson = await responseTabela.json();
+        setTabela(responseTabelaJson);
+        setValue("cabecalhos", montarCabecalhos(responseTabelaJson));
 
-        const responseEspecialidade = await fetch(process.env.NEXT_PUBLIC_API + '/api/especialidade/nomes', {
-          method: "GET",
-          headers: {
-            authorization: session?.user.token,
-          },
-        }); 
-        const responseEspecialidadeJson = await responseEspecialidade.json();
-        // console.log(responseEspecialidadeJson);
-        setEspecialidades(responseEspecialidadeJson);
-
-        const responseProcedimentoCirurgiao = await fetch(process.env.NEXT_PUBLIC_API + '/api/procedimentoCirurgiao/nomes', {
-          method: "GET",
-          headers: {
-            authorization: session?.user.token,
-          },
-        }); 
-        const responseProcedimentoCirurgiaoJson = await responseProcedimentoCirurgiao.json();
-        // console.log(responseProcedimentoCirurgiaoJson);
-        setProcedimentosCirurgioes(responseProcedimentoCirurgiaoJson);
       } finally {
         setLoading(false);
       }
@@ -100,10 +79,14 @@ function ConteudoTabela({dataCalendario, setData, session}) {
     fetchData();
   }, [dataCalendario, getValues, session?.user.token, setValue]);
 
+  useEffect(() => {
+    console.log(tabela);
+  }, [tabela]);
+
   if (isLoading) return CarregandoSession()
 
   async function onSubmit(dadosNovos) {
-    const linhas = montarValoresLinhas(dadosNovos, especialidades, procedimentosCirurgioes);
+    const linhas = montarValoresLinhas(dadosNovos, tabela.linhasEspecialidades, tabela.linhasCirurgioes);
     const cabecalhos = montarValoresCabecalhos(dadosNovos);
 
     const resultado = {
@@ -133,13 +116,13 @@ function ConteudoTabela({dataCalendario, setData, session}) {
     <>
       <div>
         <HeaderEditarTabela data={dataCalendario} setData={setData}/> 
-        {dadosTabela != null ?
+        {tabela != null ?
           <Form {...form}>
-            <LinhasOrdemTabelaEspecialidade dadosTabela={dadosTabela} watchLinha={watchLinha} 
-              especialidades={especialidades} control={control} setValue={setValue} register={register}
+            <LinhasOrdemTabelaEspecialidade tabela={tabela} watch={watchLinha} 
+              control={control} setValue={setValue} register={register}
             />
-            <LinhasOrdemTabelaCirurgiao dadosTabela={dadosTabela} watchLinha={watchLinha} 
-              procedimentosCirurgioes={procedimentosCirurgioes} control={control} setValue={setValue} register={register}
+            <LinhasOrdemTabelaCirurgiao tabela={tabela} control={control}
+             setValue={setValue} register={register}
             />
             <div className="flex items-center justify-end gap-8 w-full mt-8">
               <ButtonLocal texto={"Salvar"} color={"bg-green-800"} onClick={handleSubmit(onSubmit)} type={"button"} icon={"Salvar"}/>

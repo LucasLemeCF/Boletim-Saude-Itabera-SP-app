@@ -2,7 +2,6 @@
 
 import { FaArrowDown, FaArrowUp, FaTrashAlt } from "react-icons/fa";
 import { RiMenuAddLine } from "react-icons/ri";
-import { z } from "zod";
  
 import {
   FormControl,
@@ -18,40 +17,29 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 
-export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, watchLinha, procedimentosCirurgioes, control, setValue, register }) {
-  const tamanhoCabecalho = dadosTabela.cabecalhosTabela.length;
-  let cabecalhos = SepararCabecalhosCirurgiao(dadosTabela.cabecalhosTabela);
-  let qtdCabecalhosEspecialidade = BuscarQtdCabecalhosEspecialidade(dadosTabela.cabecalhosTabela);
-  let indexLinha = -1;
+export default function LinhasOrdemTabelaCirurgiao({ tabela, control, setValue, register }) {
+  let qtdCabecalhosEspecialidade = tabela.cabecalhosEspecialidades.length
 
   return (
     <div>
-      {cabecalhos.map((cabecalho, indexCabecalho) => {
+      {tabela.cabecalhosCirurgioes.map((cabecalho, indexCabecalho) => {
         return(
           <div className="border border-t-0 border-black" key={indexCabecalho}>
-            <LinhaCabecalho cabecalho={cabecalho} key={cabecalho} indexCabecalho={indexCabecalho} 
-              setValue={setValue} watchLinha={watchLinha} register={register} qtdCabecalhosEspecialidade={qtdCabecalhosEspecialidade}
+            <LinhaCabecalho cabecalho={cabecalho} key={"cabecalho-"+indexCabecalho} indexCabecalho={indexCabecalho} 
+              setValue={setValue} register={register} qtdCabecalhosEspecialidade={qtdCabecalhosEspecialidade}
             />
-            {dadosTabela.linhasTabela.map((linha, indexLinhaTabela) => {
-              const linhaInicial = dadosTabela.cabecalhosTabela[indexCabecalho].posicao + 1;
-              let linhaAtual = linhaInicial + indexLinhaTabela;
-
-              let linhaFinal;
-              if (tamanhoCabecalho > indexCabecalho + 1) {
-                linhaFinal = dadosTabela.cabecalhosTabela[indexCabecalho + 1].posicao - 1;
-              } else {
-                linhaFinal = dadosTabela.linhasTabela.length;
-              }
-
-              if (linhaAtual <= linhaFinal) {
-                indexLinha++;
-                return(
-                  <LinhaTabela key={indexLinhaTabela} linha={dadosTabela.linhasTabela[indexLinha]}
-                    procedimentosCirurgioes={procedimentosCirurgioes} control={control} 
-                    indexLinhaTabela={indexLinhaTabela} setValue={setValue} linhaAtual={linhaAtual}
-                  />
-                );
-              }
+            {tabela.listaCirurgioes.map((cirurgiao, indexCirurgiao) => {
+              return(
+                <div key={indexCirurgiao}>
+                  {cirurgiao.linhasProcedimentos.map((procedimento, indexProcedimento) => {
+                    return(
+                      <LinhaTabela key={indexProcedimento} procedimento={procedimento} tabela={tabela} cirurgiao={cirurgiao}
+                        control={control} indexLinhaTabela={indexProcedimento} setValue={setValue} 
+                      />
+                    )
+                  })}
+                </div>
+              );
             })}
           </div>
         );
@@ -60,21 +48,19 @@ export default function LinhasOrdemTabelaCirurgiao({ dadosTabela, watchLinha, pr
   )
 }
 
-function LinhaCabecalho({cabecalho, indexCabecalho, setValue, watchLinha, register, qtdCabecalhosEspecialidade}) {
+function LinhaCabecalho({cabecalho, indexCabecalho, setValue, register, qtdCabecalhosEspecialidade}) {
   let index = indexCabecalho + qtdCabecalhosEspecialidade
 
   function onChangeCirurgiao(value) {
     setValue("cabecalhos." + index + ".posicao", cabecalho);
     setValue("cabecalhos." + index + ".tipo", "ESPECIALIDADE_CABECALHO");
     setValue("cabecalhos." + index + ".textos.0.texto", value);
-    console.log(watchLinha);
   }
 
   function onChangeProcedimento(value) {
     setValue("cabecalhos." + index + ".posicao", cabecalho);
     setValue("cabecalhos." + index + ".tipo", "ESPECIALIDADE_CABECALHO");
     setValue("cabecalhos." + index + ".textos.1.texto", value);
-    console.log(watchLinha);
   }
 
   return (
@@ -105,31 +91,18 @@ function LinhaCabecalho({cabecalho, indexCabecalho, setValue, watchLinha, regist
   );
 }
 
-const FormSchema = z.object({
-  email: z
-    .string({
-      required_error: "Please select an email to display.",
-    })
-    .email(),
-})
-
-function LinhaTabela({linha, procedimentosCirurgioes, control, indexLinhaTabela, setValue, linhaAtual}) {
-  const nomeCirurgiao = BuscarNomeCirurgiao({linha, procedimentosCirurgioes});
-  const nomeProcedimento = BuscarNomeProcedimento({linha, procedimentosCirurgioes});
-  const listaCirurgioes = removerCirurgioesRepetidos(procedimentosCirurgioes);
-  const listaProcedimentos = filtrarProcedimentos({nomeCirurgiao, procedimentosCirurgioes});
-
+function LinhaTabela({procedimento, control, indexLinhaTabela, setValue, tabela, cirurgiao}) {
   function onChange(value) {
-    setValue("procedimento." + indexLinhaTabela + ".cirurgiao", nomeCirurgiao);
+    setValue("procedimento." + indexLinhaTabela + ".cirurgiao", procedimento.nomeCirurgiao);
     setValue("procedimento." + indexLinhaTabela + ".procedimento", value);
-    setValue("procedimento." + indexLinhaTabela + ".posicao", linhaAtual);
+    setValue("procedimento." + indexLinhaTabela + ".posicao", procedimento.posicao);
     setValue("procedimento." + indexLinhaTabela + ".tipo", "CIRURGIAO_LINHA");
   }
 
-  let procedimento = {
-    cirurgiao: nomeCirurgiao,
-    procedimento: nomeProcedimento,
-    posicao: linhaAtual,
+  let procedimentoForm = {
+    cirurgiao: procedimento.nomeCirurgiao,
+    procedimento: procedimento.nomeProcedimento,
+    posicao: procedimento.posicao,
     tipo: "CIRURGIAO_LINHA"
   }
 
@@ -139,23 +112,23 @@ function LinhaTabela({linha, procedimentosCirurgioes, control, indexLinhaTabela,
         <FormField
           control={control}
           name={"cirurgiao." + indexLinhaTabela}
-          defaultValue={nomeCirurgiao}
+          defaultValue={procedimento.nomeCirurgiao}
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={field.onChange} defaultValue={nomeCirurgiao}>
+              <Select onValueChange={field.onChange} defaultValue={procedimento.nomeCirurgiao}>
                 <FormControl className="w-[300px] h-6 border-none hover:bg-[#d2dfcc]">
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione um cirurgião" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {listaCirurgioes.map((cirurgiao, indexCirurgiao) => {
+                  {tabela.listaCirurgioes.map((cirurgiao, indexCirurgiao) => {
                     return(
-                      <SelectItem value={cirurgiao} key={indexCirurgiao}>
-                        {cirurgiao}
+                      <SelectItem value={cirurgiao.nomeCirurgiao} key={"cirurgiao-"+cirurgiao.posicao+"-"+indexCirurgiao}>
+                        {cirurgiao.nomeCirurgiao}
                       </SelectItem>
                     );
-                  })}
+                  })} 
                 </SelectContent>
               </Select>
               <FormMessage/>
@@ -167,20 +140,20 @@ function LinhaTabela({linha, procedimentosCirurgioes, control, indexLinhaTabela,
         <FormField
           control={control}
           name={"procedimento." + indexLinhaTabela}
-          defaultValue={procedimento}
+          defaultValue={procedimentoForm}
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={(value) => { field.onChange(value); onChange(value); }} defaultValue={nomeProcedimento}>
+              <Select onValueChange={(value) => { field.onChange(value); onChange(value); }} defaultValue={procedimento.nomeProcedimento}>
                 <FormControl className="w-[300px] h-6 border-none hover:bg-[#d2dfcc]">
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione um procedimento" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {listaProcedimentos.map((procedimento, indexProcedimento) => {
+                  {cirurgiao.linhasProcedimentos.map((procedimento, indexProcedimento) => {
                     return(
-                      <SelectItem value={procedimento.procedimento} key={indexProcedimento}>
-                        {procedimento.procedimento}
+                      <SelectItem value={procedimento.nomeProcedimento} key={"procedimento-"+procedimento.posicao+"-"+indexProcedimento}>
+                        {procedimento.nomeProcedimento}
                       </SelectItem>
                     );
                   })}
@@ -207,86 +180,18 @@ function LinhaTabela({linha, procedimentosCirurgioes, control, indexLinhaTabela,
   );
 }
 
-function BuscarNomeCirurgiao({linha, procedimentosCirurgioes}) {
-  let nomeCirurgiao = "";
+function calcularLinhaFinal(tabela) {
+  let linhaFinal = 0;
 
-  procedimentosCirurgioes.map((procedimento) => {
-    if (procedimento.id == linha.componenteId) {
-      nomeCirurgiao = procedimento.cirurgiao;
-    }
-  });
+  if (tabela.listaCirurgioes !== undefined) {
+    tabela.listaCirurgioes.map((cirurgiao) => {
+      cirurgiao.linhasProcedimentos.map(() => {
+        linhaFinal++;
+      });
+    });
+  }
 
-  return nomeCirurgiao;
-}
+  linhaFinal += tabela.cabecalhosCirurgioes.length;
 
-function BuscarNomeProcedimento({linha, procedimentosCirurgioes}) {
-  let nomeProcedimentoCirurgiao = "";
-
-  procedimentosCirurgioes.map((procedimento) => {
-    if (procedimento.id == linha.componenteId) {
-      nomeProcedimentoCirurgiao = procedimento.procedimento;
-    }
-  });
-
-  return nomeProcedimentoCirurgiao;
-}
-
-function SepararCabecalhosCirurgiao(cabecalhos) {
-  let cabecalhosEspecialidade = [];
-
-  cabecalhos.map((cabecalho) => {
-    if (cabecalho.tipo == "CIRURGIAO_CABECALHO") {
-      cabecalhosEspecialidade.push(cabecalho);
-    }
-  });
-
-  return cabecalhosEspecialidade;
-}
-
-function BuscarQtdCabecalhosEspecialidade(cabecalhos) {
-  let qtdCabecalhosEspecialidade = 0;
-
-  cabecalhos.map((cabecalho) => {
-    if (cabecalho.tipo == "ESPECIALIDADE_CABECALHO") {
-      qtdCabecalhosEspecialidade++;
-    }
-  });
-
-  return qtdCabecalhosEspecialidade;
-}
-
-function removerCirurgioesRepetidos(procedimentosCirurgioes) {
-  let listaCirurgioes = [];
-
-  procedimentosCirurgioes.map((procedimento) => {
-    if (!listaCirurgioes.includes(procedimento.cirurgiao)) {
-      listaCirurgioes.push(procedimento.cirurgiao);
-    }
-  });
-
-  return listaCirurgioes;
-}
-
-function removerProcedimentosRepetidos(procedimentosCirurgioes) {
-  let listaProcedimentos = [];
-
-  procedimentosCirurgioes.map((procedimento) => {
-    if (!listaProcedimentos.includes(procedimento.procedimento)) {
-      listaProcedimentos.push(procedimento.procedimento);
-    }
-  });
-
-  return listaProcedimentos;
-}
-
-function filtrarProcedimentos({nomeCirurgiao, procedimentosCirurgioes}) {
-  let listaProcedimentos = [];
-
-  procedimentosCirurgioes.map((procedimento) => {
-    if (nomeCirurgiao == procedimento.cirurgiao) {
-      listaProcedimentos.push(procedimento);
-    }
-  });
-
-  return listaProcedimentos;
+  return linhaFinal;
 }

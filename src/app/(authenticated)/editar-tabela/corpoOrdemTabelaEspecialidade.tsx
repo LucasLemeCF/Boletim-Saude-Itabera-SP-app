@@ -2,7 +2,6 @@
 
 import { FaArrowDown, FaArrowUp, FaTrashAlt } from "react-icons/fa";
 import { RiMenuAddLine } from "react-icons/ri";
-import { z } from "zod";
  
 import {
   FormControl,
@@ -18,34 +17,33 @@ import {
   SelectValue,
 } from "../../../components/ui/select";
 
-export default function LinhasOrdemTabelaEspecialidade({ dadosTabela, watchLinha, especialidades, control, setValue, register }) {
-  const tamanhoCabecalho = dadosTabela.cabecalhosTabela.length;
-  let cabecalhos = SepararCabecalhosEspecialidade(dadosTabela.cabecalhosTabela);
+export default function LinhasOrdemTabelaEspecialidade({ tabela, control, setValue, register, watch }) {
+  const tamanhoCabecalho = tabela.cabecalhosEspecialidades.length;
   let indexLinha = -1;
 
   return (
     <div>
-      {cabecalhos.map((cabecalho, indexCabecalho) => {
+      {tabela.cabecalhosEspecialidades.map((cabecalho, indexCabecalho) => {
         return(
           <div className="border border-t-0 border-black" key={indexCabecalho}>
-            <LinhaCabecalho cabecalho={cabecalho} register={register} indexCabecalho={indexCabecalho} setValue={setValue} watchLinha={watchLinha}/>
-            {dadosTabela.linhasTabela.map((linha, indexLinhaTabela) => {
-              const linhaInicial = dadosTabela.cabecalhosTabela[indexCabecalho].posicao + 1;
+            <LinhaCabecalho register={register} indexCabecalho={indexCabecalho} setValue={setValue} watch={watch}/>
+            {tabela.linhasEspecialidades.map((linha, indexLinhaTabela) => { 
+              const linhaInicial = tabela.cabecalhosEspecialidades[indexCabecalho].posicao + 1;
               let linhaAtual = linhaInicial + indexLinhaTabela;
 
               let linhaFinal;
               if (tamanhoCabecalho > indexCabecalho + 1) {
-                linhaFinal = dadosTabela.cabecalhosTabela[indexCabecalho + 1].posicao - 1;
+                linhaFinal = tabela.cabecalhosEspecialidades[indexCabecalho + 1].posicao - 1;
               } else {
-                linhaFinal = dadosTabela.linhasTabela.length;
+                linhaFinal = tabela.linhasEspecialidades.length + tamanhoCabecalho;
               }
 
               if (linhaAtual <= linhaFinal) {
                 indexLinha++;
+
                 return(
-                  <LinhaTabela key={indexLinhaTabela} linha={dadosTabela.linhasTabela[indexLinha]} linhaAtual={linhaAtual} 
-                    especialidades={especialidades} control={control} indexLinhaTabela={indexLinhaTabela}
-                    setValue={setValue} indexLinha={indexLinha}
+                  <LinhaTabela key={indexLinhaTabela} tabela={tabela} linha={tabela.linhasEspecialidades[indexLinha]} 
+                    control={control} setValue={setValue} indexLinha={indexLinha}
                   />
                 );
               }
@@ -57,13 +55,15 @@ export default function LinhasOrdemTabelaEspecialidade({ dadosTabela, watchLinha
   )
 }
 
-function LinhaCabecalho({cabecalho, register, indexCabecalho, setValue, watchLinha}) {
+function LinhaCabecalho({ register, indexCabecalho, setValue, watch }) {
   function onChange(value) {
     setValue("cabecalhos." + indexCabecalho + ".posicao", indexCabecalho);
     setValue("cabecalhos." + indexCabecalho + ".tipo", "ESPECIALIDADE_CABECALHO");
     setValue("cabecalhos." + indexCabecalho + ".textos.0.texto", value);
-    console.log(watchLinha);
   }
+
+  console.log("Teste: ");
+  console.log(watch);
 
   return (
     <div className="flex items-center justify-between divide-x bg-[#E2EFDB]">
@@ -89,26 +89,16 @@ function LinhaCabecalho({cabecalho, register, indexCabecalho, setValue, watchLin
   );
 }
 
-const FormSchema = z.object({
-  email: z
-    .string({
-      required_error: "Please select an email to display.",
-    })
-    .email(),
-})
-
-function LinhaTabela({linha, linhaAtual, especialidades, control, indexLinhaTabela, setValue, indexLinha}) {
-  const nomeEspecialidade = buscarNomeEspecialidade({linha, especialidades});
-
+function LinhaTabela({linha, tabela, control, setValue, indexLinha}) {
   function onChange(value) {
     setValue("especialidade." + indexLinha + ".especialidade", value);
-    setValue("especialidade." + indexLinha + ".posicao", linhaAtual);
+    setValue("especialidade." + indexLinha + ".posicao", linha.posicao);
     setValue("especialidade." + indexLinha + ".tipo", "ESPECIALIDADE_LINHA");
   }
 
   let especialidade = {
-    especialidade: nomeEspecialidade,
-    posicao: linhaAtual,
+    especialidade: linha.nomeEspecialidade,
+    posicao: linha.posicao,
     tipo: "ESPECIALIDADE_LINHA"
   }
 
@@ -121,20 +111,20 @@ function LinhaTabela({linha, linhaAtual, especialidades, control, indexLinhaTabe
           defaultValue={especialidade}
           render={({ field }) => (
             <FormItem>
-              <Select onValueChange={(value) => { field.onChange(value); onChange(value); }} defaultValue={nomeEspecialidade}>
-                <FormControl className="w-[300px] h-6 border-none hover:bg-[#d2dfcc]">
+              <Select onValueChange={(value) => { field.onChange(value); onChange(value); }} defaultValue={linha.nomeEspecialidade}>
+                <FormControl className="w-[300px] h-[23px] border-none hover:bg-[#d2dfcc]">
                   <SelectTrigger>
                     <SelectValue placeholder="Selecione uma especialidade" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {especialidades.map((especialidade, index) => {
+                  {tabela.linhasEspecialidades.map((especialidade, index) => {
                     return(
                       <SelectItem 
-                        value={especialidade.especialidade}
+                        value={especialidade.nomeEspecialidade}
                         key={index}
                       >
-                        {especialidade.especialidade}
+                        {especialidade.nomeEspecialidade}
                       </SelectItem>
                     );
                   })}
@@ -160,28 +150,4 @@ function LinhaTabela({linha, linhaAtual, especialidades, control, indexLinhaTabe
       </div>
     </div>
   );
-}
-
-function buscarNomeEspecialidade({linha, especialidades}) {
-  let nomeEspecialidade = "";
-
-  especialidades.map((especialidade) => {
-    if (especialidade.id == linha.componenteId) {
-      nomeEspecialidade = especialidade.especialidade;
-    }
-  });
-
-  return nomeEspecialidade;
-}
-
-function SepararCabecalhosEspecialidade(cabecalhos) {
-  let cabecalhosEspecialidade = [];
-
-  cabecalhos.map((cabecalho) => {
-    if (cabecalho.tipo == "ESPECIALIDADE_CABECALHO") {
-      cabecalhosEspecialidade.push(cabecalho);
-    }
-  });
-
-  return cabecalhosEspecialidade;
 }
